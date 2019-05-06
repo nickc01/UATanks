@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Controller : MonoBehaviour
+[RequireComponent(typeof(TankMover), typeof(TankShooter), typeof(TankData))]
+public abstract class Controller : MonoBehaviour, IOnShellHit
 {
-    // Start is called before the first frame update
+    protected TankMover Mover;
+    protected TankShooter Shooter;
+    protected TankData Data;
+
+    public abstract void OnShellHit(Shell shell);
+
     public virtual void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    public virtual void Update()
-    {
-
+        //Get the main tank components
+        Mover = GetComponent<TankMover>();
+        Shooter = GetComponent<TankShooter>();
+        Data = GetComponent<TankData>();
     }
 }
