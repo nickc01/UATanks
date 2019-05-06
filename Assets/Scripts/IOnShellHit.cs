@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 public interface IOnShellHit
 {
+    //When this object is hit with a shell
     void OnShellHit(Shell shell);
 }

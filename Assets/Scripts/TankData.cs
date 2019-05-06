@@ -17,6 +17,11 @@ public class TankData : MonoBehaviour
     [Tooltip("The current health of the tank. This value is set during gameplay")]
     [ReadOnly]
     public float Health = 0f;
+    [ReadOnly]
+    [Tooltip("The score of the current tank. This increases when it kills an opposing tank")]
+    public float Score = 0f;
+    [Tooltip("How many points this tank rewards the player when killed. This is primarily used on enemy tanks when they are killed and is ignored for player tanks")]
+    public float TankValue = 25f;
 
     [Header("Shell Stats")]
 
