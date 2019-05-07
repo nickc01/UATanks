@@ -11,6 +11,8 @@ public class PlayerTank : Controller
         base.Start();
         //Set the main player data
         GameManager.Player = Data;
+        //Set the camera target to be the player tank
+        CameraController.Target = gameObject;
     }
     //Used to control input
     private void Update()
