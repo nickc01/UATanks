@@ -14,6 +14,19 @@ public class PlayerTank : Controller
         //Set the camera target to be the player tank
         CameraController.Target = gameObject;
     }
+
+    //The Score for the player
+    public override float Score
+    {
+        get => base.Score;
+        set
+        {
+            base.Score = value;
+            //Update the score display
+            ScoreDisplay.Score = value;
+        }
+    }
+
     //Used to control input
     private void Update()
     {

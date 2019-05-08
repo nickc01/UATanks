@@ -31,16 +31,20 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        //If there is a target to move to
         if (targetInternal != null)
         {
+            //Linearly interpolate to the target
             Vector3 targetPosition = targetInternal.transform.position;
             transform.position = Vector3.Lerp(transform.position, new Vector3(targetPosition.x, transform.position.y, targetPosition.z), Time.deltaTime * Speed);
         }
     }
 
+    //Sets the target that the camera should move to
     private static void SetTarget(GameObject target)
     {
         targetInternal = target;
+        //Set the position of the camera to the target
         mainController.transform.position = new Vector3(target.transform.position.x,mainController.transform.position.y,target.transform.position.z);
     }
 }
