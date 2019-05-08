@@ -13,12 +13,13 @@ public class Shell : MonoBehaviour
     private Rigidbody body;
 
     //Sets the main parameters of the shell
-    public void Set(float lifetime, float damage, float speed, Controller source)
+    public void Set(float lifetime, float damage, float speed, Controller source, float offset = 0f)
     {
         Lifetime = lifetime; //Set the lifetime of the shell
         Damage = damage; //Set the damage the shell inflicts on an opposing tank
         Speed = speed; //Set the speed at which the shell travels
         Source = source; //Set the source tank that shot the shell
+        transform.position += transform.forward * offset;
     }
 
     void Start()
@@ -29,6 +30,8 @@ public class Shell : MonoBehaviour
         body.velocity = transform.forward * Speed;
         //Destroy the shell after a set lifetime
         Destroy(gameObject, Lifetime);
+        //Play the shell fire sound
+        AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
     }
 
     //When the shell has collided with anything

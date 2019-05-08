@@ -25,7 +25,7 @@ public class TankShooter : MonoBehaviour
             //Otherwise, create a new shell object and set its stats
             Firing = true;
             var newShell = Instantiate(Game.ShellPrefab, transform.position, transform.rotation).GetComponent<Shell>();
-            newShell.Set(Lifetime, Damage, Speed, controller);
+            newShell.Set(Lifetime, Damage, Speed, controller,1f);
         }
     }
 

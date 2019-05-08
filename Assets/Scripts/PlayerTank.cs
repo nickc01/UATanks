@@ -10,7 +10,7 @@ public class PlayerTank : Controller
     {
         base.Start();
         //Set the main player data
-        GameManager.Player = Data;
+        GameManager.Player = (this, Data);
         //Set the camera target to be the player tank
         CameraController.Target = gameObject;
     }
@@ -77,5 +77,14 @@ public class PlayerTank : Controller
             //Decrease the tank's health
             Health -= shell.Damage;
         }
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        //Set the main player to null
+        GameManager.Player = (null, null);
+        //Trigger the lose condition
+        GameManager.Lose();
     }
 }

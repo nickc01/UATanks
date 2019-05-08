@@ -21,6 +21,7 @@ public class CameraController : MonoBehaviour
         if (mainController == null)
         {
             mainController = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
