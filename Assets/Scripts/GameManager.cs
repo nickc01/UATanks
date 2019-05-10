@@ -41,7 +41,9 @@ public class GameManager : MonoBehaviour
     {
         //Show the win screen
         UIManager.SetUIState("Win");
-        AudioSource.PlayClipAtPoint(Game.WinSound, Camera.main.transform.position);
+        //Play the Win Sound
+        CameraController.Main.Sound.clip = Game.WinSound;
+        CameraController.Main.Sound.Play();
     }
 
     //Called when the player tank has been destroyed
@@ -49,7 +51,9 @@ public class GameManager : MonoBehaviour
     {
         //Show the lose screen
         UIManager.SetUIState("Lose");
-        AudioSource.PlayClipAtPoint(Game.LoseSound, Camera.main.transform.position);
+        //Play the Lose Sound
+        CameraController.Main.Sound.clip = Game.LoseSound;
+        CameraController.Main.Sound.Play();
     }
 
     //Called when the play button is pressed

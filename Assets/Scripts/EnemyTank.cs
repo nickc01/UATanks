@@ -27,7 +27,6 @@ public class EnemyTank : Controller
         {
             var playerPosition = GameManager.Player.Tank.transform.position;
             var angle = Vector3.SignedAngle(playerPosition - transform.position, transform.forward, Vector3.up);
-            Debug.Log("ANGLE = " + angle);
             if (angle < 0)
             {
                 Mover.Rotate(Mathf.Clamp(-angle, 0, Data.RotateSpeed * Time.deltaTime));

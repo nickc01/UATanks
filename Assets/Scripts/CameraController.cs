@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     public float Speed = 7f; //How fast the camera moves towards the target
 
     private static GameObject targetInternal; //The target the camera will move towards
-    private static CameraController mainController; //The singleton for the camera controller
+    public static CameraController Main { get; private set; } //The singleton for the camera controller
 
     public static GameObject Target
     {
@@ -15,12 +15,14 @@ public class CameraController : MonoBehaviour
         set => SetTarget(value);
     }
 
+    public AudioSource Sound { get; private set; } //The Audio Source of the Camera
+
     private void Start()
     {
         //Set the singleton
-        if (mainController == null)
+        if (Main == null)
         {
-            mainController = this;
+            Main = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -28,6 +30,8 @@ public class CameraController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        //Set the Audio Source
+        Sound = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -46,6 +50,6 @@ public class CameraController : MonoBehaviour
     {
         targetInternal = target;
         //Set the position of the camera to the target
-        mainController.transform.position = new Vector3(target.transform.position.x,mainController.transform.position.y,target.transform.position.z);
+        Main.transform.position = new Vector3(target.transform.position.x,Main.transform.position.y,target.transform.position.z);
     }
 }
