@@ -9,37 +9,43 @@ public class TankShooter : MonoBehaviour
     private Controller controller; //The tank controller of this object
     public float FireRate { get; set; } = 0f; //The cooldown timer before another shell can be fired
     public bool Firing { get; private set; } = false; //Whether the tank is shooting a bullet or not
+
+    private float CooldownTracker = 0f; //A clock for determining how long the cooldown will take
+
     private void Start()
     {
         //Get the tank controller
         controller = GetComponent<Controller>();
-        //Start the cooldown tracker
-        StartCoroutine(CoolDownTracker());
     }
+
+    private void Update()
+    {
+        //If the shooter is firing
+        if (Firing)
+        {
+            //Decrease the cooldown tracker
+            CooldownTracker -= Time.deltaTime;
+            //If the cooldown is over
+            if (CooldownTracker <= 0)
+            {
+                //The shooter is ready to fire another bullet
+                Firing = false;
+            }
+        }
+    }
+
     //Shoots a shell with a set speed, damage, and lifetime
     public void Shoot(float Speed, float Damage, float Lifetime)
     {
         //If the firing cooldown is still present, then do not fire a shell
         if (!Firing)
         {
+            //Reset the cooldown tracker
+            CooldownTracker = FireRate;
             //Otherwise, create a new shell object and set its stats
             Firing = true;
             var newShell = Instantiate(Game.ShellPrefab, transform.position, transform.rotation).GetComponent<Shell>();
             newShell.Set(Lifetime, Damage, Speed, controller,1f);
-        }
-    }
-
-    //Keeps track of the cooldown between each shell fire
-    IEnumerator CoolDownTracker()
-    {
-        while (true)
-        {
-            //Wait until the controller wants to fire a shell
-            yield return new WaitUntil(() => Firing);
-            //Wait the set firing cooldown
-            yield return new WaitForSeconds(FireRate);
-            //Ready to fire another shell
-            Firing = false;
         }
     }
 }
