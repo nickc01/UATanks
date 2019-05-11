@@ -8,7 +8,6 @@ using UnityEngine;
 
 public class EnemyTank : Controller
 {
-    [SerializeField] float HearingRadius = 6f; //The range at which the enemy can hear the player
 
     public override void Start()
     {
@@ -17,27 +16,13 @@ public class EnemyTank : Controller
         GameManager.Enemies.Add((this,Data));
     }
 
-    private void Update()
+    protected virtual void Update()
     {
-        //Shoots shells as fast as possible
-        //The shoot function has a cooldown timer, so it will limit the amount of shells fired based on the cooldown
-        Shooter.Shoot(Data.ShellSpeed, Data.ShellDamage, Data.ShellLifetime);
-        //If there is a player in the game and the player is within hearing radius
-        if (GameManager.Player.Tank != null && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < HearingRadius)
-        {
-            var playerPosition = GameManager.Player.Tank.transform.position;
-            var angle = Vector3.SignedAngle(playerPosition - transform.position, transform.forward, Vector3.up);
-            if (angle < 0)
-            {
-                Mover.Rotate(Mathf.Clamp(-angle, 0, Data.RotateSpeed * Time.deltaTime));
-            }
-            else if (angle > 0)
-            {
-                Mover.Rotate(Mathf.Clamp(-angle, -Data.RotateSpeed * Time.deltaTime, 0));
-            }
-        }
+
     }
 
+    //When the enemy is hit by a player shell, it reduces the tank's health
+    //if the tank's health is zero, the tank is destroyed
     public override void OnShellHit(Shell shell)
     {
         //If the shell came from a player tank
@@ -53,6 +38,7 @@ public class EnemyTank : Controller
         }
     }
 
+    //Called when the tank dies
     protected override void OnDeath()
     {
         base.OnDeath();
