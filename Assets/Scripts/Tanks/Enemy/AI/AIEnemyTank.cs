@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.Extensions;
 
 [RequireComponent(typeof(ObstacleAvoidance))]
 public class AIEnemyTank : EnemyTank
@@ -30,22 +31,30 @@ public class AIEnemyTank : EnemyTank
     [Tooltip("Determines whether to show the seeing circle or not")]
     [SerializeField] private bool DebugSeeing = false;
 
+    private ObstacleAvoidance OA;
+
     public override void Start()
     {
+        OA = GetComponent<ObstacleAvoidance>();
         base.Start();
     }
 
     protected override void Update()
     {
+        Debug.Log("UPDATE");
         switch (personality)
         {
             case Personality.Chase:
+                Chase();
                 break;
             case Personality.Flee:
+                Flee();
                 break;
             case Personality.Patrol:
+                Patrol();
                 break;
             case Personality.Navigate:
+                Navigate();
                 break;
         }
         if (DebugSeeing)
@@ -69,7 +78,20 @@ public class AIEnemyTank : EnemyTank
     //Chase towards the player
     protected void Chase()
     {
-
+        /*Debug.Log("CHASING");
+        if (!OA.CanTurnInDirection(Mover.GetAngleTo(GameManager.Player.Tank.transform.position) * Time.deltaTime))
+        {
+            Debug.Log("AVOIDING");
+            Mover.Rotate(OA.RecommendedDirection * Time.deltaTime);
+        }
+        else
+        {
+            Debug.Log("TO PLAYER");
+            
+        }*/
+        Mover.Rotate(OA.RecommendedDirection * Time.deltaTime);
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime);
+        Mover.Move(Data.ForwardSpeed);
     }
 
     //Flee from the player

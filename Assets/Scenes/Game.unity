@@ -1118,7 +1118,17 @@ PrefabInstance:
     - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: layers.m_Bits
-      value: 4294967295
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: DebugWhiskers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: whiskerFOV
+      value: 135
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -1143,22 +1153,22 @@ PrefabInstance:
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9426672
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.33373427
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -1173,7 +1183,7 @@ PrefabInstance:
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 141.009
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}

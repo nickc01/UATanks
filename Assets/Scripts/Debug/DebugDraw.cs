@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.Extensions;
 
 //Contains helper functions to help draw shapes in the scene
 public static class DebugDraw
@@ -25,8 +26,9 @@ public static class DebugDraw
     public static void DrawFOV(Vector3 origin,float Radius, float Direction,float FOV,Color? color = null)
     {
         color = color ?? Color.white;
-        Vector3 firstEnd = origin + new Vector3(Mathf.Cos((-Direction + 90f - (FOV / 2)) * Mathf.Deg2Rad) * Radius,origin.y, Mathf.Sin((-Direction + 90f - (FOV / 2)) * Mathf.Deg2Rad) * Radius);
-        Vector3 secondEnd = origin + new Vector3(Mathf.Cos((-Direction + 90f + (FOV / 2)) * Mathf.Deg2Rad) * Radius, origin.y, Mathf.Sin((-Direction + 90f + (FOV / 2)) * Mathf.Deg2Rad) * Radius);
+        
+        Vector3 firstEnd = origin + new Vector3(Mathf.Cos(RelativeDegrees(Direction - (FOV / 2)) * Mathf.Deg2Rad) * Radius,origin.y, Mathf.Sin(RelativeDegrees(Direction - (FOV / 2)) * Mathf.Deg2Rad) * Radius);
+        Vector3 secondEnd = origin + new Vector3(Mathf.Cos(RelativeDegrees(Direction + (FOV / 2)) * Mathf.Deg2Rad) * Radius, origin.y, Mathf.Sin(RelativeDegrees(Direction + (FOV / 2)) * Mathf.Deg2Rad) * Radius);
         Debug.DrawLine(origin, firstEnd,color.Value);
         Debug.DrawLine(origin, secondEnd,color.Value);
     }
