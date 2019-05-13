@@ -11,12 +11,11 @@ GameObject:
   - component: {fileID: 793303101265936076}
   - component: {fileID: 793303101265936075}
   - component: {fileID: 793303101265936074}
-  - component: {fileID: -5155638072916944991}
-  - component: {fileID: 704099995470250137}
   - component: {fileID: 793303101265936073}
   - component: {fileID: 793303101265936072}
+  - component: {fileID: 793303101265936071}
   - component: {fileID: 793303101265936077}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Enemy Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,62 +64,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 793303101265936070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be49f7b758c267e4ea8e5f6a7f94fb5b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d2d1d26277cc774cb58592071e26e5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 1
-  BackwardSpeed: 1
-  RotateSpeed: 45
+  ForwardSpeed: 3
+  BackwardSpeed: 3
+  RotateSpeed: 90
   MaxHealth: 100
   Health: 0
   Score: 0
   TankValue: 25
   FireRate: 0.4
-  ShellSpeed: 4
+  ShellSpeed: 6
   ShellLifetime: 10
-  ShellDamage: 25
---- !u!114 &-5155638072916944991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dca1a25c25e6c1045a59329da87291b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HearingDistance: 6
-  SeeingDistance: 6
-  SeeingFOV: 45
-  SeeingLOS: 5
-  personality: 0
-  DebugFOV: 0
-  DebugLOS: 0
-  DebugHearing: 0
-  DebugSeeing: 0
---- !u!114 &704099995470250137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc1649fcdac5c7e419ff92e6f4360064, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxObstacleThreshhold: 2.5
-  whiskerAmount: 5
-  whiskerLength: 5
-  whiskerFOV: 90
-  HeightOffset: 0
-  layers:
-    serializedVersion: 2
-    m_Bits: 0
-  DebugWhiskers: 0
+  ShellDamage: 100
 --- !u!114 &793303101265936073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 793303101265936070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4f17fb9451f95348a5740ec0733c7f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f5f6925e04edf64fa895deeff049beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &793303101265936072
@@ -142,9 +99,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 793303101265936070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d39ce232d2f612439149cda777db91d, type: 3}
+  m_Script: {fileID: 11500000, guid: 543f3e9e031132c45b8aa888cc57088a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &793303101265936071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793303101265936070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac371a806ead1fc4e870ec137906eb09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HearingRadius: 6
 --- !u!135 &793303101265936077
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -169,7 +139,7 @@ GameObject:
   - component: {fileID: 7379744907756405944}
   - component: {fileID: 1362220024643532743}
   - component: {fileID: 1470020951319061044}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +220,7 @@ GameObject:
   - component: {fileID: 210482576647096866}
   - component: {fileID: 1907469361846322744}
   - component: {fileID: 1782198298560368199}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}

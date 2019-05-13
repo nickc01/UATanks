@@ -68,11 +68,8 @@ public class GameManager : MonoBehaviour
 
     static IEnumerator LoadGameScene()
     {
-        if (!SceneManager.GetSceneByName("Game").isLoaded)
-        {
-            //Load the game scene
-            yield return SceneManager.LoadSceneAsync("Game", LoadSceneMode.Additive);
-        }
+        //Load the game scene
+        yield return SceneManager.LoadSceneAsync("Game", LoadSceneMode.Additive);
         //Set the scene active
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
     }

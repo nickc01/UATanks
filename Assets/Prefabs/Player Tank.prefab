@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2414689848305283133}
   - component: {fileID: 6690577872831465995}
   - component: {fileID: 1145387976293791474}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 8926561653577404945}
   - component: {fileID: 484843089036699687}
   - component: {fileID: 6162625592037348574}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 7624680093946310130}
   - component: {fileID: 7624680093946310132}
   - component: {fileID: 7624680093946310134}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Player Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,20 +223,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 7624680093946310137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be49f7b758c267e4ea8e5f6a7f94fb5b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d2d1d26277cc774cb58592071e26e5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 1
-  BackwardSpeed: 1
-  RotateSpeed: 45
+  ForwardSpeed: 3
+  BackwardSpeed: 3
+  RotateSpeed: 90
   MaxHealth: 100
   Health: 0
   Score: 0
   TankValue: 25
   FireRate: 0.4
-  ShellSpeed: 4
+  ShellSpeed: 6
   ShellLifetime: 10
-  ShellDamage: 25
+  ShellDamage: 100
 --- !u!114 &7624680093946310130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7624680093946310137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4f17fb9451f95348a5740ec0733c7f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f5f6925e04edf64fa895deeff049beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7624680093946310132
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7624680093946310137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d39ce232d2f612439149cda777db91d, type: 3}
+  m_Script: {fileID: 11500000, guid: 543f3e9e031132c45b8aa888cc57088a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7624680093946310134
