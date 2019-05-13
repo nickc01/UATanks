@@ -10,14 +10,24 @@ using static UnityEngine.Extensions;
 public static class DebugDraw
 {
     //A helper function used to draw a debug circle
-    public static void DrawCircle2D(Vector3 origin, float Radius, int Subsections = 100, Color? color = null)
+    public static void DrawCircle2D(Vector3 origin, float Radius, int Subsections = 100, Color? color = null, Func<float,float,(float Angle,float Radius)> modifier = null)
     {
         color = color ?? Color.white;
         var angleDifference = 360f / Subsections;
         for (int i = 0; i < Subsections; i++)
         {
-            Vector3 start = new Vector3(origin.x,origin.y, origin.z) + new Vector3(Mathf.Cos(angleDifference * i * Mathf.Deg2Rad) * Radius,origin.y, Mathf.Sin(angleDifference * i * Mathf.Deg2Rad) * Radius);
-            Vector3 end = new Vector3(origin.x,origin.y, origin.z) + new Vector3(Mathf.Cos(angleDifference * (i + 1) * Mathf.Deg2Rad) * Radius,origin.y, Mathf.Sin(angleDifference * (i + 1) * Mathf.Deg2Rad) * Radius);
+            var FirstAngle = angleDifference * i;
+            var SecondAngle = angleDifference * (i + 1);
+            var FirstRadius = Radius;
+            var SecondRadius = Radius;
+            if (modifier != null)
+            {
+                (FirstAngle, FirstRadius) = modifier(FirstAngle, FirstRadius);
+                (SecondAngle, SecondRadius) = modifier(SecondAngle, SecondRadius);
+            }
+
+            Vector3 start = new Vector3(origin.x,origin.y, origin.z) + new Vector3(Mathf.Cos(FirstAngle * Mathf.Deg2Rad) * FirstRadius,origin.y, Mathf.Sin(FirstAngle * Mathf.Deg2Rad) * FirstRadius);
+            Vector3 end = new Vector3(origin.x,origin.y, origin.z) + new Vector3(Mathf.Cos(SecondAngle * Mathf.Deg2Rad) * SecondRadius,origin.y, Mathf.Sin(SecondAngle * Mathf.Deg2Rad) * SecondRadius);
             Debug.DrawLine(start, end, color.Value);
         }
     }

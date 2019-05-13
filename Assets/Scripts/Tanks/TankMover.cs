@@ -30,6 +30,10 @@ public class TankMover : MonoBehaviour
     {
         if (UseOA)
         {
+            if (OA == null)
+            {
+                throw new Exception("There is no Obstacle Avoidance Component attached to this object, please add one to use Obstacle Avoidance");
+            }
             degrees += degrees * OA.RecommendedDirection;
         }
         transform.Rotate(0, degrees, 0);
@@ -40,30 +44,41 @@ public class TankMover : MonoBehaviour
     public void RotateTowards(Vector3 target, float maxDegrees,bool UseOA = false)
     {
 
-        var angle = GetAngleTo(target);
-        if (angle < 0f)
+        var angle = 0f;
+        //angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
+        if (maxDegrees < 0f)
         {
-            angle = -Mathf.Clamp(Mathf.Abs(angle),0,maxDegrees);
+            //angle = -Mathf.Clamp(Mathf.Abs(angle),0,maxDegrees);
+            angle = GetAngleAwayFrom(target);
+            angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
         }
         else
         {
-            angle = Mathf.Clamp(angle,0,maxDegrees);
+            angle = GetAngleTo(target);
+            angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
         }
-        Rotate(angle);
         if (UseOA)
         {
-            Rotate(OA.RecommendedDirection * maxDegrees, false);
+            if (OA == null)
+            {
+                throw new Exception("There is no Obstacle Avoidance Component attached to this object, please add one to use Obstacle Avoidance");
+            }
+            //Rotate(OA.RecommendedDirection * Mathf.Abs(maxDegrees), false);
+            Rotate(MostExtreme(OA.RecommendedDirection * Mathf.Abs(maxDegrees),angle), false);
         }
-    }
-
-    //Same as rotate towards but will also make sure to avoid any obstacles
-    public void RotateTowardsWithOA()
-    {
-
+        else
+        {
+            Rotate(angle);
+        }
     }
 
     public float GetAngleTo(Vector3 target)
     {
         return Vector3.SignedAngle(transform.forward, target - transform.position, Vector3.up);
+    }
+
+    public float GetAngleAwayFrom(Vector3 target)
+    {
+        return Vector3.SignedAngle(transform.forward, -(target - transform.position), Vector3.up);
     }
 }

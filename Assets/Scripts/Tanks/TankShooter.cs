@@ -7,6 +7,7 @@ using static GameManager;
 public class TankShooter : MonoBehaviour
 {
     private Controller controller; //The tank controller of this object
+    private TankData data; //The tank data of this object
     public float FireRate { get; set; } = 0f; //The cooldown timer before another shell can be fired
     public bool Firing { get; private set; } = false; //Whether the tank is shooting a bullet or not
 
@@ -16,6 +17,8 @@ public class TankShooter : MonoBehaviour
     {
         //Get the tank controller
         controller = GetComponent<Controller>();
+        //Get the tank data
+        data = GetComponent<TankData>();
     }
 
     private void Update()
@@ -47,5 +50,11 @@ public class TankShooter : MonoBehaviour
             var newShell = Instantiate(Game.ShellPrefab, transform.position, transform.rotation).GetComponent<Shell>();
             newShell.Set(Lifetime, Damage, Speed, controller,1f);
         }
+    }
+    //Shoots a shell with a set speed, damage, and lifetime
+    //Retrieves the values from the tank's data
+    public void Shoot()
+    {
+        Shoot(data.ShellSpeed, data.ShellDamage, data.ShellLifetime);
     }
 }

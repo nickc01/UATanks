@@ -7,7 +7,7 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
 {
     protected TankMover Mover; //The mover component for the tank
     protected TankShooter Shooter; //The shooter component of the tank
-    protected TankData Data; //The data of the tank
+    public TankData Data { get; protected set; } //The data of the tank
 
     public float Health //The health of the tank
     {

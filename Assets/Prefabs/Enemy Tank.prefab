@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 793303101265936073}
   - component: {fileID: 793303101265936072}
   - component: {fileID: 793303101265936077}
+  - component: {fileID: 3940914476459504855}
+  - component: {fileID: 4670365770039128682}
   m_Layer: 8
   m_Name: Enemy Tank
   m_TagString: Untagged
@@ -99,15 +101,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be49f7b758c267e4ea8e5f6a7f94fb5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 2
-  BackwardSpeed: 2
+  ForwardSpeed: 4
+  BackwardSpeed: 4
   RotateSpeed: 90
   MaxHealth: 100
   Health: 0
   Score: 0
   TankValue: 25
-  FireRate: 0.4
-  ShellSpeed: 4
+  FireRate: 0.3
+  ShellSpeed: 8
   ShellLifetime: 10
   ShellDamage: 25
 --- !u!114 &-5155638072916944991
@@ -125,8 +127,16 @@ MonoBehaviour:
   HearingDistance: 6
   SeeingDistance: 6
   SeeingFOV: 45
-  SeeingLOS: 5
-  personality: 0
+  personality: 2
+  PatrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  PatrolMinimumDistance: 0.4
+  patrolLoopMode: 2
   DebugFOV: 0
   DebugLOS: 0
   DebugHearing: 0
@@ -187,6 +197,33 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3940914476459504855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793303101265936070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca672a76c8fc1da489cfeb822917c931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Blockers:
+    serializedVersion: 2
+    m_Bits: 1536
+--- !u!114 &4670365770039128682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793303101265936070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b9d73ea15f8e947b395012f99a3054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7117367260825042002
 GameObject:
   m_ObjectHideFlags: 0

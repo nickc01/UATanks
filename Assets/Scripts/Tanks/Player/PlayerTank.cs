@@ -6,6 +6,8 @@ using UnityEngine;
 //Primarilly handles inputs and moves the tank depending on said inputs
 public class PlayerTank : Controller
 {
+    public NoiseMaker Noise { get; private set; }
+
     public override void Start()
     {
         base.Start();
@@ -13,6 +15,8 @@ public class PlayerTank : Controller
         GameManager.Player = (this, Data);
         //Set the camera target to be the player tank
         CameraController.Target = gameObject;
+        //Get the noise maker
+        Noise = GetComponent<NoiseMaker>();
     }
 
     //The Score for the player
@@ -30,23 +34,28 @@ public class PlayerTank : Controller
     //Used to control input
     private void Update()
     {
+        Noise.NoiseLevel = 0;
         //If the spacebar is pressed
         if (Input.GetKey(KeyCode.Space))
         {
             //Shoot a shell
-            Shooter.Shoot(Data.ShellSpeed, Data.ShellDamage, Data.ShellLifetime);
+            //Shooter.Shoot(Data.ShellSpeed, Data.ShellDamage, Data.ShellLifetime);
+            Shooter.Shoot();
+            Noise.NoiseLevel += 3f;
         }
         //If the W or Up Arrow Keys are currently held down
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             //Move the tank forward
             Mover.Move(Data.ForwardSpeed);
+            Noise.NoiseLevel += 3f;
         }
         //If the S or Down Arrow Keys are currently held down
         else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             //Move the tank backwards
             Mover.Move(-Data.BackwardSpeed);
+            Noise.NoiseLevel += 3f;
         }
         //If neither the up or down inputs are pressed
         else

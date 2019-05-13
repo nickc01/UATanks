@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEngine.Extensions;
 
-[RequireComponent(typeof(ObstacleAvoidance))]
 public class AIEnemyTank : EnemyTank
 {
     [Header("Enemy Tank AI Data")]
@@ -16,10 +15,14 @@ public class AIEnemyTank : EnemyTank
     [SerializeField] protected float SeeingDistance = 6f;
     [Tooltip("The FOV at which the enemy can see the player. Value is in degrees")]
     [SerializeField] protected float SeeingFOV = 45f;
-    [Tooltip("The FOV that determines if the enemy is looking directly at the player. Value is in degrees")]
-    [SerializeField] protected float SeeingLOS = 5f;
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
     [SerializeField] private Personality personality;
+    [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
+    [SerializeField] private List<Transform> PatrolPoints;
+    [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
+    [SerializeField] private float PatrolMinimumDistance = 0.4f;
+    [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
+    [SerializeField] private PatrolLoopMode patrolLoopMode;
     [Space]
     [Header("DEBUG")]
     [Tooltip("Determines whether to show the FOV or not in the scene")]
@@ -31,31 +34,44 @@ public class AIEnemyTank : EnemyTank
     [Tooltip("Determines whether to show the seeing circle or not")]
     [SerializeField] private bool DebugSeeing = false;
 
-    //private ObstacleAvoidance OA;
+    TankHearing Hearing;
+    TankVision Vision;
 
     public override void Start()
     {
         //OA = GetComponent<ObstacleAvoidance>();
+        Hearing = GetComponent<TankHearing>();
+        Vision = GetComponent<TankVision>();
+
+        Hearing.HearingRange = HearingDistance;
+        Vision.SightFOV = SeeingFOV;
+        Vision.SightRange = SeeingDistance;
+
         base.Start();
     }
 
     protected override void Update()
     {
-        Debug.Log("UPDATE");
-        switch (personality)
+        if (GameManager.Player.Tank != null)
         {
-            case Personality.Chase:
-                Chase();
-                break;
-            case Personality.Flee:
-                Flee();
-                break;
-            case Personality.Patrol:
-                Patrol();
-                break;
-            case Personality.Navigate:
-                Navigate();
-                break;
+            switch (personality)
+            {
+                case Personality.Chase:
+                    Chase();
+                    break;
+                case Personality.Flee:
+                    Flee();
+                    break;
+                case Personality.Patrol:
+                    Patrol();
+                    break;
+                case Personality.Navigate:
+                    Navigate();
+                    break;
+                case Personality.Strategic:
+                    Strategic();
+                    break;
+            }
         }
         if (DebugSeeing)
         {
@@ -69,15 +85,13 @@ public class AIEnemyTank : EnemyTank
         {
             DebugDraw.DrawFOV(transform.position, SeeingDistance, transform.eulerAngles.y,SeeingFOV, Color.green);
         }
-        if (DebugLOS)
-        {
-            DebugDraw.DrawFOV(transform.position, SeeingDistance, transform.eulerAngles.y, SeeingLOS, Color.blue);
-        }
     }
 
     //Chase towards the player
     protected void Chase()
     {
+        //Shoot forwards
+        Shooter.Shoot();
         //Rotate towards the player, with obstacle avoidance enabled
         Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,true);
         //Move forward
@@ -87,19 +101,102 @@ public class AIEnemyTank : EnemyTank
     //Flee from the player
     protected void Flee()
     {
-
+        //Shoot forwards
+        Shooter.Shoot();
+        //Rotate away from the player, with obstacle avoidance enabled
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, true);
+        //Move forward
+        Mover.Move(Data.ForwardSpeed);
     }
 
     //Patrol the area
     protected void Patrol()
     {
-
+        var target = GameManager.Player.Tank.transform.position;
+        if (Vision.SeeingTarget(target))
+        {
+            Shooter.Shoot();
+            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime);
+        }
+        else if (Hearing.HearingTarget(target,GameManager.Player.Tank.Noise))
+        {
+            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime);
+        }
+        else
+        {
+            Navigate(false);
+        }
     }
 
-    //Navigate the area
-    protected void Navigate()
-    {
+    private int CurrentPatrolIndex = 0;
+    bool pingPongDirection = true;
 
+    //Navigate the area
+    protected void Navigate(bool Shoot = true)
+    {
+        if (Shoot)
+        {
+            if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position,GameManager.Player.Tank.Noise))
+            {
+                Shooter.Shoot();
+            }
+        }
+        if (PatrolPoints.Count == 0 || CurrentPatrolIndex == PatrolPoints.Count)
+        {
+            return;
+        }
+        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, true);
+
+        Mover.Move(Data.ForwardSpeed);
+
+        if (Vector3.Distance(PatrolPoints[CurrentPatrolIndex].position,transform.position) <= PatrolMinimumDistance)
+        {
+            switch (patrolLoopMode)
+            {
+                case PatrolLoopMode.End:
+                    CurrentPatrolIndex++;
+                    break;
+                case PatrolLoopMode.Loop:
+                    CurrentPatrolIndex++;
+                    if (CurrentPatrolIndex == PatrolPoints.Count)
+                    {
+                        CurrentPatrolIndex = 0;
+                    }
+                    break;
+                case PatrolLoopMode.PingPong:
+                    if (pingPongDirection == true)
+                    {
+                        CurrentPatrolIndex++;
+                        if (CurrentPatrolIndex == PatrolPoints.Count)
+                        {
+                            pingPongDirection = false;
+                            CurrentPatrolIndex--;
+                        }
+                    }
+                    else
+                    {
+                        CurrentPatrolIndex--;
+                        if (CurrentPatrolIndex < 0)
+                        {
+                            pingPongDirection = true;
+                            CurrentPatrolIndex++;
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    protected void Strategic()
+    {
+        if (Health > Data.MaxHealth / 2f)
+        {
+            Chase();
+        }
+        else
+        {
+            Flee();
+        }
     }
 
 

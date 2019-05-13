@@ -37,5 +37,17 @@ namespace UnityEngine
                 Debug.Log(item);
             }
         }
+
+        public static float ClampAbs(float value, float min, float max)
+        {
+            if (value < 0f)
+            {
+                return Mathf.Clamp(value, -max, -min);
+            }
+            else
+            {
+                return Mathf.Clamp(value, min, max);
+            }
+        }
     }
 }
