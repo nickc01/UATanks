@@ -31,11 +31,11 @@ public class AIEnemyTank : EnemyTank
     [Tooltip("Determines whether to show the seeing circle or not")]
     [SerializeField] private bool DebugSeeing = false;
 
-    private ObstacleAvoidance OA;
+    //private ObstacleAvoidance OA;
 
     public override void Start()
     {
-        OA = GetComponent<ObstacleAvoidance>();
+        //OA = GetComponent<ObstacleAvoidance>();
         base.Start();
     }
 
@@ -78,19 +78,9 @@ public class AIEnemyTank : EnemyTank
     //Chase towards the player
     protected void Chase()
     {
-        /*Debug.Log("CHASING");
-        if (!OA.CanTurnInDirection(Mover.GetAngleTo(GameManager.Player.Tank.transform.position) * Time.deltaTime))
-        {
-            Debug.Log("AVOIDING");
-            Mover.Rotate(OA.RecommendedDirection * Time.deltaTime);
-        }
-        else
-        {
-            Debug.Log("TO PLAYER");
-            
-        }*/
-        Mover.Rotate(OA.RecommendedDirection * Time.deltaTime);
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime);
+        //Rotate towards the player, with obstacle avoidance enabled
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,true);
+        //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
 

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &478797211305545881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 84583040445033594}
+  m_Layer: 9
+  m_Name: Rotator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &84583040445033594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478797211305545881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2414689848305283133}
+  m_Father: {fileID: 7624680093946671577}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1718662325452177966
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,10 +58,10 @@ Transform:
   m_GameObject: {fileID: 1718662325452177966}
   m_LocalRotation: {x: -0.7071068, y: 0.000000014901161, z: 0.000000014901161, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.35}
+  m_LocalScale: {x: 0.5, y: 0.50000024, z: 0.3500001}
   m_Children:
   - {fileID: 8926561653577404945}
-  m_Father: {fileID: 7624680093946671577}
+  m_Father: {fileID: 84583040445033594}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6690577872831465995
@@ -58,7 +89,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7364664100900938564, guid: 12a8e50ceafe4344ca6011ccd7e2adcc, type: 3}
+  - {fileID: 2100000, guid: dd6d9bac0c71195479af54e1db0d691e, type: 2}
   - {fileID: 4234376698861162050, guid: 12a8e50ceafe4344ca6011ccd7e2adcc, type: 3}
   - {fileID: -7138092269131073482, guid: 12a8e50ceafe4344ca6011ccd7e2adcc, type: 3}
   - {fileID: -3578011754156894309, guid: 12a8e50ceafe4344ca6011ccd7e2adcc, type: 3}
@@ -138,7 +169,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -9103484930961366303, guid: 7568d3c0aa2bd8b4386138deedd154cc, type: 3}
+  - {fileID: 2100000, guid: ce480fe58b98ea145a12bf4b69eedc53, type: 2}
   - {fileID: -1580535799172915004, guid: 7568d3c0aa2bd8b4386138deedd154cc, type: 3}
   - {fileID: -4532758957498553600, guid: 7568d3c0aa2bd8b4386138deedd154cc, type: 3}
   m_StaticBatchInfo:
@@ -192,7 +223,7 @@ Transform:
   m_LocalPosition: {x: 3.56, y: 0.31, z: -3.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2414689848305283133}
+  - {fileID: 84583040445033594}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -207,13 +238,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1
-  m_Radius: 0.89
-  m_SlopeLimit: 45
+  m_Height: 4
+  m_Radius: 1
+  m_SlopeLimit: 180
   m_StepOffset: 0.3
   m_SkinWidth: 0.001
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0.19, z: 0}
+  m_Center: {x: 0, y: 1.76, z: 0}
 --- !u!114 &7624680093946310128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,9 +257,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be49f7b758c267e4ea8e5f6a7f94fb5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 1
-  BackwardSpeed: 1
-  RotateSpeed: 45
+  ForwardSpeed: 3
+  BackwardSpeed: 3
+  RotateSpeed: 90
   MaxHealth: 100
   Health: 0
   Score: 0
