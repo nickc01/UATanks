@@ -1,0 +1,10 @@
+﻿There are 4 different personalities that an AI enemy can be in:
+
+Chase : Will simply chase towards the player
+
+Flee : Will simply flee from the player
+
+Patrol : Patrols a set region defined by waypoints. 
+         If it can hear the player, it will stop and rotate towards the player
+         If it can see the player, it will rotate towards him
+         If the player is directly within the enemy's line of sight, it will stop rotating and will start shooting at the player
