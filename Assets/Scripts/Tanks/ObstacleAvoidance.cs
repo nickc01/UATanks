@@ -8,19 +8,15 @@ using static UnityEngine.Extensions;
 
 public class ObstacleAvoidance : MonoBehaviour
 {
-   // public float CurrentThreshold { get; private set; } //The current obstacle threshold
-    public float DirectionalThreshold { get; private set; } //A score determining the direction the obstacles are
-                                                            //A positive score indicates the obstacles are to the right
-                                                            //A negative score indicates the obstacles are to the left
-    //public float RecommendedDirection => -6f / 15f * DirectionalThreshold; //The recommended direction to turn and how much
-    public float RecommendedDirection
+    public float DirectionalThreshold { get; private set; } //A score that determines the best direction to take to move away from the obstacles
+    public float RecommendedDirection //The recommended direction to take to avoid the obstacles
     {
         get
         {
             //If all the whiskers are triggering, then that most likely means that the tank is entering a corner
             if (Distances.Average() <= whiskerLength)
             {
-                //Attempt to rotate away from the corner
+                //Attempt to rotate away from the corner to prevent the tank from getting stuck in there
                 return -5f;
             }
             else
@@ -36,8 +32,7 @@ public class ObstacleAvoidance : MonoBehaviour
     public float WhiskerLength => whiskerLength; //The public interface for accessing the Whisker Length
 
     [Header("Stats")]
-    [Tooltip(@"The amount of whiskers to use for obstacle avoidance.
-             The more, the more accurate the obstacle avoidance is, but the more processing power it takes")]
+    [Tooltip("The amount of whiskers to use for obstacle avoidance")]
     [SerializeField] private int whiskerAmount = 5;
     [Tooltip("How long the whiskers will be")]
     [SerializeField] private float whiskerLength = 5f;
@@ -51,20 +46,19 @@ public class ObstacleAvoidance : MonoBehaviour
     [SerializeField] private bool DebugWhiskers = false;
 
     private int whiskerAmountInternal;
-    //The whiskers being used
-    private List<(float Direction, float Sensitivity)> Whiskers = new List<(float, float)>();
-    private List<float> Distances = new List<float>();
+    private List<(float Direction, float Sensitivity)> Whiskers = new List<(float, float)>(); //The whiskers that are being used
+    private List<float> Distances = new List<float>(); //The last known distance of each whisker to an obstacle
 
     private float EnemyDirection => -transform.eulerAngles.y; //Returns the direction of the enemy in degrees
 
     private void Start()
     {
+        //Create the whiskers
         UpdateWhiskers();
     }
 
     private void Update()
     {
-        Debug.DrawLine(transform.position, transform.position + (DegToVector(0) * 10f),Color.black);
         if (whiskerAmount != whiskerAmountInternal)
         {
             UpdateWhiskers();
@@ -77,7 +71,6 @@ public class ObstacleAvoidance : MonoBehaviour
                 DebugDraw.DrawFOV(new Vector3(transform.position.x,transform.position.y,transform.position.z), whiskerLength, whisker.Direction + currentDirection,0f, Color.green);
             }
         }
-        //CurrentThreshold = 0;
         DirectionalThreshold = 0;
         int validCollisions = 0;
         for (int i = 0; i < Whiskers.Count; i++)
@@ -94,11 +87,6 @@ public class ObstacleAvoidance : MonoBehaviour
                 //Create a final modifier with the sensitivity and the perpendicularity to judge the score of the whisker
                 var modifier = whisker.Sensitivity * perpendicularity;
 
-
-                //var score = (1f / hit.distance) * modifier;
-                //CurrentThreshold = Mathf.Max(CurrentThreshold, score);
-
-
                 var directionalScore = (1f / hit.distance) * modifier * directionModifier;
                 DirectionalThreshold = MostExtreme(DirectionalThreshold, directionalScore);
                 Distances[i] = hit.distance;
@@ -108,7 +96,6 @@ public class ObstacleAvoidance : MonoBehaviour
                 Distances[i] = float.PositiveInfinity;
             }
         }
-       // CurrentThreshold = (CurrentThreshold / whiskerLength) * 100f;
         DirectionalThreshold = (DirectionalThreshold / whiskerLength) * 100f;
     }
 
@@ -120,10 +107,12 @@ public class ObstacleAvoidance : MonoBehaviour
 
     private static float SensitivityTransform(float input) => 1 - Mathf.Abs(Mathf.Cos((input + 1) * (Mathf.PI / 2)));
 
+    //Creates a set of whiskers
     //Run when the amount of whiskers change
     void UpdateWhiskers()
     {
         whiskerAmountInternal = whiskerAmount;
+        //Clear the whisker and distance list
         Whiskers.Clear();
         Distances.Clear();
         float LeftDegrees = -(whiskerFOV / 2);
