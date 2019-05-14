@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &778688799390292936
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8606136238444763087}
-  m_Layer: 8
-  m_Name: Rotator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8606136238444763087
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 778688799390292936}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 7379744907756405944}
-  m_Father: {fileID: 793303101265936076}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &793303101265936070
 GameObject:
   m_ObjectHideFlags: 0
@@ -46,9 +15,9 @@ GameObject:
   - component: {fileID: 704099995470250137}
   - component: {fileID: 793303101265936073}
   - component: {fileID: 793303101265936072}
-  - component: {fileID: 793303101265936077}
   - component: {fileID: 3940914476459504855}
   - component: {fileID: 4670365770039128682}
+  - component: {fileID: 5745804633450361143}
   m_Layer: 8
   m_Name: Enemy Tank
   m_TagString: Untagged
@@ -67,7 +36,7 @@ Transform:
   m_LocalPosition: {x: -2.7529202, y: 0.31, z: 2.3177228}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8606136238444763087}
+  - {fileID: 7379744907756405944}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 141.009, z: 0}
@@ -101,14 +70,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be49f7b758c267e4ea8e5f6a7f94fb5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 4
-  BackwardSpeed: 4
+  ForwardSpeed: 3
+  BackwardSpeed: 3
   RotateSpeed: 90
   MaxHealth: 100
   Health: 0
   Score: 0
   TankValue: 25
-  FireRate: 0.3
+  color: {r: 1, g: 1, b: 1, a: 1}
+  FireRate: 0.6
   ShellSpeed: 8
   ShellLifetime: 10
   ShellDamage: 25
@@ -127,7 +97,8 @@ MonoBehaviour:
   HearingDistance: 6
   SeeingDistance: 6
   SeeingFOV: 45
-  personality: 2
+  UseObstacleAvoidance: 1
+  personality: 0
   PatrolPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -139,7 +110,7 @@ MonoBehaviour:
   patrolLoopMode: 2
   DebugFOV: 0
   DebugLOS: 0
-  DebugHearing: 0
+  DebugHearing: 1
   DebugSeeing: 0
 --- !u!114 &704099995470250137
 MonoBehaviour:
@@ -159,7 +130,7 @@ MonoBehaviour:
   layers:
     serializedVersion: 2
     m_Bits: 1024
-  DebugWhiskers: 1
+  DebugWhiskers: 0
 --- !u!114 &793303101265936073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,19 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d39ce232d2f612439149cda777db91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &793303101265936077
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3940914476459504855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,6 +182,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64b9d73ea15f8e947b395012f99a3054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &5745804633450361143
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793303101265936070}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.8144989, y: 0.7859235, z: 0.9571749}
+  m_Center: {x: -0.008475304, y: 0.14451289, z: -0.05995524}
 --- !u!1 &7117367260825042002
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +206,7 @@ GameObject:
   - component: {fileID: 7379744907756405944}
   - component: {fileID: 1362220024643532743}
   - component: {fileID: 1470020951319061044}
+  - component: {fileID: 3166760292568071326}
   m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
@@ -251,10 +223,10 @@ Transform:
   m_GameObject: {fileID: 7117367260825042002}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.50000024, y: 0.5000005, z: 0.3500002}
+  m_LocalScale: {x: 0.50000036, y: 0.5000007, z: 0.35000032}
   m_Children:
   - {fileID: 210482576647096866}
-  m_Father: {fileID: 8606136238444763087}
+  m_Father: {fileID: 793303101265936076}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
 --- !u!33 &1362220024643532743
@@ -305,6 +277,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &3166760292568071326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7117367260825042002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7941e7d95c2d59c4aa2bcfa9be566232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifier: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
 --- !u!1 &7572778114442299512
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,6 +301,7 @@ GameObject:
   - component: {fileID: 210482576647096866}
   - component: {fileID: 1907469361846322744}
   - component: {fileID: 1782198298560368199}
+  - component: {fileID: 4888652668779078749}
   m_Layer: 8
   m_Name: Gun
   m_TagString: Untagged
@@ -384,3 +370,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &4888652668779078749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7572778114442299512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7941e7d95c2d59c4aa2bcfa9be566232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifier: {r: 1, g: 1, b: 1, a: 1}

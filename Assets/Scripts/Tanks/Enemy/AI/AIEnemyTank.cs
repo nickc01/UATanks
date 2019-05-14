@@ -95,8 +95,11 @@ public class AIEnemyTank : EnemyTank
     //Chase towards the player
     protected void Chase()
     {
-        //Shoot forwards
-        Shooter.Shoot();
+        if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        {
+            //Shoot forwards
+            Shooter.Shoot();
+        }
         //Rotate towards the player, with obstacle avoidance enabled
         Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
         //Move forward
@@ -106,8 +109,11 @@ public class AIEnemyTank : EnemyTank
     //Flee from the player
     protected void Flee()
     {
-        //Shoot forwards
-        Shooter.Shoot();
+        if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        {
+            //Shoot forwards
+            Shooter.Shoot();
+        }
         //Rotate away from the player, with obstacle avoidance enabled
         Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
         //Move forward

@@ -39,6 +39,12 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
         Data.Health = Data.MaxHealth;
         //Set the firing rate
         Shooter.FireRate = Data.FireRate;
+
+        //Set the color of any colorizers on this object
+        foreach (var colorizer in GetComponentsInChildren<TankColorer>())
+        {
+            colorizer.Color = Data.color;
+        }
     }
 
     //Called when the tank's health is zero

@@ -22,6 +22,8 @@ public class TankData : MonoBehaviour
     public float Score = 0f;
     [Tooltip("How many points this tank rewards the player when killed. This is primarily used on enemy tanks when they are killed and is ignored for player tanks")]
     public float TankValue = 25f;
+    [Tooltip("The color of the tank")]
+    public Color color = Color.white;
 
     [Header("Shell Stats")]
 
