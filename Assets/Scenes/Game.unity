@@ -257,6 +257,11 @@ PrefabInstance:
       propertyPath: color.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: FireRate
+      value: 0.59
+      objectReference: {fileID: 0}
     - target: {fileID: -5155638072916944991, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: PatrolPoints.Array.size
@@ -768,6 +773,11 @@ PrefabInstance:
         type: 3}
       propertyPath: color.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: FireRate
+      value: 0.61
       objectReference: {fileID: 0}
     - target: {fileID: -5155638072916944991, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -1297,6 +1307,11 @@ PrefabInstance:
       propertyPath: PatrolPoints.Array.data[11]
       value: 
       objectReference: {fileID: 1597817453}
+    - target: {fileID: -5155638072916944991, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: patrolLoopMode
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
 --- !u!1 &1259020738
@@ -1923,6 +1938,16 @@ PrefabInstance:
       propertyPath: color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: FireRate
+      value: 0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: -5155638072916944991, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: PatrolPoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -5155638072916944991, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: PatrolPoints.Array.data[0]
@@ -2056,8 +2081,12 @@ PrefabInstance:
       propertyPath: color.b
       value: 0.008546103
       objectReference: {fileID: 0}
-    - target: {fileID: 4299117969512306518, guid: 017e1da9893592c49813c7152c4de7fb,
+    - target: {fileID: 7624680093946310128, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
+      propertyPath: ShellDamage
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: Debug
       value: 1
       objectReference: {fileID: 0}

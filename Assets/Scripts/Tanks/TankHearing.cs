@@ -15,8 +15,4 @@ public class TankHearing : MonoBehaviour
     {
         return Vector3.Distance(transform.position, target) - targetNoise <= HearingRange;
     }
-    public bool HearingTarget(Vector3 target, NoiseMaker noise)
-    {
-        return HearingTarget(target, noise.NoiseLevel);
-    }
 }

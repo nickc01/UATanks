@@ -124,7 +124,7 @@ public class ObstacleAvoidance : MonoBehaviour
             Whiskers.Add((newWhiskerDirection,sensitivity));
             Distances.Add(float.PositiveInfinity);
         }
-        Whiskers.Print();
+        //Whiskers.Print();
     }
     
 }
