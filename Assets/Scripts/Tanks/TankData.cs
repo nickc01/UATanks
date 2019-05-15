@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class TankData : MonoBehaviour
 {
     [Header("Tank Stats")]
@@ -35,4 +36,35 @@ public class TankData : MonoBehaviour
     public float ShellLifetime = 10f;
     [Tooltip("How much damage the shell will inflict on an enemy")]
     public float ShellDamage = 25f;
+
+    //BELOW IS USED TO DISPLAY THE CURRENT COLOR IN THE EDITOR
+    //THIS ALLOWS YOU TO ACTUALLY SEE THE COLOR YOU SET ON THE TANK BEFORE YOU HIT PLAY
+#if UNITY_EDITOR
+
+    TankColorer[] colorizers;
+
+    private void Start()
+    {
+        //If the data is in edit mode
+        if (!Application.IsPlaying(gameObject))
+        {
+            colorizers = GetComponentsInChildren<TankColorer>();
+        }
+    }
+
+    private void Update()
+    {
+        //If the data is in edit mode
+        if (!Application.IsPlaying(gameObject))
+        {
+            //Set the color of any colorizers on this object
+            foreach (var colorizer in GetComponentsInChildren<TankColorer>())
+            {
+                colorizer.Color = color;
+            }
+        }
+    }
+
+#endif
+
 }

@@ -127,6 +127,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: WhiskerFOV
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: MaxObstacleThreshhold
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: layers.m_Bits
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DebugWhiskers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerFOV
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerAmount
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_Name
@@ -211,36 +235,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SlopeLimit
       value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: WhiskerFOV
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: MaxObstacleThreshhold
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: layers.m_Bits
-      value: 1280
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: DebugWhiskers
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerFOV
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerAmount
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -644,6 +638,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: WhiskerFOV
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: MaxObstacleThreshhold
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: layers.m_Bits
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DebugWhiskers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerFOV
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerAmount
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_Name
@@ -652,7 +670,7 @@ PrefabInstance:
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -728,36 +746,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SlopeLimit
       value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: WhiskerFOV
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: MaxObstacleThreshhold
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: layers.m_Bits
-      value: 1280
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: DebugWhiskers
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerFOV
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerAmount
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -1107,6 +1095,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: WhiskerFOV
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: MaxObstacleThreshhold
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: layers.m_Bits
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DebugWhiskers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerFOV
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: whiskerAmount
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_Name
@@ -1191,36 +1203,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SlopeLimit
       value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: WhiskerFOV
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: MaxObstacleThreshhold
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: layers.m_Bits
-      value: 1280
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: DebugWhiskers
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerFOV
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: whiskerAmount
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -1843,6 +1825,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: layers.m_Bits
+      value: 1280
+      objectReference: {fileID: 0}
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_Name
@@ -1918,11 +1904,6 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 4.67
       objectReference: {fileID: 0}
-    - target: {fileID: 704099995470250137, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
-        type: 3}
-      propertyPath: layers.m_Bits
-      value: 1280
-      objectReference: {fileID: 0}
     - target: {fileID: 793303101265936074, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: color.r
@@ -1987,15 +1968,19 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3983206468043743639, guid: 017e1da9893592c49813c7152c4de7fb,
-        type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 0}
+      propertyPath: Debug
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7624680093946310137, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
       propertyPath: m_Name
       value: Player Tank
+      objectReference: {fileID: 0}
+    - target: {fileID: 3983206468043743639, guid: 017e1da9893592c49813c7152c4de7fb,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7624680093946671577, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
@@ -2074,21 +2059,17 @@ PrefabInstance:
     - target: {fileID: 7624680093946310128, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
       propertyPath: color.g
-      value: 0.7264151
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7624680093946310128, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
       propertyPath: color.b
-      value: 0.008546103
+      value: 0.010810852
       objectReference: {fileID: 0}
     - target: {fileID: 7624680093946310128, guid: 017e1da9893592c49813c7152c4de7fb,
         type: 3}
       propertyPath: ShellDamage
       value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: Debug
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 017e1da9893592c49813c7152c4de7fb, type: 3}

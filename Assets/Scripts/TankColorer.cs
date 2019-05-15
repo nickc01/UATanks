@@ -13,7 +13,7 @@ public class TankColorer : MonoBehaviour
     {
         set
         {
-            if (mainRenderer == null)
+            if (mainRenderer == null || MatBlock == null)
             {
                 MatBlock = new MaterialPropertyBlock();
                 mainRenderer = GetComponent<Renderer>();

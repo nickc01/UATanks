@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 793303101265936075}
   - component: {fileID: 793303101265936074}
   - component: {fileID: -5155638072916944991}
-  - component: {fileID: 704099995470250137}
   - component: {fileID: 793303101265936073}
   - component: {fileID: 793303101265936072}
   - component: {fileID: 3940914476459504855}
@@ -106,25 +105,13 @@ MonoBehaviour:
   DebugLOS: 0
   DebugHearing: 0
   DebugSeeing: 0
---- !u!114 &704099995470250137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc1649fcdac5c7e419ff92e6f4360064, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  whiskerAmount: 7
+  whiskerAmount: 9
   whiskerLength: 5
   whiskerFOV: 150
-  layers:
+  obstacleLayers:
     serializedVersion: 2
-    m_Bits: 1024
-  DebugWhiskers: 0
+    m_Bits: 1280
+  debugWhiskers: 0
 --- !u!114 &793303101265936073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +171,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793303101265936070}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.8144989, y: 0.7859235, z: 0.9571749}

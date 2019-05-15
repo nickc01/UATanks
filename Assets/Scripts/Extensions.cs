@@ -12,8 +12,6 @@ namespace UnityEngine
         //Converts a degrees rotation to a unit vector relative to an identity
         public static Vector3 DegToVector(float degrees, Vector3? identity = null)
         {
-            //identity = identity ?? Vector3.forward;
-            //float identityDirection = Mathf.Atan2(identity.Value.z, identity.Value.x);
             return new Vector3(Mathf.Cos(RelativeDegrees(degrees, identity) * Mathf.Deg2Rad), 0f, Mathf.Sin(RelativeDegrees(degrees, identity) * Mathf.Deg2Rad));
         }
 
@@ -25,11 +23,18 @@ namespace UnityEngine
             return identityDirection + degrees;
         }
 
-        public static float MostExtreme(float A, float B) => Mathf.Abs(A) > Mathf.Abs(B) ? A : B;
-        public static float LeastExtreme(float A, float B) => Mathf.Abs(A) < Mathf.Abs(B) ? A : B;
+        //Returns the number with the bigger absolute value
+        public static float BiggerAbsNumber(float A, float B) => Mathf.Abs(A) > Mathf.Abs(B) ? A : B;
 
-        public static float ToSignOnly(this float number) => number >= 0f ? 1f : -1f;
+        //Returns the number with the lowest absolute value
+        public static float LowestAbsNumber(float A, float B) => Mathf.Abs(A) < Mathf.Abs(B) ? A : B;
 
+        //Returns the number either -1 or 1
+        //If the number is less than zero, then the number is -1
+        //Otherwise, it it +1
+        public static float Normalize(this float number) => number >= 0f ? 1f : -1f;
+
+        //Prints out a list. Mainly used for debug purposes
         public static void Print<T>(this List<T> list)
         {
             foreach (var item in list)
@@ -38,6 +43,7 @@ namespace UnityEngine
             }
         }
 
+        //A clamp method that works with negative and positive numbers
         public static float ClampAbs(float value, float min, float max)
         {
             if (value < 0f)

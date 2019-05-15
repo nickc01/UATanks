@@ -8,6 +8,8 @@ using static UnityEngine.Extensions;
 
 public class EnemyTank : Controller
 {
+    /*-----MAIN TANK STATS-----*/
+
     [Header("Enemy Tank AI Data")]
     [Tooltip("The range at which the enemy can hear the player")]
     [SerializeField] float HearingDistance = 6f;
@@ -25,19 +27,36 @@ public class EnemyTank : Controller
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
     [SerializeField] PatrolLoopMode patrolLoopMode;
+
+    /*-----DEBUG FLAGS-----*/
+
+    [Header("Enemy Tank DEBUG")]
     [Space]
-    [Header("DEBUG")]
     [Tooltip("Determines whether to show the FOV or not in the scene")]
     [SerializeField] bool DebugFOV = false;
-    [Tooltip("Determines whether to show the LOS or not in the scene")]
-    [SerializeField] bool DebugLOS = false;
     [Tooltip("Determines whether to show the hearing circle or not")]
     [SerializeField] bool DebugHearing = false;
     [Tooltip("Determines whether to show the seeing circle or not")]
     [SerializeField] bool DebugSeeing = false;
 
+    /*-----OBSTACLE AVOIDANCE SYSTEM-----*/
+    [Header("Obstacle Avoidance System")]
+    [Tooltip("The amount of whiskers to use for obstacle avoidance")]
+    [SerializeField] private int whiskerAmount = 7;
+    [Tooltip("How long the whiskers will be")]
+    [SerializeField] private float whiskerLength = 5f;
+    [Tooltip("The Field of view the whiskers will cover")]
+    [Range(0f, 180f)]
+    [SerializeField] private float whiskerFOV = 150f;
+    [Tooltip("The layers the whiskers will consider an obstacle")]
+    [SerializeField] private LayerMask obstacleLayers;
+    [Header("Obstacle Avoidance DEBUG")]
+    [Tooltip("Whether to display the whisker lines or not")]
+    [SerializeField] private bool debugWhiskers = false;
+
     TankHearing Hearing; //The hearing component of the enemy tank
     TankVision Vision; //The vision component of the enemy tank
+    //ObstacleAvoidance OA; //The obstacle avoidance system of this tank
 
     public override void Start()
     {
@@ -52,6 +71,15 @@ public class EnemyTank : Controller
 
         //Add the enemy's data to a list of enemy datas
         GameManager.Enemies.Add((this, Data));
+
+        //Set the stats for the obstacle avoidance system
+        var OA = Mover.OA;
+        OA.WhiskerAmount = whiskerAmount;
+        OA.WhiskerLength = whiskerLength;
+        OA.WhiskerFOV = whiskerFOV;
+        OA.ObstacleLayers = obstacleLayers;
+        OA.Debug = debugWhiskers;
+
     }
 
     protected virtual void Update()
@@ -103,7 +131,7 @@ public class EnemyTank : Controller
             Shooter.Shoot();
         }
         //Rotate towards the player, with obstacle avoidance enabled
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,true);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -111,13 +139,14 @@ public class EnemyTank : Controller
     //Flee from the player
     protected void Flee()
     {
+        //TODO : FIX Obstacle Avoidance
         if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate away from the player, with obstacle avoidance enabled
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, true);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -174,7 +203,7 @@ public class EnemyTank : Controller
         }
 
         //Rotate towards the next patrol point
-        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
+        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, true);
 
         //Move forwards
         Mover.Move(Data.ForwardSpeed);

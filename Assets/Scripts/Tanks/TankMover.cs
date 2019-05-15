@@ -8,13 +8,13 @@ using static UnityEngine.Extensions;
 public class TankMover : MonoBehaviour
 {
     CharacterController controller;
-    ObstacleAvoidance OA;
+    public ObstacleAvoidance OA { get; private set; }
     private void Start()
     {
         //Gets the character controller of this tank
         controller = GetComponent<CharacterController>();
-        //Get the obstacle avoidance component
-        OA = GetComponent<ObstacleAvoidance>();
+        //Create the Obstacle Avoidance System for this mover
+        OA = new ObstacleAvoidance(transform);
     }
     //Moves the tank forward at a set speed
     //Negative values move the tank backwards
@@ -64,7 +64,7 @@ public class TankMover : MonoBehaviour
                 throw new Exception("There is no Obstacle Avoidance Component attached to this object, please add one to use Obstacle Avoidance");
             }
             //Rotate(OA.RecommendedDirection * Mathf.Abs(maxDegrees), false);
-            Rotate(MostExtreme(OA.RecommendedDirection * Mathf.Abs(maxDegrees),angle), false);
+            Rotate(BiggerAbsNumber(OA.RecommendedDirection * Mathf.Abs(maxDegrees),angle), false);
         }
         else
         {
