@@ -5,7 +5,7 @@ using UnityEngine;
 public class TankColorer : MonoBehaviour
 {
     [Tooltip("A modifier to add to the color of the tank. Can be used to make certain regions darker")]
-    [SerializeField] Color Modifier;
+    [SerializeField] Color Modifier = Color.white;
     Renderer mainRenderer;
     MaterialPropertyBlock MatBlock;
 

@@ -11,12 +11,10 @@ GameObject:
   - component: {fileID: 793303101265936076}
   - component: {fileID: 793303101265936075}
   - component: {fileID: 793303101265936074}
-  - component: {fileID: -5155638072916944991}
   - component: {fileID: 793303101265936073}
   - component: {fileID: 793303101265936072}
-  - component: {fileID: 3940914476459504855}
-  - component: {fileID: 4670365770039128682}
   - component: {fileID: 5745804633450361143}
+  - component: {fileID: -5155638072916944991}
   m_Layer: 8
   m_Name: Enemy Tank
   m_TagString: Untagged
@@ -50,13 +48,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 4
+  m_Height: 10
   m_Radius: 1
   m_SlopeLimit: 180
   m_StepOffset: 0.3
   m_SkinWidth: 0.001
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 1.76, z: 0}
+  m_Center: {x: 0, y: 4.67, z: 0}
 --- !u!114 &793303101265936074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,42 +74,11 @@ MonoBehaviour:
   Health: 0
   Score: 0
   TankValue: 25
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {r: 1, g: 0, b: 0, a: 1}
   FireRate: 0.6
   ShellSpeed: 8
   ShellLifetime: 10
   ShellDamage: 25
---- !u!114 &-5155638072916944991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba94dc175ed1f9f45a5da5eec84eb581, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HearingDistance: 6
-  SeeingDistance: 6
-  SeeingFOV: 45
-  UseObstacleAvoidance: 1
-  personality: 0
-  PatrolPoints: []
-  PatrolMinimumDistance: 0.4
-  patrolLoopMode: 0
-  DebugFOV: 0
-  DebugLOS: 0
-  DebugHearing: 0
-  DebugSeeing: 0
-  whiskerAmount: 9
-  whiskerLength: 5
-  whiskerFOV: 150
-  obstacleLayers:
-    serializedVersion: 2
-    m_Bits: 1280
-  debugWhiskers: 0
 --- !u!114 &793303101265936073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,33 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d39ce232d2f612439149cda777db91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3940914476459504855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca672a76c8fc1da489cfeb822917c931, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Blockers:
-    serializedVersion: 2
-    m_Bits: 1536
---- !u!114 &4670365770039128682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793303101265936070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64b9d73ea15f8e947b395012f99a3054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &5745804633450361143
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -176,6 +116,39 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.8144989, y: 0.7859235, z: 0.9571749}
   m_Center: {x: -0.008475304, y: 0.14451289, z: -0.05995524}
+--- !u!114 &-5155638072916944991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793303101265936070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba94dc175ed1f9f45a5da5eec84eb581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HearingDistance: 6
+  SeeingDistance: 6
+  SeeingFOV: 45
+  SightObstacles:
+    serializedVersion: 2
+    m_Bits: 0
+  UseObstacleAvoidance: 1
+  personality: 0
+  PatrolPoints: []
+  PatrolMinimumDistance: 0.4
+  patrolLoopMode: 0
+  DebugFOV: 0
+  DebugHearing: 0
+  DebugSeeing: 0
+  whiskerAmount: 9
+  whiskerLength: 5
+  whiskerFOV: 150
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 1280
+  debugWhiskers: 0
 --- !u!1 &7117367260825042002
 GameObject:
   m_ObjectHideFlags: 0

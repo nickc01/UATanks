@@ -10,23 +10,25 @@ public class EnemyTank : Controller
 {
     /*-----MAIN TANK STATS-----*/
 
-    [Header("Enemy Tank AI Data")]
+    [Header("Enemy Tank General Data")]
     [Tooltip("The range at which the enemy can hear the player")]
     [SerializeField] float HearingDistance = 6f;
     [Tooltip("The range at which the enemy can see")]
     [SerializeField] float SeeingDistance = 6f;
     [Tooltip("The FOV at which the enemy can see the player. Value is in degrees")]
     [SerializeField] float SeeingFOV = 45f;
+    [Tooltip("A list of object types that will block the enemy's line of sight")]
+    [SerializeField] LayerMask SightObstacles = default;
     [Tooltip("Whether to use Obstacle Avoidance in the enemy movement")]
     [SerializeField] bool UseObstacleAvoidance = true;
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
-    [SerializeField] Personality personality;
+    [SerializeField] Personality personality = Personality.Chase;
     [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
-    [SerializeField] List<Transform> PatrolPoints;
+    [SerializeField] List<Transform> PatrolPoints = new List<Transform>();
     [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
-    [SerializeField] PatrolLoopMode patrolLoopMode;
+    [SerializeField] PatrolLoopMode patrolLoopMode = PatrolLoopMode.End;
 
     /*-----DEBUG FLAGS-----*/
 
@@ -49,21 +51,21 @@ public class EnemyTank : Controller
     [Range(0f, 180f)]
     [SerializeField] private float whiskerFOV = 150f;
     [Tooltip("The layers the whiskers will consider an obstacle")]
-    [SerializeField] private LayerMask obstacleLayers;
+    [SerializeField] private LayerMask obstacleLayers = default;
     [Header("Obstacle Avoidance DEBUG")]
     [Tooltip("Whether to display the whisker lines or not")]
     [SerializeField] private bool debugWhiskers = false;
 
-    TankHearing Hearing; //The hearing component of the enemy tank
-    TankVision Vision; //The vision component of the enemy tank
-    //ObstacleAvoidance OA; //The obstacle avoidance system of this tank
+    Hearing Hearing; //The hearing component of the enemy tank
+    Vision Vision; //The vision component of the enemy tank
 
     public override void Start()
     {
         base.Start();
-        //OA = GetComponent<ObstacleAvoidance>();
-        Hearing = GetComponent<TankHearing>();
-        Vision = GetComponent<TankVision>();
+
+        //Create the hearing and sight components
+        Hearing = new Hearing(transform, HearingDistance);
+        Vision = new Vision(transform, SeeingDistance, SeeingFOV, SightObstacles);
 
         Hearing.HearingRange = HearingDistance; //Set the hearing range
         Vision.SightFOV = SeeingFOV; //Set the sight FOV
@@ -125,13 +127,13 @@ public class EnemyTank : Controller
     //Chase towards the player
     protected void Chase()
     {
-        if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate towards the player, with obstacle avoidance enabled
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,true);
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -139,14 +141,13 @@ public class EnemyTank : Controller
     //Flee from the player
     protected void Flee()
     {
-        //TODO : FIX Obstacle Avoidance
-        if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate away from the player, with obstacle avoidance enabled
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, true);
+        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -164,10 +165,10 @@ public class EnemyTank : Controller
             Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime);
         }
         //If the enemy can hear the player
-        else if (Hearing.HearingTarget(target,GameManager.Player.Tank.Noise))
+        else if (Hearing.CanHearTarget(target,GameManager.Player.Tank.Noise))
         {
             //Rotate towards the player
-            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime,true);
+            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
             //Move towards it
             Mover.Move(Data.ForwardSpeed);
         }
@@ -190,7 +191,7 @@ public class EnemyTank : Controller
         if (Shoot)
         {
             //If the enemy can hear the player
-            if (Hearing.HearingTarget(GameManager.Player.Tank.transform.position,GameManager.Player.Tank.Noise))
+            if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position,GameManager.Player.Tank.Noise))
             {
                 //Shoot forwards
                 Shooter.Shoot();
@@ -203,7 +204,7 @@ public class EnemyTank : Controller
         }
 
         //Rotate towards the next patrol point
-        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, true);
+        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
 
         //Move forwards
         Mover.Move(Data.ForwardSpeed);
@@ -226,25 +227,28 @@ public class EnemyTank : Controller
                         CurrentPatrolIndex = 0;
                     }
                     break;
-                //If the enemy has reached the last patrol point, then start working backwards
-                case PatrolLoopMode.PingPong:
-                    if (pingPongDirection == true)
+                //If the loop mode is ping-pong and is currently going forward through the list
+                case PatrolLoopMode.PingPong when pingPongDirection == true:
+                    //Increase the index
+                    CurrentPatrolIndex++;
+                    //If the index is at the end of the list
+                    if (CurrentPatrolIndex == PatrolPoints.Count)
                     {
-                        CurrentPatrolIndex++;
-                        if (CurrentPatrolIndex == PatrolPoints.Count)
-                        {
-                            pingPongDirection = false;
-                            CurrentPatrolIndex--;
-                        }
-                    }
-                    else
-                    {
+                        //Start going backwards through the list and set the index to the last patrol point in the list
+                        pingPongDirection = false;
                         CurrentPatrolIndex--;
-                        if (CurrentPatrolIndex < 0)
-                        {
-                            pingPongDirection = true;
-                            CurrentPatrolIndex++;
-                        }
+                    }
+                    break;
+                //If the loop mode is ping-pong and is currently going backwards through the list
+                case PatrolLoopMode.PingPong when pingPongDirection == false:
+                    //Reduce the index
+                    CurrentPatrolIndex--;
+                    //If the index is less than zero
+                    if (CurrentPatrolIndex < 0)
+                    {
+                        //Start going forward through the list and set the index to zero
+                        pingPongDirection = true;
+                        CurrentPatrolIndex++;
                     }
                     break;
             }

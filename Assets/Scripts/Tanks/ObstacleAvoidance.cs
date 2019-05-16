@@ -9,6 +9,7 @@ using static UnityEngine.Extensions;
 
 public class ObstacleAvoidance
 {
+
     public float RecommendedDirection //The recommended direction to take to avoid the obstacles by utilizing the whiskerScore
     {
         get
