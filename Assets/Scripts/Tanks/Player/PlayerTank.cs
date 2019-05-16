@@ -18,12 +18,14 @@ public class PlayerTank : Controller
         CameraController.Target = gameObject;
     }
 
+    //The health of the player
     public override float Health
     {
         get => base.Health;
         set
         {
             base.Health = value;
+            //Update the health display
             HealthDisplay.Health = value / Data.MaxHealth;
         }
     }
@@ -48,7 +50,6 @@ public class PlayerTank : Controller
         if (Input.GetKey(KeyCode.Space))
         {
             //Shoot a shell
-            //Shooter.Shoot(Data.ShellSpeed, Data.ShellDamage, Data.ShellLifetime);
             Shooter.Shoot();
             Noise += 3f;
         }

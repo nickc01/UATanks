@@ -16,6 +16,7 @@ public class ScoreDisplay : MonoBehaviour
         set
         {
             Singleton.scoreInternal = value;
+            //Update the score display
             Singleton.Text.text = Singleton.baseText + value.ToString();
         }
     }

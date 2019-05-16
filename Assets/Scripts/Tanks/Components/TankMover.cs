@@ -30,10 +30,6 @@ public class TankMover : MonoBehaviour
     {
         if (UseOA)
         {
-            if (OA == null)
-            {
-                throw new Exception("There is no Obstacle Avoidance Component attached to this object, please add one to use Obstacle Avoidance");
-            }
             degrees += degrees * OA.RecommendedDirection;
         }
         transform.Rotate(0, degrees, 0);
@@ -45,38 +41,43 @@ public class TankMover : MonoBehaviour
     {
 
         var angle = 0f;
-        //angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
+        //If the angle is negative, then the tank should move away from the target
         if (maxDegrees < 0f)
         {
-            //angle = -Mathf.Clamp(Mathf.Abs(angle),0,maxDegrees);
+            //Get the angle to move away from the target
             angle = GetAngleAwayFrom(target);
+            //Clamp it below the maxDegrees
             angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
         }
+        //If the angle is positive, then the tank should move towards the target
         else
         {
+            //Get the angle to move towards the target
             angle = GetAngleTo(target);
+            //Clamp it below the maxDgrees
             angle = ClampAbs(angle, 0, Mathf.Abs(maxDegrees));
         }
+        //If Obstacle avoidance should be used
         if (UseOA)
         {
-            if (OA == null)
-            {
-                throw new Exception("There is no Obstacle Avoidance Component attached to this object, please add one to use Obstacle Avoidance");
-            }
-            //Rotate(OA.RecommendedDirection * Mathf.Abs(maxDegrees), false);
+            //Rotate either the obstacle avoidance recommended direction or the set angle
+            //Pick which one is bigger
             Rotate(BiggerAbsNumber(OA.RecommendedDirection * Mathf.Abs(maxDegrees),angle), false);
         }
         else
         {
+            //Rotate the set angle
             Rotate(angle);
         }
     }
 
+    //Gets the amount to rotate to go toward the target
     public float GetAngleTo(Vector3 target)
     {
         return Vector3.SignedAngle(transform.forward, target - transform.position, Vector3.up);
     }
 
+    //Get the amount to rotate to go away from the target
     public float GetAngleAwayFrom(Vector3 target)
     {
         return Vector3.SignedAngle(transform.forward, -(target - transform.position), Vector3.up);

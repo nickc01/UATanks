@@ -20,6 +20,7 @@ public class Hearing
         return Vector3.Distance(Source.transform.position, Target) - targetNoise <= HearingRange;
     }
 
+    //Used to create the hearing object
     public Hearing(Transform source = null, float hearingRange = 5f)
     {
         Source = source;

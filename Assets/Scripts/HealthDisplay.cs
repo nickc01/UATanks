@@ -46,8 +46,10 @@ public class HealthDisplay : MonoBehaviour
 
     private void Update()
     {
+        //If interpolation is enabled
         if (Interpolate)
         {
+            //Interpolate to the current health value
             healthSlider.value = Mathf.Lerp(healthSlider.value, healthInternal, InterpolationSpeed * Time.deltaTime);
         }
     }

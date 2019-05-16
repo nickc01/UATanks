@@ -14,7 +14,7 @@ public class Vision
     public LayerMask Blockers; //The objects that will block the line of sight
 
     //Returns true if the source can see the target
-    public bool SeeingTarget(Vector3 target)
+    public bool CanSeeTarget(Vector3 target)
     {
         if (Source == null)
         {
@@ -24,6 +24,7 @@ public class Vision
         return Physics.Raycast(Source.transform.position, (target - Source.transform.position).normalized, out var hitInfo, SightRange, Blockers) && hitInfo.transform.position == target;
     }
 
+    //Used to create the vision object
     public Vision(Transform source = null, float sightRange = 5f, float sightFOV = 45f, LayerMask blockers = default)
     {
         Source = source;

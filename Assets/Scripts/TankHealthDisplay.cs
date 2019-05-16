@@ -47,8 +47,10 @@ public class TankHealthDisplay : MonoBehaviour
 
     private void Update()
     {
+        //If interpolation is enabled
         if (Interpolate)
         {
+            //Interpolate to the new health value
             healthSlider.value = Mathf.Lerp(healthSlider.value, healthInternal, InterpolationSpeed * Time.deltaTime);
         }
     }

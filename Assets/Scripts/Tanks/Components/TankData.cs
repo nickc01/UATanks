@@ -37,7 +37,7 @@ public class TankData : MonoBehaviour
     [Tooltip("How much damage the shell will inflict on an enemy")]
     public float ShellDamage = 25f;
 
-    //BELOW IS USED TO DISPLAY THE CURRENT COLOR IN THE EDITOR
+    //BELOW IS USED TO DISPLAY THE CURRENT TANK COLOR IN THE EDITOR
     //THIS ALLOWS YOU TO ACTUALLY SEE THE COLOR YOU SET ON THE TANK BEFORE YOU HIT PLAY
 #if UNITY_EDITOR
 
@@ -48,6 +48,7 @@ public class TankData : MonoBehaviour
         //If the data is in edit mode
         if (!Application.IsPlaying(gameObject))
         {
+            //Get all the colorizers on the current tank
             colorizers = GetComponentsInChildren<TankColorer>();
         }
     }

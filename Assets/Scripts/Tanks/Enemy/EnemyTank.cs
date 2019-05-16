@@ -87,12 +87,14 @@ public class EnemyTank : Controller
 
     }
 
+    //Gets and sets the health of the enemy tank
     public override float Health
     {
         get => base.Health;
         set
         {
             base.Health = value;
+            //Update the tank health display
             tankHealth.Health = value / Data.MaxHealth;
         }
     }
@@ -106,33 +108,36 @@ public class EnemyTank : Controller
             switch (personality)
             {
                 case Personality.Chase:
-                    Chase();
+                    Chase(); //Run the chase AI state
                     break;
                 case Personality.Flee:
-                    Flee();
+                    Flee(); //Run the flee AI state
                     break;
                 case Personality.Patrol:
-                    Patrol();
+                    Patrol(); //Run the patrol AI state
                     break;
                 case Personality.Navigate:
-                    Navigate();
+                    Navigate(); //Run the navigate AI state
                     break;
                 case Personality.Strategic:
-                    Strategic();
+                    Strategic(); //Run the strategic AI state
                     break;
             }
         }
         //DEBUG
         if (DebugSeeing)
         {
+            //Draw a circle representing the sight radius
             DebugDraw.DrawCircle2D(transform.position, SeeingDistance,color: Color.red);
         }
         if (DebugHearing)
         {
+            //Draw a circle representing the hearing radius
             DebugDraw.DrawCircle2D(transform.position, HearingDistance, color: Color.yellow);
         }
         if (DebugFOV)
         {
+            //Draw the sight FOV
             DebugDraw.DrawFOV(transform.position, SeeingDistance, transform.eulerAngles.y,SeeingFOV, Color.green);
         }
     }
@@ -140,12 +145,13 @@ public class EnemyTank : Controller
     //Chase towards the player
     protected void Chase()
     {
+        //If the tank can hear the player
         if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
-        //Rotate towards the player, with obstacle avoidance enabled
+        //Rotate towards the player
         Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
@@ -154,6 +160,7 @@ public class EnemyTank : Controller
     //Flee from the player
     protected void Flee()
     {
+        //If the tank can hear the player
         if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
@@ -171,7 +178,7 @@ public class EnemyTank : Controller
         //Set the target to be the player in the scene
         var target = GameManager.Player.Tank.transform.position;
         //If the enemy is able to see the target
-        if (Vision.SeeingTarget(target))
+        if (Vision.CanSeeTarget(target))
         {
             //Shoot at it and rotate towards it
             Shooter.Shoot();

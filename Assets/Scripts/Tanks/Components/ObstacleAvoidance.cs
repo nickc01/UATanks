@@ -51,13 +51,21 @@ public class ObstacleAvoidance
         get => updateRoutine != null;
         set
         {
+            //If the caller is trying to disable the obstacle avoidance
+            //And is the update routine currently running
             if (!value && updateRoutine != null)
             {
+                //Stop the update routine
                 CoroutineManager.StopCoroutine(updateRoutine);
+                updateRoutine = null;
+                //Reset the whiskerScore
                 whiskerScore = 0;
             }
+            //If the caller is trying to enable the obstacle avoidance
+            //And if the update routine is currently not running
             else if (value && updateRoutine == null)
             {
+                //Start the update routine
                 updateRoutine = CoroutineManager.StartCoroutine(Update());
             }
         }
@@ -78,23 +86,30 @@ public class ObstacleAvoidance
 
     //Used to calculate the sensitity of each whisker
     //Visualization : https://www.desmos.com/calculator/d6tnxlp4tp
+    //Values towards the front of the of the tank (an input value around 0)  will have a higher sensitivty
+    //Values towards the sides of the tank (an input value around 1 or -1) will ahve a lower sensitivity
     static float SensitivityTransform(float input) => 1 - Mathf.Abs(Mathf.Cos((input + 1) * (Mathf.PI / 2)));
 
     //Create the obstacle avoidance algorithm for the specified source object
     public ObstacleAvoidance(Transform source = null,int whiskerAmount = 7,float whiskerLength = 5f, float whiskerFOV = 150f)
     {
+        //Set the default values
         Source = source;
         WhiskerAmount = whiskerAmount;
         WhiskerLength = whiskerLength;
         WhiskerFOV = whiskerFOV;
+        //Update the whiskers
         UpdateWhiskers();
+        //Start the update routine
         updateRoutine = CoroutineManager.StartCoroutine(Update());
     }
 
+    //The update routine that is run each frame
     IEnumerator Update()
     {
         while (true)
         {
+            //If there is a source object to check against
             if (Source != null)
             {
                 //If debug mode is turned on
@@ -158,6 +173,7 @@ public class ObstacleAvoidance
                 //Amplify the current whisker score for use with the RecommendedDirection property
                 whiskerScore *= 100f;
             }
+            //Wait a frame
             yield return null;
         }
     }
