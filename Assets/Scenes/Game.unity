@@ -326,6 +326,16 @@ PrefabInstance:
       propertyPath: PatrolPoints.Array.data[11]
       value: 
       objectReference: {fileID: 1597817453}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
 --- !u!1 &397557465
@@ -670,7 +680,7 @@ PrefabInstance:
     - target: {fileID: 793303101265936070, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 793303101265936076, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
         type: 3}
@@ -837,6 +847,16 @@ PrefabInstance:
       propertyPath: PatrolPoints.Array.data[11]
       value: 
       objectReference: {fileID: 1597817453}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
 --- !u!1 &800401719
@@ -1293,6 +1313,16 @@ PrefabInstance:
         type: 3}
       propertyPath: patrolLoopMode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
@@ -1935,6 +1965,16 @@ PrefabInstance:
       propertyPath: PatrolPoints.Array.data[5]
       value: 
       objectReference: {fileID: 1597817453}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963117841459109431, guid: 3bbe89f9ece0e434eb9af32f90928c9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3940914476459504855, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3bbe89f9ece0e434eb9af32f90928c9f, type: 3}
@@ -2017,11 +2057,6 @@ PrefabInstance:
     - target: {fileID: 1249225840, guid: 017e1da9893592c49813c7152c4de7fb, type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7624680093946310128, guid: 017e1da9893592c49813c7152c4de7fb,
-        type: 3}
-      propertyPath: ShellDamage
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 017e1da9893592c49813c7152c4de7fb, type: 3}

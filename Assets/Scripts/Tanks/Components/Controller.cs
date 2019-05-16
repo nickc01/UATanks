@@ -9,7 +9,7 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     protected TankShooter Shooter; //The shooter component of the tank
     public TankData Data { get; protected set; } //The data of the tank
 
-    public float Health //The health of the tank
+    public virtual float Health //The health of the tank
     {
         get => Data.Health;
         set

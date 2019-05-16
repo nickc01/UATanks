@@ -18,6 +18,16 @@ public class PlayerTank : Controller
         CameraController.Target = gameObject;
     }
 
+    public override float Health
+    {
+        get => base.Health;
+        set
+        {
+            base.Health = value;
+            HealthDisplay.Health = value / Data.MaxHealth;
+        }
+    }
+
     //The Score for the player
     public override float Score
     {

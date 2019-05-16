@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEngine.Extensions;
 
 public class EnemyTank : Controller
 {
@@ -58,6 +57,7 @@ public class EnemyTank : Controller
 
     Hearing Hearing; //The hearing component of the enemy tank
     Vision Vision; //The vision component of the enemy tank
+    TankHealthDisplay tankHealth; //The component to display the tank's health
 
     public override void Start()
     {
@@ -66,6 +66,9 @@ public class EnemyTank : Controller
         //Create the hearing and sight components
         Hearing = new Hearing(transform, HearingDistance);
         Vision = new Vision(transform, SeeingDistance, SeeingFOV, SightObstacles);
+
+        //Get the tank health component
+        tankHealth = GetComponentInChildren<TankHealthDisplay>();
 
         Hearing.HearingRange = HearingDistance; //Set the hearing range
         Vision.SightFOV = SeeingFOV; //Set the sight FOV
@@ -82,6 +85,16 @@ public class EnemyTank : Controller
         OA.ObstacleLayers = obstacleLayers;
         OA.Debug = debugWhiskers;
 
+    }
+
+    public override float Health
+    {
+        get => base.Health;
+        set
+        {
+            base.Health = value;
+            tankHealth.Health = value / Data.MaxHealth;
+        }
     }
 
     protected virtual void Update()

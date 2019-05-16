@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        //If the game scene is already active
+        if (SceneManager.GetSceneByName("Game").isLoaded)
+        {
+            //Set the scene active
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
+            //Show the game screen
+            UIManager.SetUIState("Game");
+        }
     }
 
     //Called when all the enemy tanks in the map have been destroyed
