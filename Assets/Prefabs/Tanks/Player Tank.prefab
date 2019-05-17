@@ -266,7 +266,7 @@ MonoBehaviour:
   FireRate: 0.3
   ShellSpeed: 8
   ShellLifetime: 10
-  ShellDamage: 50
+  ShellDamage: 25
 --- !u!114 &7624680093946310130
 MonoBehaviour:
   m_ObjectHideFlags: 0

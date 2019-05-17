@@ -110,7 +110,7 @@ MonoBehaviour:
   MaxHealth: 100
   Health: 0
   Score: 0
-  TankValue: 25
+  TankValue: 20
   color: {r: 1, g: 0, b: 0, a: 1}
   FireRate: 0.6
   ShellSpeed: 8
@@ -174,7 +174,7 @@ MonoBehaviour:
   UseObstacleAvoidance: 1
   personality: 0
   PatrolPoints: []
-  PatrolMinimumDistance: 0.4
+  PatrolMinimumDistance: 2
   patrolLoopMode: 0
   DebugFOV: 0
   DebugHearing: 0

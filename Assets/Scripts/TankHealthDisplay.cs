@@ -22,11 +22,11 @@ public class TankHealthDisplay : MonoBehaviour
             {
                 if (healthInternal == 1f)
                 {
+                    healthSlider.value = 1f;
                     transform.GetChild(0).gameObject.SetActive(false);
                 }
                 else
                 {
-                    healthSlider.value = 1f;
                     transform.GetChild(0).gameObject.SetActive(true);
                 }
             }
