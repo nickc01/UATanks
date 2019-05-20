@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     public GameObject ShellPrefab;
     [Tooltip("The player prefab")]
     public GameObject PlayerPrefab;
+    [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
+    public List<GameObject> EnemyPrefabs = new List<GameObject>();
+    [Tooltip("A list of possible powerups to spawn at the powerup spawnpoints")]
+    public List<GameObject> PowerUpPrefabs = new List<GameObject>();
 
     [Header("Sounds")]
     [Tooltip("Played When a shell is fired")]

@@ -21,12 +21,16 @@ public class EnemyTank : Controller
     [Tooltip("Whether to use Obstacle Avoidance in the enemy movement")]
     [SerializeField] bool UseObstacleAvoidance = true;
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
+    [HiddenSender("Patrolling","personality",Personality.Patrol)]
     [SerializeField] Personality personality = Personality.Chase;
     [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
+    [HiddenReceiver("Patrolling")]
     [SerializeField] List<Transform> patrolPoints = new List<Transform>();
     [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
+    [HiddenReceiver("Patrolling")]
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
+    [HiddenReceiver("Patrolling")]
     [SerializeField] PatrolLoopMode patrolLoopMode = PatrolLoopMode.End;
 
     /*-----DEBUG FLAGS-----*/
@@ -303,7 +307,7 @@ public class EnemyTank : Controller
         if (shell.Source is PlayerTank)
         {
             //Decrease the tank's health
-            Health -= shell.Damage;
+            Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance, 0f, shell.Damage);
             //Increase source tank's score if health is zero
             if (Health == 0)
             {

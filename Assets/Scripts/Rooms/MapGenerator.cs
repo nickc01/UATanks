@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using static GameManager;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -13,14 +14,14 @@ public class MapGenerator : MonoBehaviour
     public int MapHeight = 5;
     [Tooltip("How wide and how long each tile in the map will be")]
     public Vector2Int TileDimensions;
-    [Tooltip("The seed used to generate the map")]
-    public int Seed = 0;
     [Tooltip("The type of seed to use")]
+    [HiddenSender("SeedGenerator", "SeedGenerator", SeedGenerator.UseSeed)]
     public SeedGenerator SeedGenerator;
+    [Tooltip("The seed used to generate the map")]
+    [HiddenReceiver("SeedGenerator")]
+    public int Seed = 0;
     [Tooltip("A list of room prefabs to use")]
     public List<GameObject> Rooms = new List<GameObject>();
-    [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
-    public List<GameObject> Enemies = new List<GameObject>();
 
     public static List<PlayerSpawn> PlayerSpawnPoints = new List<PlayerSpawn>();
     public static MapGenerator Generator { get; private set; } //The singleton for the map generator
@@ -91,7 +92,7 @@ public class MapGenerator : MonoBehaviour
                 //Spawn Random Enemies
                 foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
                 {
-                    var enemy = Instantiate(Enemies[Random.Range(0, Enemies.Count)], enemySpawn.transform.position, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
+                    var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], enemySpawn.transform.position, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
                     if (enemy.Personality == Personality.Patrol)
                     {
                         var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();

@@ -25,6 +25,8 @@ public class TankData : MonoBehaviour
     public float TankValue = 25f;
     [Tooltip("The color of the tank")]
     public Color color = Color.white;
+    [Tooltip("How much damage the tank will be able to resist per hit")]
+    public float DamageResistance = 0f;
 
     [Header("Shell Stats")]
 

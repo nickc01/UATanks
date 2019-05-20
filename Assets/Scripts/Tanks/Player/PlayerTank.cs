@@ -94,7 +94,7 @@ public class PlayerTank : Controller
         if (shell.Source is EnemyTank)
         {
             //Decrease the tank's health
-            Health -= shell.Damage;
+            Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
         }
     }
 

@@ -172,8 +172,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   UseObstacleAvoidance: 1
-  personality: 0
-  PatrolPoints: []
+  personality: 2
+  patrolPoints: []
   PatrolMinimumDistance: 2
   patrolLoopMode: 0
   DebugFOV: 0

@@ -8,6 +8,8 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     protected TankMover Mover; //The mover component for the tank
     protected TankShooter Shooter; //The shooter component of the tank
     public TankData Data { get; protected set; } //The data of the tank
+    [HideInInspector]
+    public List<PowerUp> ActivePowerUps = new List<PowerUp>();
 
     public virtual float Health //The health of the tank
     {
@@ -50,6 +52,11 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     //Called when the tank's health is zero
     protected virtual void OnDeath()
     {
+        //Deactivate all the active powerups
+        foreach (var powerup in ActivePowerUps)
+        {
+            powerup.OnDeactivated();
+        }
         //Destroy the tank
         Destroy(gameObject);
     }
