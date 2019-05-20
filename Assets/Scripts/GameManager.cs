@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [Header("Prefabs")]
     [Tooltip("The prefab used whenever a tank fires a shell")]
     public GameObject ShellPrefab;
+    [Tooltip("The player prefab")]
+    public GameObject PlayerPrefab;
 
     [Header("Sounds")]
     [Tooltip("Played When a shell is fired")]
@@ -37,10 +39,7 @@ public class GameManager : MonoBehaviour
         //If the game scene is already active
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
-            //Set the scene active
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
-            //Show the game screen
-            UIManager.SetUIState("Game");
+            Play();
         }
     }
 
@@ -83,6 +82,11 @@ public class GameManager : MonoBehaviour
         }
         //Set the scene active
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
+        //Generate the map
+        MapGenerator.Generator.GenerateMap();
+        //Spawn the player at a random spawnpoint
+        var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
+        Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
     }
 
 }

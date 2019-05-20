@@ -23,7 +23,7 @@ public class EnemyTank : Controller
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
     [SerializeField] Personality personality = Personality.Chase;
     [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
-    [SerializeField] List<Transform> PatrolPoints = new List<Transform>();
+    [SerializeField] List<Transform> patrolPoints = new List<Transform>();
     [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
@@ -58,6 +58,10 @@ public class EnemyTank : Controller
     Hearing Hearing; //The hearing component of the enemy tank
     Vision Vision; //The vision component of the enemy tank
     TankHealthDisplay tankHealth; //The component to display the tank's health
+
+    //Public Interfaces
+    public Personality Personality => personality;
+    public List<Transform> PatrolPoints => patrolPoints;
 
     public override void Start()
     {
@@ -102,7 +106,7 @@ public class EnemyTank : Controller
     protected virtual void Update()
     {
         //If there is a player in the scene
-        if (GameManager.Player.Tank != null)
+        if (GameManager.Player.Tank != null && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)

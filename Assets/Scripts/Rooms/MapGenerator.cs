@@ -19,15 +19,28 @@ public class MapGenerator : MonoBehaviour
     public SeedGenerator SeedGenerator;
     [Tooltip("A list of room prefabs to use")]
     public List<GameObject> Rooms = new List<GameObject>();
-    [Header("Debug")]
-    [Tooltip("Generates the map upon playing the game")]
-    public bool Test = false;
+    [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
+    public List<GameObject> Enemies = new List<GameObject>();
 
     public static List<PlayerSpawn> PlayerSpawnPoints = new List<PlayerSpawn>();
+    public static MapGenerator Generator { get; private set; } //The singleton for the map generator
 
-    public void GenerateMap()
+    private void Start()
     {
-        PlayerSpawnPoints.Clear();
+        //Set the singleton
+        if (Generator == null)
+        {
+            Generator = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    public void ResetSeed()
+    {
         switch (SeedGenerator)
         {
             case SeedGenerator.UseSeed:
@@ -40,6 +53,12 @@ public class MapGenerator : MonoBehaviour
                 Random.InitState(GetSeedOfTheDay());
                 break;
         }
+    }
+
+    public void GenerateMap()
+    {
+        ResetSeed();
+        PlayerSpawnPoints.Clear();
         for (int x = 0; x < MapWidth; x++)
         {
             for (int y = 0; y < MapHeight; y++)
@@ -69,9 +88,30 @@ public class MapGenerator : MonoBehaviour
                 }
                 //Add the player Spawnpoints
                 PlayerSpawnPoints.AddRange(NewRoom.GetComponentsInChildren<PlayerSpawn>());
-
+                //Spawn Random Enemies
+                foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
+                {
+                    var enemy = Instantiate(Enemies[Random.Range(0, Enemies.Count)], enemySpawn.transform.position, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
+                    if (enemy.Personality == Personality.Patrol)
+                    {
+                        var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();
+                        var SelectedPatrolSet = AllPatrolSets[Random.Range(0, AllPatrolSets.GetLength(0))];
+;                       enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
+                    }
+                }
             }
         }
+    }
+
+    //Returns a spawnpoint for the player to spawn at
+    //It also removes the spawnpoint from the list to prevent spawning at duplicate places
+    public PlayerSpawn PopPlayerSpawnPoint()
+    {
+        //Initialize the seed
+        ResetSeed();
+        var spawnPoint = PlayerSpawnPoints[Random.Range(0,PlayerSpawnPoints.Count)];
+        PlayerSpawnPoints.Remove(spawnPoint);
+        return spawnPoint;
     }
 
     private int GetRandomSeed()
@@ -82,14 +122,4 @@ public class MapGenerator : MonoBehaviour
     {
         return DateTime.Today.GetHashCode();
     }
-
-
-    private void Start()
-    {
-        if (Test)
-        {
-            GenerateMap();
-        }
-    }
-
 }

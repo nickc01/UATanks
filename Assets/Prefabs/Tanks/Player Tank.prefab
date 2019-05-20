@@ -258,7 +258,7 @@ MonoBehaviour:
   ForwardSpeed: 5
   BackwardSpeed: 5
   RotateSpeed: 90
-  MaxHealth: 100
+  MaxHealth: 9999
   Health: 0
   Score: 0
   TankValue: 25

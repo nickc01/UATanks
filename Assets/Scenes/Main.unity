@@ -278,6 +278,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 56853411}
   m_CullTransparentMesh: 0
+--- !u!1 &60740761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 60740763}
+  - component: {fileID: 60740762}
+  m_Layer: 0
+  m_Name: Map Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &60740762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60740761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeaaf0b2ecf08f446a7aef1f6616be3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapWidth: 5
+  MapHeight: 5
+  TileDimensions: {x: 30, y: 30}
+  Seed: 0
+  SeedGenerator: 1
+  Rooms:
+  - {fileID: 4222168820409451953, guid: 9e5ec3e7c7c47d543957813ab384b6b6, type: 3}
+  Enemies:
+  - {fileID: 2052326719224177851, guid: 5b5d740ec8d8779448e3a2651e268441, type: 3}
+  - {fileID: 6113312973623313551, guid: c1227b21c03e07646beb04c0dc671af5, type: 3}
+  - {fileID: 4683954280872225256, guid: 9dcfd63ed789d7749a6213bd2855305d, type: 3}
+  - {fileID: 4973846459062302955, guid: 9cb78349b6cc49f4c9fb5b74da37b13d, type: 3}
+--- !u!4 &60740763
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60740761}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &78701891
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,6 +888,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShellPrefab: {fileID: 4539904492125385591, guid: af9da874e29c579499cfe6898be651e4,
+    type: 3}
+  PlayerPrefab: {fileID: 7624680093946310137, guid: 017e1da9893592c49813c7152c4de7fb,
     type: 3}
   FireSound: {fileID: 8300000, guid: 90a79e17679a4234f8e43ae932a81f36, type: 3}
   WinSound: {fileID: 8300000, guid: 7f73c5762040bba4c88ae6b7c8dba565, type: 3}
