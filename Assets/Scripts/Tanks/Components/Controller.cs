@@ -29,7 +29,7 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     public virtual float Score { get => Data.Score; set => Data.Score = value; } //A public accessor for the score
 
     //When the tank is hit by a shell
-    public abstract void OnShellHit(Shell shell);
+    public abstract bool OnShellHit(Shell shell);
 
     public virtual void Start()
     {

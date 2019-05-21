@@ -301,8 +301,12 @@ public class EnemyTank : Controller
 
     //When the enemy is hit by a player shell, it reduces the tank's health
     //if the tank's health is zero, the tank is destroyed
-    public override void OnShellHit(Shell shell)
+    public override bool OnShellHit(Shell shell)
     {
+        if (shell.Source == this)
+        {
+            return false;
+        }
         //If the shell came from a player tank
         if (shell.Source is PlayerTank)
         {
@@ -314,6 +318,7 @@ public class EnemyTank : Controller
                 shell.Source.Score += Data.TankValue;
             }
         }
+        return true;
     }
 
     //Called when the tank dies

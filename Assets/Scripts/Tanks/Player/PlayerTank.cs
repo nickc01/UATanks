@@ -88,14 +88,19 @@ public class PlayerTank : Controller
     }
 
 
-    public override void OnShellHit(Shell shell)
+    public override bool OnShellHit(Shell shell)
     {
+        if (shell.Source == this)
+        {
+            return false;
+        }
         //If the shell came from a enemy tank
-        if (shell.Source is EnemyTank)
+        if (shell.Source is Controller)
         {
             //Decrease the tank's health
             Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
         }
+        return true;
     }
 
     protected override void OnDeath()
