@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> EnemyPrefabs = new List<GameObject>();
     /*[Tooltip("A list of possible powerups to spawn at the powerup spawnpoints")]
     public List<GameObject> PowerUpPrefabs = new List<GameObject>();*/
-    public List<PowerUpInfo> PowerUps = new List<PowerUpInfo>();
+    public List<PowerupHolder> PowerUps = new List<PowerupHolder>();
 
     [Header("Sounds")]
     [Tooltip("Played When a shell is fired")]

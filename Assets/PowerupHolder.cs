@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -8,34 +9,66 @@ using Object = UnityEngine.Object;
 
 public class PowerupHolder : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("The type of powerup to use. Can be any script that inherits from the PowerUp Class")]
-    public Object Script;
+    public PowerUpInfo powerUp;
 
-    [Header("Powerup Stats")]
-    [Tooltip("Whether the powerup will last forever or not")]
-    [HiddenSender("Forever", false)]
-    [SerializeField] protected bool Forever = false;
-    [Tooltip("How long the powerup will last")]
-    [HiddenReceiver("Forever")]
-    [SerializeField] protected float LifeTime = 9f;
-    [HiddenReceiver("Forever")]
-    [Tooltip("The warning time used to warn the player when the powerup is about to run out")]
-    [SerializeField] protected float WarningTime = 3f;
-    [Tooltip("How long it takes for the powerup to spawn in the game")]
-    public Vector2 SpawnTimeMinMax;
-    [Tooltip("If true, will make sure that tanks cannot have more than one of this powerup active on them at once")]
-    [SerializeField] protected bool OneAtATime = false;
+    public bool Activated { get; private set; } = false;
 
-    private Type powerup;
+    private bool visible = true;
 
-    private void Start()
+    public bool Visible
     {
-        GetPowerupType();
+        get => visible;
+        set
+        {
+            if (visible != value)
+            {
+                visible = value;
+                foreach (var renderer in GetComponentsInChildren<Renderer>())
+                {
+                    renderer.enabled = value;
+                }
+            }
+        }
     }
 
-    private void GetPowerupType()
+
+    protected void OnTriggerEnter(Collider other)
     {
-        
+        if (!Activated)
+        {
+            var controller = other.GetComponent<Controller>();
+            if (controller != null && controller.Data != null)
+            {
+                //Get the powerup type
+                Type powerupType = powerUp.PowerUpType;
+                if (powerupType == null)
+                {
+                    Destroy(gameObject);
+                }
+                Activated = true;
+                //Instantiate the new powerup via the Activator class
+                var NewPowerUp = Activator.CreateInstance(powerupType) as PowerUp;
+                NewPowerUp.Info = powerUp;
+                NewPowerUp.Tank = controller;
+                NewPowerUp.TankData = controller.Data;
+                NewPowerUp.Holder = this;
+
+                transform.parent = controller.transform;
+                transform.localPosition = Vector3.zero;
+                Visible = false;
+
+                if (powerUp.OneAtATime)
+                {
+                    var finding = controller.ActivePowerUps.FirstOrDefault(p => p.GetType() == powerupType);
+                    if (finding != null)
+                    {
+                        //Deactivate it
+                        finding.Destroy();
+                    }
+                }
+
+                NewPowerUp.Activate();
+            }
+        }
     }
 }

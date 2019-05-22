@@ -107,8 +107,9 @@ public class EnemyTank : Controller
         }
     }
 
-    protected virtual void Update()
+    public override void Update()
     {
+        base.Update();
         //If there is a player in the scene
         if (GameManager.Player.Tank != null && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
         {

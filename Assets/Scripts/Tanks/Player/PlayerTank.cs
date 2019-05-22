@@ -43,8 +43,9 @@ public class PlayerTank : Controller
     }
 
     //Used to control input
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         Noise = 0;
         //If the spacebar is pressed
         if (Input.GetKey(KeyCode.Space))

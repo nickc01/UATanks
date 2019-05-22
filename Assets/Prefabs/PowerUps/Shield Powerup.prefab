@@ -92,7 +92,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51febc766d471d54091d6a155dd1ee57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PowerupScript: {fileID: 11500000, guid: 6a681c086fb3d5747a9eeb0cdb6dbbd3, type: 3}
+  powerUp:
+    Name: Shield
+    Script: {fileID: 11500000, guid: ee95e2f64ded1344f8a3bf0b7e6c2d64, type: 3}
+    Forever: 0
+    LifeTime: 9
+    WarningTime: 3
+    SpawnTimeMinMax: {x: 3, y: 3}
+    OneAtATime: 1
 --- !u!135 &9068368924123058688
 SphereCollider:
   m_ObjectHideFlags: 0

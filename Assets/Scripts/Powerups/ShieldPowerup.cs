@@ -4,40 +4,43 @@ using UnityEngine;
 
 public class ShieldPowerup : PowerUp
 {
-    [Tooltip("How much damage the shield will resist")]
-    [SerializeField] protected float ShieldStrength = 10f;
-    [Tooltip("How fast the powerup will flicker when warning the player that it's about to run out. The value is how many flickers per second.")]
-    [SerializeField] protected float WarningFlashRate = 20f;
+    protected float ShieldStrength = 10f;
+    protected float WarningFlashRate = 20f;
 
+    bool Warning = false;
+    bool FlashOn = true;
+    float Timer = 0f;
+    Vector3 RotationVector = Vector3.up;
 
-    public override void OnActivated(TankData tankData, Controller tankController)
+    protected override void OnActivate()
     {
-        base.OnActivated(tankData, tankController);
-        Visible = true;
-        transform.parent = tankData.transform;
-        transform.localPosition = Vector3.zero;
-        tankData.DamageResistance += 10f;
+        Holder.Visible = true;
+        TankData.DamageResistance += 10f;
     }
 
-    public override void OnWarning()
+    protected override void OnWarning()
     {
-        StartCoroutine(WarningRoutine());
+        Warning = true;
     }
 
-    IEnumerator WarningRoutine()
+    protected override void Update()
     {
-        while (true)
+        Holder.transform.Rotate(RotationVector * 180f * Mathf.Deg2Rad, Space.Self);
+        if (Warning)
         {
-            Visible = true;
-            yield return new WaitForSeconds(1f / WarningFlashRate);
-            Visible = false;
-            yield return new WaitForSeconds(1f / WarningFlashRate);
+            Timer += Time.deltaTime * WarningFlashRate;
+            if (Timer >= 1f)
+            {
+                Timer = 0;
+                FlashOn = !FlashOn;
+                Holder.Visible = FlashOn;
+            }
         }
     }
 
-    public override void OnDeactivated()
+    protected override void OnDeactivate()
     {
-        base.OnDeactivated();
+        Holder.Visible = false;
         TankData.DamageResistance -= 10f;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Represents a powerup spawnpoint
 public class PowerUpSpawn : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -10,30 +11,23 @@ public class PowerUpSpawn : MonoBehaviour
         StartCoroutine(PowerupRoutine());
     }
 
-    PowerUp SpawnedPowerUp = null;
+    PowerupHolder SpawnedPowerUp = null;
 
     IEnumerator PowerupRoutine()
     {
         while (true)
-        {
-            /*var powerUpObject = GameManager.Game.PowerUpPrefabs.RandomElement();
-            var powerUp = powerUpObject.GetComponent<PowerUp>();
+       {
+            var powerUp = GameManager.Game.PowerUps.RandomElement();
             if (powerUp == null)
             {
-                Debug.LogError("The power up of " + powerUpObject.name + " is not a valid powerUp. Make sure that it has a PowerUp Component attached attached to it.");
+                Debug.LogError("The power up of " + powerUp.name + " is not a valid powerUp. Make sure that it has a PowerUp Component attached attached to it.");
                 continue;
             }
-            yield return new WaitForSeconds(Random.Range(powerUp.SpawnTimeMinMax.x, powerUp.SpawnTimeMinMax.y));
-            SpawnedPowerUp = Instantiate(powerUpObject, transform.position, transform.rotation).GetComponent<PowerUp>();
+            yield return new WaitForSeconds(Random.Range(powerUp.powerUp.SpawnTimeMinMax.x, powerUp.powerUp.SpawnTimeMinMax.y));
+            SpawnedPowerUp = Instantiate(powerUp.gameObject, transform.position, transform.rotation).GetComponent<PowerupHolder>();
             yield return new WaitUntil(() => SpawnedPowerUp.Activated);
-            SpawnedPowerUp = null;*/
+            SpawnedPowerUp = null;
         }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }
