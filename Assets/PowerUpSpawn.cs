@@ -16,7 +16,7 @@ public class PowerUpSpawn : MonoBehaviour
     {
         while (true)
         {
-            var powerUpObject = GameManager.Game.PowerUpPrefabs.RandomElement();
+            /*var powerUpObject = GameManager.Game.PowerUpPrefabs.RandomElement();
             var powerUp = powerUpObject.GetComponent<PowerUp>();
             if (powerUp == null)
             {
@@ -26,7 +26,7 @@ public class PowerUpSpawn : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(powerUp.SpawnTimeMinMax.x, powerUp.SpawnTimeMinMax.y));
             SpawnedPowerUp = Instantiate(powerUpObject, transform.position, transform.rotation).GetComponent<PowerUp>();
             yield return new WaitUntil(() => SpawnedPowerUp.Activated);
-            SpawnedPowerUp = null;
+            SpawnedPowerUp = null;*/
         }
         
     }

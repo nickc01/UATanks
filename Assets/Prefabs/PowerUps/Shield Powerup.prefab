@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4241920962399990387}
   - component: {fileID: 1569992265471339834}
   - component: {fileID: 6605882106863528809}
-  - component: {fileID: 397764451061708841}
+  - component: {fileID: 4855172135021809453}
   - component: {fileID: 9068368924123058688}
   - component: {fileID: 4749668662286178399}
   m_Layer: 0
@@ -80,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &397764451061708841
+--- !u!114 &4855172135021809453
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,16 +89,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 397764451061708840}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee95e2f64ded1344f8a3bf0b7e6c2d64, type: 3}
+  m_Script: {fileID: 11500000, guid: 51febc766d471d54091d6a155dd1ee57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Forever: 0
-  LifeTime: 9
-  WarningTime: 3
-  SpawnTimeMinMax: {x: 3, y: 3}
-  OneAtATime: 1
-  ShieldStrength: 10
-  WarningFlashRate: 20
+  PowerupScript: {fileID: 11500000, guid: 6a681c086fb3d5747a9eeb0cdb6dbbd3, type: 3}
 --- !u!135 &9068368924123058688
 SphereCollider:
   m_ObjectHideFlags: 0
