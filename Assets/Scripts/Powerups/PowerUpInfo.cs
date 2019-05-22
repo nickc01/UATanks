@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.Reflection;
 
+
 [Serializable]
 public class PowerUpInfo
 {
@@ -30,6 +31,7 @@ public class PowerUpInfo
     public Vector2 SpawnTimeMinMax;
     [Tooltip("If true, will make sure that tanks cannot have more than one of this powerup active on them at once")]
     public bool OneAtATime = false;
+    
 
     public Type PowerUpType
     {

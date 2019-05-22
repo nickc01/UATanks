@@ -887,6 +887,7 @@ MonoBehaviour:
     type: 3}
   PlayerPrefab: {fileID: 7624680093946310137, guid: 017e1da9893592c49813c7152c4de7fb,
     type: 3}
+  BombPrefab: {fileID: 0}
   EnemyPrefabs:
   - {fileID: 2052326719224177851, guid: 5b5d740ec8d8779448e3a2651e268441, type: 3}
   - {fileID: 6113312973623313551, guid: c1227b21c03e07646beb04c0dc671af5, type: 3}
@@ -894,9 +895,16 @@ MonoBehaviour:
   - {fileID: 4973846459062302955, guid: 9cb78349b6cc49f4c9fb5b74da37b13d, type: 3}
   PowerUps:
   - {fileID: 4855172135021809453, guid: 3311eb344053c3d44847b9e0bac06a0f, type: 3}
+  - {fileID: 4518953824826894254, guid: 2826c83de6df91649951626baaf52e61, type: 3}
+  - {fileID: 7821059125058578150, guid: ac53611a9dede2a4fac81425a3aaba7a, type: 3}
   FireSound: {fileID: 8300000, guid: 90a79e17679a4234f8e43ae932a81f36, type: 3}
   WinSound: {fileID: 8300000, guid: 7f73c5762040bba4c88ae6b7c8dba565, type: 3}
   LoseSound: {fileID: 8300000, guid: 81b6589028f893d408fdb1d928ce1536, type: 3}
+  ShieldStrength: 10
+  ShieldWarningFlashRate: 20
+  ShieldDamageResistance: 10
+  HealthRestoreAmount: 50
+  PowerupSpeed: 10
 --- !u!4 &336639180
 Transform:
   m_ObjectHideFlags: 0

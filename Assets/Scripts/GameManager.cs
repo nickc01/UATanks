@@ -14,10 +14,11 @@ public class GameManager : MonoBehaviour
     public GameObject ShellPrefab;
     [Tooltip("The player prefab")]
     public GameObject PlayerPrefab;
+    [Tooltip("The bomb prefab used when the bomb powerup is picked up")]
+    public GameObject BombPrefab;
     [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
     public List<GameObject> EnemyPrefabs = new List<GameObject>();
-    /*[Tooltip("A list of possible powerups to spawn at the powerup spawnpoints")]
-    public List<GameObject> PowerUpPrefabs = new List<GameObject>();*/
+    [Tooltip("A list of possible powerups to spawn at the powerup spawnpoints")]
     public List<PowerupHolder> PowerUps = new List<PowerupHolder>();
 
     [Header("Sounds")]
@@ -27,6 +28,24 @@ public class GameManager : MonoBehaviour
     public AudioClip WinSound;
     [Tooltip("Played when you lose the game")]
     public AudioClip LoseSound;
+
+    [Header("Shield")]
+    [Space]
+    [Header("Powerup Stats")]
+    [Tooltip("How much damage the shield can withstand")]
+    public float ShieldStrength = 10f;
+    [Tooltip("How fast the warning notifier will flash. Number's in flashes per second")]
+    public float ShieldWarningFlashRate = 20f;
+    [Tooltip("How much damage resistance the shield will apply to the tank")]
+    public float ShieldDamageResistance = 10f;
+    
+    [Header("Health")]
+    [Tooltip("How much health the health powerup will restore on the tank")]
+    public float HealthRestoreAmount = 50f;
+
+    [Header("Speed")]
+    [Tooltip("How fast the tank will go when the speed powerup is collected")]
+    public float PowerupSpeed = 10f;
 
     private void Start()
     {

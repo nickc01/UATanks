@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ShieldPowerup : PowerUp
 {
-    protected float ShieldStrength = 10f;
-    protected float WarningFlashRate = 20f;
+    protected float ShieldStrength;
+    protected float WarningFlashRate;
+    protected float DamageResistance;
 
     bool Warning = false;
     bool FlashOn = true;
@@ -14,6 +15,9 @@ public class ShieldPowerup : PowerUp
 
     protected override void OnActivate()
     {
+        ShieldStrength = GameManager.Game.ShieldStrength;
+        WarningFlashRate = GameManager.Game.ShieldWarningFlashRate;
+        DamageResistance = GameManager.Game.ShieldDamageResistance;
         Holder.Visible = true;
         TankData.DamageResistance += 10f;
     }
