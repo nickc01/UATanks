@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
+    public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.None;
+    public static int CurrentCampaignLevel { get; set; } = 0;
     public static GameManager Game { get; private set; } //The singleton for the game manager
     public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
@@ -47,6 +49,16 @@ public class GameManager : MonoBehaviour
     [Tooltip("How fast the tank will go when the speed powerup is collected")]
     public float PowerupSpeed = 10f;
 
+    [Header("Bomb")]
+    [Tooltip("How many bombs will be dropped per second")]
+    public float BombRate = 1f;
+    [Tooltip("How long each bomb will take to detonate")]
+    public float BombTime;
+    [Tooltip("How large the bomb explosion will be")]
+    public float BombExplosionSize;
+    [Tooltip("How much damage the explosion will do to tanks")]
+    public float BombDamage;
+
     private void Start()
     {
         //Set the singleton
@@ -63,7 +75,7 @@ public class GameManager : MonoBehaviour
         //If the game scene is already active
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
-            Play();
+            UI.Play(LevelLoadMode.None);
         }
     }
 
@@ -87,18 +99,35 @@ public class GameManager : MonoBehaviour
         CameraController.Main.Sound.Play();
     }
 
-    //Called when the play button is pressed
-    //Used to start the game
-    public static void Play()
+    public static IEnumerator UnloadLevel()
     {
-        //Show the game UI
-        UIManager.SetUIState("Game");
-        //Load the game scene
-        Game.StartCoroutine(LoadGameScene());
+        if (SceneManager.GetSceneByName("Game").isLoaded)
+        {
+            yield return SceneManager.UnloadSceneAsync("Game");
+        }
     }
 
-    static IEnumerator LoadGameScene()
+    static IEnumerator LoadGameScene(LevelLoadMode loadMode)
     {
+        Player = (null, null);
+        Enemies.Clear();
+        CurrentLoadMode = loadMode;
+        switch (loadMode)
+        {
+            case LevelLoadMode.None:
+                MapGenerator.Generator.SeedGenerator = SeedGenerator.Random;
+                break;
+            case LevelLoadMode.Campaign:
+                MapGenerator.Generator.SeedGenerator = SeedGenerator.UseSeed;
+                MapGenerator.Generator.Seed = CurrentCampaignLevel;
+                break;
+            case LevelLoadMode.MapOfTheDay:
+                MapGenerator.Generator.SeedGenerator = SeedGenerator.MapOfTheDay;
+                break;
+            case LevelLoadMode.Random:
+                MapGenerator.Generator.SeedGenerator = SeedGenerator.Random;
+                break;
+        }
         if (!SceneManager.GetSceneByName("Game").isLoaded)
         {
             //Load the game scene

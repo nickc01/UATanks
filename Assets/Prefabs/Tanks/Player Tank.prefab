@@ -258,11 +258,12 @@ MonoBehaviour:
   ForwardSpeed: 5
   BackwardSpeed: 5
   RotateSpeed: 90
-  MaxHealth: 9999
+  MaxHealth: 100
   Health: 0
   Score: 0
   TankValue: 25
   color: {r: 0, g: 1, b: 0.010810852, a: 1}
+  DamageResistance: 0
   FireRate: 0.3
   ShellSpeed: 8
   ShellLifetime: 10

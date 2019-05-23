@@ -24,7 +24,7 @@ public class PowerUpSpawn : MonoBehaviour
                 continue;
             }
             yield return new WaitForSeconds(Random.Range(powerUp.powerUp.SpawnTimeMinMax.x, powerUp.powerUp.SpawnTimeMinMax.y));
-            SpawnedPowerUp = Instantiate(powerUp.gameObject, transform.position, transform.rotation).GetComponent<PowerupHolder>();
+            SpawnedPowerUp = Instantiate(powerUp.gameObject, transform.position, powerUp.gameObject.transform.rotation).GetComponent<PowerupHolder>();
             yield return new WaitUntil(() => SpawnedPowerUp.Activated);
             SpawnedPowerUp = null;
         }

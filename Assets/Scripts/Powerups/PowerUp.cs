@@ -9,6 +9,9 @@ using UnityEngine;
 
 public abstract class PowerUp
 {
+
+
+
     public PowerUpInfo Info { get; set; }
     public Controller Tank { get; set; }
     public TankData TankData { get; set; }

@@ -51,13 +51,8 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
 
     public virtual void Update()
     {
-        /*foreach (var powerup in ActivePowerUps)
-        {
-            powerup.TimeLeft -= Time.deltaTime;
-        }*/
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {
-            Debug.Log("I = " + i);
             ActivePowerUps[i].TimeLeft -= Time.deltaTime;
         }
     }
@@ -66,10 +61,6 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     protected virtual void OnDeath()
     {
         //Deactivate all the active powerups
-        /*foreach (var powerup in ActivePowerUps)
-        {
-            powerup.Destroy();
-        }*/
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {
             ActivePowerUps[i].Destroy();
