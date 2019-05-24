@@ -111,7 +111,7 @@ public class EnemyTank : Controller
     {
         base.Update();
         //If there is a player in the scene
-        if (GameManager.Player.Tank != null && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
+        if (GameManager.Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)
@@ -152,16 +152,17 @@ public class EnemyTank : Controller
     }
 
     //Chase towards the player
-    protected void Chase()
+    protected void Chase(Transform target = null)
     {
+        target = target ?? GameManager.Player.Tank.transform;
         //If the tank can hear the player
-        if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(target.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate towards the player
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
+        Mover.RotateTowards(target.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -295,8 +296,16 @@ public class EnemyTank : Controller
         //If the health is less than half
         else
         {
-            //Flee from the player
-            Flee();
+            var (_, holder) = PowerupHolder.GetNearestHolder<HealthPowerup>(transform.position);
+            if (holder != null)
+            {
+                Chase(holder.transform);
+            }
+            else
+            {
+                //Flee from the player
+                Flee();
+            }
         }
     }
 
@@ -311,8 +320,7 @@ public class EnemyTank : Controller
         //If the shell came from a player tank
         if (shell.Source is PlayerTank)
         {
-            //Decrease the tank's health
-            Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance, 0f, shell.Damage);
+            Attack(shell.Damage);
             //Increase source tank's score if health is zero
             if (Health == 0)
             {
@@ -329,7 +337,7 @@ public class EnemyTank : Controller
         //Remove this enemy data from the list of enemy data's
         GameManager.Enemies.Remove((this, Data));
         //If there are no enemies in the Enemies list
-        if (GameManager.Enemies.Count == 0)
+        if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel)
         {
             //Trigger the win condition
             GameManager.Win();

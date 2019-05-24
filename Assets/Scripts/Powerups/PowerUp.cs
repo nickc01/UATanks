@@ -9,9 +9,6 @@ using UnityEngine;
 
 public abstract class PowerUp
 {
-
-
-
     public PowerUpInfo Info { get; set; }
     public Controller Tank { get; set; }
     public TankData TankData { get; set; }
@@ -50,7 +47,17 @@ public abstract class PowerUp
         }
         Tank.ActivePowerUps.Add(this);
 
+        GameManager.PlayingLevelEvent += OnLevelEnd;
+
         OnActivate();
+    }
+
+    private void OnLevelEnd(bool playingLevel)
+    {
+        if (!playingLevel)
+        {
+            Destroy();
+        }
     }
 
     protected abstract void OnActivate();
@@ -61,6 +68,7 @@ public abstract class PowerUp
 
     public void Destroy()
     {
+        GameManager.PlayingLevelEvent -= OnLevelEnd;
         OnDeactivate();
         Tank.ActivePowerUps.Remove(this);
         GameObject.Destroy(Holder);

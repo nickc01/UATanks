@@ -85,13 +85,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 10
-  m_Radius: 1
+  m_Height: 0.58
+  m_Radius: 0.12
   m_SlopeLimit: 180
   m_StepOffset: 0.3
   m_SkinWidth: 0.001
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 4.67, z: 0}
+  m_Center: {x: 0, y: 0.11, z: 0}
 --- !u!114 &793303101265936074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,6 +112,7 @@ MonoBehaviour:
   Score: 0
   TankValue: 20
   color: {r: 1, g: 0, b: 0, a: 1}
+  DamageResistance: 0
   FireRate: 0.6
   ShellSpeed: 8
   ShellLifetime: 10

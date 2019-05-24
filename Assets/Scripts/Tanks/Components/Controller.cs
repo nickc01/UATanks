@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(TankMover), typeof(TankShooter), typeof(TankData))]
 public abstract class Controller : MonoBehaviour, IOnShellHit
 {
+    public static List<Controller> AllTanks = new List<Controller>();
+
     protected TankMover Mover; //The mover component for the tank
     protected TankShooter Shooter; //The shooter component of the tank
     public TankData Data { get; protected set; } //The data of the tank
@@ -42,6 +44,8 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
         //Set the firing rate
         Shooter.FireRate = Data.FireRate;
 
+        AllTanks.Add(this);
+
         //Set the color of any colorizers on this object
         foreach (var colorizer in GetComponentsInChildren<TankColorer>())
         {
@@ -57,9 +61,16 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
         }
     }
 
+    public void Attack(float Damage)
+    {
+        //Decrease the tank's health
+        Health -= Mathf.Clamp(Damage - Data.DamageResistance, 0f, Damage);
+    }
+
     //Called when the tank's health is zero
     protected virtual void OnDeath()
     {
+        AllTanks.Remove(this);
         //Deactivate all the active powerups
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {

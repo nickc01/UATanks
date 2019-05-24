@@ -27,6 +27,16 @@ public static class Callbacks
         CoroutineManager.StartCoroutine(NextLevelRoutine());
     }
 
+    public static void Help()
+    {
+        GameManager.UI.ToHelpScreen();
+    }
+
+    public static void Quit()
+    {
+        GameManager.Quit();
+    }
+
     static IEnumerator NextLevelRoutine()
     {
         yield return GameManager.UnloadLevel();
@@ -56,7 +66,7 @@ public static class Callbacks
     {
         GameManager.CurrentCampaignLevel = levelNumber;
         MapGenerator.Generator.MapHeight = Mathf.FloorToInt(levelNumber / 2f) + 2;
-        MapGenerator.Generator.MapWidth = Mathf.FloorToInt(levelNumber / 2f) + 2;
+        MapGenerator.Generator.MapWidth = Mathf.FloorToInt(levelNumber / 2f) + 1;
         GameManager.UI.Play(LevelLoadMode.Campaign);
     }
 
@@ -73,6 +83,10 @@ public static class Callbacks
         MapGenerator.Generator.MapWidth = 5;
         GameManager.UI.Play(LevelLoadMode.Random);
     }
+
+    #endregion
+
+    #region Help Area
 
     #endregion
 }

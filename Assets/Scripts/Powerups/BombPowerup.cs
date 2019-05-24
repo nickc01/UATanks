@@ -20,7 +20,7 @@ public class BombPowerup : PowerUp
         if (BombTimer >= GameManager.Game.BombRate)
         {
             BombTimer = 0f;
-            GameObject.Instantiate(GameManager.Game.BombPrefab, Tank.transform.position, Quaternion.identity);
+            Bomb.Spawn(Tank);
         }
     }
 

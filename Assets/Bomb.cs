@@ -19,7 +19,18 @@ public class Bomb : MonoBehaviour
         Timer -= Time.deltaTime;
         if (Timer <= 0)
         {
-            //TODO : BLOW UP
+            var explosion = Instantiate(GameManager.Game.ExplosionPrefab, transform.position, Quaternion.identity);
+            explosion.transform.localScale = Vector3.one * GameManager.Game.BombExplosionSize;
+            Destroy(explosion, 1f);
+            for (int i = Controller.AllTanks.Count - 1; i >= 0; i--)
+            {
+                var tank = Controller.AllTanks[i];
+                if (tank != Source && Vector3.Distance(tank.transform.position, explosion.transform.position) <= GameManager.Game.BombExplosionSize)
+                {
+                    tank.Attack(GameManager.Game.BombDamage);
+                }
+            }
+            Destroy(gameObject);
         }
     }
 

@@ -1,10 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public partial class GameManager : MonoBehaviour
 {
+    private static bool playingLevel = false;
+    public static bool PlayingLevel
+    {
+        get => playingLevel;
+        set
+        {
+            if (playingLevel != value)
+            {
+                playingLevel = value;
+                PlayingLevelEvent?.Invoke(value);
+            }
+        }
+    }
+    public static event Action<bool> PlayingLevelEvent;
     public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.None;
     public static int CurrentCampaignLevel { get; set; } = 0;
     public static GameManager Game { get; private set; } //The singleton for the game manager
@@ -18,6 +33,8 @@ public partial class GameManager : MonoBehaviour
     public GameObject PlayerPrefab;
     [Tooltip("The bomb prefab used when the bomb powerup is picked up")]
     public GameObject BombPrefab;
+    [Tooltip("The prefab used when the bomb explodes")]
+    public GameObject ExplosionPrefab;
     [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
     public List<GameObject> EnemyPrefabs = new List<GameObject>();
     [Tooltip("A list of possible powerups to spawn at the powerup spawnpoints")]
@@ -79,24 +96,31 @@ public partial class GameManager : MonoBehaviour
         }
     }
 
+    public static void Quit()
+    {
+        Application.Quit();
+    }
+
     //Called when all the enemy tanks in the map have been destroyed
     public static void Win()
     {
         //Show the win screen
-        UIManager.SetUIState("Win");
+        UIManager.SetUIState("Win",Curves.Smooth,FromIsHidden: true);
         //Play the Win Sound
         CameraController.Main.Sound.clip = Game.WinSound;
         CameraController.Main.Sound.Play();
+        PlayingLevel = false;
     }
 
     //Called when the player tank has been destroyed
     public static void Lose()
     {
         //Show the lose screen
-        UIManager.SetUIState("Lose");
+        UIManager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
         //Play the Lose Sound
         CameraController.Main.Sound.clip = Game.LoseSound;
         CameraController.Main.Sound.Play();
+        PlayingLevel = false;
     }
 
     public static IEnumerator UnloadLevel()
@@ -111,6 +135,7 @@ public partial class GameManager : MonoBehaviour
     {
         Player = (null, null);
         Enemies.Clear();
+        Controller.AllTanks.Clear();
         CurrentLoadMode = loadMode;
         switch (loadMode)
         {
@@ -140,6 +165,10 @@ public partial class GameManager : MonoBehaviour
         //Spawn the player at a random spawnpoint
         var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
         Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        yield return UI.ShowReadySequence();
+        //Show the game UI
+        UIManager.SetUIState("Game");
+        PlayingLevel = true;
     }
 
 }

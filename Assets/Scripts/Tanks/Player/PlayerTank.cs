@@ -47,44 +47,47 @@ public class PlayerTank : Controller
     {
         base.Update();
         Noise = 0;
-        //If the spacebar is pressed
-        if (Input.GetKey(KeyCode.Space))
+        if (GameManager.PlayingLevel)
         {
-            //Shoot a shell
-            Shooter.Shoot();
-            Noise += 3f;
-        }
-        //If the W or Up Arrow Keys are currently held down
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            //Move the tank forward
-            Mover.Move(Data.ForwardSpeed);
-            Noise += 3f;
-        }
-        //If the S or Down Arrow Keys are currently held down
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            //Move the tank backwards
-            Mover.Move(-Data.BackwardSpeed);
-            Noise += 3f;
-        }
-        //If neither the up or down inputs are pressed
-        else
-        {
-            //Do not move the tank and just apply gravity
-            Mover.Move(0);
-        }
-        //If the A or Left Arrow Keys are currently held down
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            //Rotate the tank to the left
-            Mover.Rotate(-Data.RotateSpeed * Time.deltaTime);
-        }
-        //If the D or Right Arrow Keys are currently held down
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            //Rotate the tank to the right
-            Mover.Rotate(Data.RotateSpeed * Time.deltaTime);
+            //If the spacebar is pressed
+            if (Input.GetKey(KeyCode.Space))
+            {
+                //Shoot a shell
+                Shooter.Shoot();
+                Noise += 3f;
+            }
+            //If the W or Up Arrow Keys are currently held down
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                //Move the tank forward
+                Mover.Move(Data.ForwardSpeed);
+                Noise += 3f;
+            }
+            //If the S or Down Arrow Keys are currently held down
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                //Move the tank backwards
+                Mover.Move(-Data.BackwardSpeed);
+                Noise += 3f;
+            }
+            //If neither the up or down inputs are pressed
+            else
+            {
+                //Do not move the tank and just apply gravity
+                Mover.Move(0);
+            }
+            //If the A or Left Arrow Keys are currently held down
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                //Rotate the tank to the left
+                Mover.Rotate(-Data.RotateSpeed * Time.deltaTime);
+            }
+            //If the D or Right Arrow Keys are currently held down
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                //Rotate the tank to the right
+                Mover.Rotate(Data.RotateSpeed * Time.deltaTime);
+            }
         }
     }
 
@@ -99,7 +102,8 @@ public class PlayerTank : Controller
         if (shell.Source is Controller)
         {
             //Decrease the tank's health
-            Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
+            //Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
+            Attack(shell.Damage);
         }
         return true;
     }
@@ -110,6 +114,9 @@ public class PlayerTank : Controller
         //Set the main player to null
         GameManager.Player = (null, null);
         //Trigger the lose condition
-        GameManager.Lose();
+        if (GameManager.PlayingLevel)
+        {
+            GameManager.Lose();
+        }
     }
 }
