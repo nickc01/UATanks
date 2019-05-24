@@ -590,8 +590,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeaaf0b2ecf08f446a7aef1f6616be3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapWidth: 5
-  MapHeight: 5
+  MapWidth: 1
+  MapHeight: 2
+  IncreaseWidthEvery: 2
+  IncreaseHeightEvery: 2
   TileDimensions: {x: 30, y: 30}
   SeedGenerator: 2
   Seed: 0

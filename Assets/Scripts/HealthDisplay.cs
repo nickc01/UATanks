@@ -17,6 +17,10 @@ public class HealthDisplay : MonoBehaviour
         get => Singleton.healthInternal;
         set
         {
+            if (Singleton == null)
+            {
+                return;
+            }
             //Clamps the health between 0 and 1
             Singleton.healthInternal = Mathf.Clamp01(value);
             if (!Singleton.Interpolate)

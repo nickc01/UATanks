@@ -82,9 +82,6 @@ public static class Callbacks
     {
         //Set the campaign level number
         GameManager.CurrentCampaignLevel = levelNumber;
-        //Set the width and height of the map generator
-        MapGenerator.Generator.MapHeight = Mathf.FloorToInt(levelNumber / 2f) + 2;
-        MapGenerator.Generator.MapWidth = Mathf.FloorToInt(levelNumber / 2f) + 1;
         //Play the selected campaign level
         GameManager.UI.Play(LevelLoadMode.Campaign);
     }

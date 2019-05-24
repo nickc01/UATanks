@@ -167,7 +167,7 @@ public partial class GameManager : MonoBehaviour
         //Set the scene active
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
         //Generate the map
-        MapGenerator.Generator.GenerateMap();
+        MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Campaign ? CurrentCampaignLevel : 0);
         //Spawn the player at a random spawnpoint
         var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
         Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
