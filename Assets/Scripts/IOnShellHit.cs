@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 public interface IOnShellHit
 {
     //When this object is hit with a shell
-    void OnShellHit(Shell shell);
+    //If the function returns true, then the shell will be destroyed
+    bool OnShellHit(Shell shell);
 }

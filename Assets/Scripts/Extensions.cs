@@ -43,6 +43,12 @@ namespace UnityEngine
             }
         }
 
+        //Returns a random element from the list
+        public static T RandomElement<T>(this List<T> list)
+        {
+            return list[Random.Range(0,list.Count)];
+        }
+
         //A clamp method that works with negative and positive numbers
         public static float ClampAbs(float value, float min, float max)
         {

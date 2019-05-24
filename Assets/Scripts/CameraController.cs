@@ -52,4 +52,8 @@ public class CameraController : MonoBehaviour
         //Set the position of the camera to the target
         Main.transform.position = new Vector3(target.transform.position.x,Main.transform.position.y,target.transform.position.z);
     }
+
+    //Get the width and height of the camera
+    public static (float Width, float Height) GetCameraBounds() => (Camera.main.pixelWidth, Camera.main.pixelHeight);
+
 }

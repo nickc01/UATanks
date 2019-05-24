@@ -43,12 +43,16 @@ public class Shell : MonoBehaviour
         {
             //If the shell has collided with something that registers for a shell hit, then call it
             var hitCallback = collision.gameObject.GetComponent<IOnShellHit>();
+            bool DestroyThis = true;
             if (hitCallback != null)
             {
-                hitCallback.OnShellHit(this);
+                DestroyThis = hitCallback.OnShellHit(this);
             }
-            //Destroy the shell
-            Destroy(gameObject);
+            if (DestroyThis)
+            {
+                //Destroy the shell
+                Destroy(gameObject);
+            }
         }
     }
 }

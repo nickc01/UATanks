@@ -5,9 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(TankMover), typeof(TankShooter), typeof(TankData))]
 public abstract class Controller : MonoBehaviour, IOnShellHit
 {
+    public static List<Controller> AllTanks = new List<Controller>();
+
     protected TankMover Mover; //The mover component for the tank
     protected TankShooter Shooter; //The shooter component of the tank
     public TankData Data { get; protected set; } //The data of the tank
+    [HideInInspector]
+    public List<PowerUp> ActivePowerUps = new List<PowerUp>();
 
     public virtual float Health //The health of the tank
     {
@@ -27,7 +31,7 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     public virtual float Score { get => Data.Score; set => Data.Score = value; } //A public accessor for the score
 
     //When the tank is hit by a shell
-    public abstract void OnShellHit(Shell shell);
+    public abstract bool OnShellHit(Shell shell);
 
     public virtual void Start()
     {
@@ -40,6 +44,8 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
         //Set the firing rate
         Shooter.FireRate = Data.FireRate;
 
+        AllTanks.Add(this);
+
         //Set the color of any colorizers on this object
         foreach (var colorizer in GetComponentsInChildren<TankColorer>())
         {
@@ -47,9 +53,30 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
         }
     }
 
+    public virtual void Update()
+    {
+        //Decrease the powerup timers
+        for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
+        {
+            ActivePowerUps[i].TimeLeft -= Time.deltaTime;
+        }
+    }
+
+    public void Attack(float Damage)
+    {
+        //Decrease the tank's health
+        Health -= Mathf.Clamp(Damage - Data.DamageResistance, 0f, Damage);
+    }
+
     //Called when the tank's health is zero
     protected virtual void OnDeath()
     {
+        AllTanks.Remove(this);
+        //Deactivate all the active powerups
+        for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
+        {
+            ActivePowerUps[i].Destroy();
+        }
         //Destroy the tank
         Destroy(gameObject);
     }

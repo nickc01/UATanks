@@ -21,12 +21,16 @@ public class EnemyTank : Controller
     [Tooltip("Whether to use Obstacle Avoidance in the enemy movement")]
     [SerializeField] bool UseObstacleAvoidance = true;
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
+    [PropSender("Patrolling","personality",Personality.Patrol)]
     [SerializeField] Personality personality = Personality.Chase;
     [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
-    [SerializeField] List<Transform> PatrolPoints = new List<Transform>();
+    [PropReceiver("Patrolling")]
+    [SerializeField] List<Transform> patrolPoints = new List<Transform>();
     [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
+    [PropReceiver("Patrolling")]
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
+    [PropReceiver("Patrolling")]
     [SerializeField] PatrolLoopMode patrolLoopMode = PatrolLoopMode.End;
 
     /*-----DEBUG FLAGS-----*/
@@ -58,6 +62,10 @@ public class EnemyTank : Controller
     Hearing Hearing; //The hearing component of the enemy tank
     Vision Vision; //The vision component of the enemy tank
     TankHealthDisplay tankHealth; //The component to display the tank's health
+
+    //Public Interfaces
+    public Personality Personality => personality;
+    public List<Transform> PatrolPoints => patrolPoints;
 
     public override void Start()
     {
@@ -99,10 +107,11 @@ public class EnemyTank : Controller
         }
     }
 
-    protected virtual void Update()
+    public override void Update()
     {
+        base.Update();
         //If there is a player in the scene
-        if (GameManager.Player.Tank != null)
+        if (GameManager.Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)
@@ -143,16 +152,17 @@ public class EnemyTank : Controller
     }
 
     //Chase towards the player
-    protected void Chase()
+    protected void Chase(Transform target = null)
     {
+        target = target ?? GameManager.Player.Tank.transform;
         //If the tank can hear the player
-        if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(target.position, GameManager.Player.Tank.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate towards the player
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
+        Mover.RotateTowards(target.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -286,26 +296,41 @@ public class EnemyTank : Controller
         //If the health is less than half
         else
         {
-            //Flee from the player
-            Flee();
+            //Get the nearest health powerup
+            var (_, powerup) = PowerupHolder.GetNearestPowerup<HealthPowerup>(transform.position);
+            //If there is a powerup
+            if (powerup != null)
+            {
+                //Move to it
+                Chase(powerup.transform);
+            }
+            else
+            {
+                //Flee from the player
+                Flee();
+            }
         }
     }
 
     //When the enemy is hit by a player shell, it reduces the tank's health
     //if the tank's health is zero, the tank is destroyed
-    public override void OnShellHit(Shell shell)
+    public override bool OnShellHit(Shell shell)
     {
+        if (shell.Source == this)
+        {
+            return false;
+        }
         //If the shell came from a player tank
         if (shell.Source is PlayerTank)
         {
-            //Decrease the tank's health
-            Health -= shell.Damage;
+            Attack(shell.Damage);
             //Increase source tank's score if health is zero
             if (Health == 0)
             {
                 shell.Source.Score += Data.TankValue;
             }
         }
+        return true;
     }
 
     //Called when the tank dies
@@ -315,7 +340,7 @@ public class EnemyTank : Controller
         //Remove this enemy data from the list of enemy data's
         GameManager.Enemies.Remove((this, Data));
         //If there are no enemies in the Enemies list
-        if (GameManager.Enemies.Count == 0)
+        if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel)
         {
             //Trigger the win condition
             GameManager.Win();
