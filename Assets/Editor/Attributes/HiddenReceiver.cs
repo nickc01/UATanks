@@ -3,24 +3,20 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomPropertyDrawer(typeof(HiddenReceiverAttribute))]
+[CustomPropertyDrawer(typeof(PropReceiverAttribute))]
 public class HiddenReceiver : PropertyDrawer
 {
-    HiddenReceiverAttribute parameters;
+    PropReceiverAttribute parameters;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         if (parameters == null)
         {
-            parameters = attribute as HiddenReceiverAttribute;
+            parameters = attribute as PropReceiverAttribute;
         }
-        if (HiddenSender.Enablers.ContainsKey(parameters.ValueID) && HiddenSender.Enablers[parameters.ValueID])
+        if (HiddenSender.Enablers.ContainsKey(parameters.BindID) && HiddenSender.Enablers[parameters.BindID])
         {
-            //EditorGUI.BeginProperty(position, label, property);
             EditorGUI.PropertyField(position, property, label);
-            //EditorGUI.EndProperty();
-            //EditorGUI.PropertyField(position, property, label);
-            //base.OnGUI(position, property, label);
         }
     }
 
@@ -28,12 +24,11 @@ public class HiddenReceiver : PropertyDrawer
     {
         if (parameters == null)
         {
-            parameters = attribute as HiddenReceiverAttribute;
+            parameters = attribute as PropReceiverAttribute;
         }
-        if (HiddenSender.Enablers != null && HiddenSender.Enablers.TryGetValue(parameters.ValueID, out var result) && result)
+        if (HiddenSender.Enablers != null && HiddenSender.Enablers.TryGetValue(parameters.BindID, out var result) && result)
         {
             return EditorGUI.GetPropertyHeight(property, label, true);
-            //return base.GetPropertyHeight(property,label);
         }
         return 0;
     }

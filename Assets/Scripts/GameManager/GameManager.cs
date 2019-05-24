@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public partial class GameManager : MonoBehaviour
 {
-    private static bool playingLevel = false;
-    public static bool PlayingLevel
+    private static bool playingLevel = false; //Whether the player is playing a level or not
+    public static bool PlayingLevel //The public interface for whether the player is playing a level
     {
         get => playingLevel;
         set
@@ -19,9 +19,9 @@ public partial class GameManager : MonoBehaviour
             }
         }
     }
-    public static event Action<bool> PlayingLevelEvent;
-    public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.None;
-    public static int CurrentCampaignLevel { get; set; } = 0;
+    public static event Action<bool> PlayingLevelEvent; //An event that is called whenever the game is playing or not
+    public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.Random; //The mode the map generator will use
+    public static int CurrentCampaignLevel { get; set; } = 0; //The current campaign level loaded
     public static GameManager Game { get; private set; } //The singleton for the game manager
     public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
@@ -92,12 +92,14 @@ public partial class GameManager : MonoBehaviour
         //If the game scene is already active
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
-            UI.Play(LevelLoadMode.None);
+            UI.Play(LevelLoadMode.Random);
         }
     }
 
+    //A function to quit the game
     public static void Quit()
     {
+        //Quit the game
         Application.Quit();
     }
 
@@ -123,25 +125,28 @@ public partial class GameManager : MonoBehaviour
         PlayingLevel = false;
     }
 
+    //A routine to unload the level
     public static IEnumerator UnloadLevel()
     {
+        //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
         }
     }
 
+    //A routine to load the level and play the game
     static IEnumerator LoadGameScene(LevelLoadMode loadMode)
     {
+        //Reset all the tank stats
         Player = (null, null);
         Enemies.Clear();
         Controller.AllTanks.Clear();
+        //Set the seed of the map generator depending on the level load mode
         CurrentLoadMode = loadMode;
         switch (loadMode)
         {
-            case LevelLoadMode.None:
-                MapGenerator.Generator.SeedGenerator = SeedGenerator.Random;
-                break;
             case LevelLoadMode.Campaign:
                 MapGenerator.Generator.SeedGenerator = SeedGenerator.UseSeed;
                 MapGenerator.Generator.Seed = CurrentCampaignLevel;
@@ -153,6 +158,7 @@ public partial class GameManager : MonoBehaviour
                 MapGenerator.Generator.SeedGenerator = SeedGenerator.Random;
                 break;
         }
+        //If the game scene is not loaded yet
         if (!SceneManager.GetSceneByName("Game").isLoaded)
         {
             //Load the game scene
@@ -168,7 +174,10 @@ public partial class GameManager : MonoBehaviour
         yield return UI.ShowReadySequence();
         //Show the game UI
         UIManager.SetUIState("Game");
+        //Set the playing level flag
         PlayingLevel = true;
+        //Reset the health UI
+        HealthDisplay.Health = Player.Tank.Health;
     }
 
 }

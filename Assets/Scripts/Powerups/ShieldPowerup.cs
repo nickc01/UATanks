@@ -8,34 +8,43 @@ public class ShieldPowerup : PowerUp
     protected float WarningFlashRate;
     protected float DamageResistance;
 
-    bool Warning = false;
-    bool FlashOn = true;
-    float Timer = 0f;
-    Vector3 RotationVector = Vector3.up;
+    bool Warning = false; //Whether the warning is active or not
+    bool FlashOn = true; //Wether to flash on or off
+    float FlashTimer = 0f; //The flash timer
+    Vector3 RotationVector = Vector3.up; //The direction to rotate
 
     protected override void OnActivate()
     {
+        //Set the stats
         ShieldStrength = GameManager.Game.ShieldStrength;
         WarningFlashRate = GameManager.Game.ShieldWarningFlashRate;
         DamageResistance = GameManager.Game.ShieldDamageResistance;
+        //Make the holder visible
         Holder.Visible = true;
-        TankData.DamageResistance += 10f;
+        //Increase the tank's damage resistance
+        TankData.DamageResistance += DamageResistance;
     }
 
     protected override void OnWarning()
     {
+        //Enable the warning
         Warning = true;
     }
 
     protected override void Update()
     {
+        //Rotate the holder
         Holder.transform.Rotate(RotationVector * 180f * Mathf.Deg2Rad, Space.Self);
+        //If the warning is on
         if (Warning)
         {
-            Timer += Time.deltaTime * WarningFlashRate;
-            if (Timer >= 1f)
+            //Increase the flash timer
+            FlashTimer += Time.deltaTime * WarningFlashRate;
+            //If it's greater than 1
+            if (FlashTimer >= 1f)
             {
-                Timer = 0;
+                //Change the flash mode
+                FlashTimer = 0;
                 FlashOn = !FlashOn;
                 Holder.Visible = FlashOn;
             }
@@ -44,7 +53,9 @@ public class ShieldPowerup : PowerUp
 
     protected override void OnDeactivate()
     {
+        //Hide the holder
         Holder.Visible = false;
-        TankData.DamageResistance -= 10f;
+        //Reset the damage resistance
+        TankData.DamageResistance -= DamageResistance;
     }
 }

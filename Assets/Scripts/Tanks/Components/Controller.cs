@@ -55,6 +55,7 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
 
     public virtual void Update()
     {
+        //Decrease the powerup timers
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {
             ActivePowerUps[i].TimeLeft -= Time.deltaTime;

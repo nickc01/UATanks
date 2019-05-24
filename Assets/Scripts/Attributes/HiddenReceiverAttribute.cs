@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class HiddenReceiverAttribute : PropertyAttribute
+public class PropReceiverAttribute : PropertyAttribute
 {
-    public string ValueID;
+    public string BindID; //The ID to bind to
 
-    public HiddenReceiverAttribute(string valueID)
+    public PropReceiverAttribute(string bindID)
     {
-        ValueID = valueID;
+        BindID = bindID;
     }
 }

@@ -15,15 +15,15 @@ public class MapGenerator : MonoBehaviour
     [Tooltip("How wide and how long each tile in the map will be")]
     public Vector2Int TileDimensions;
     [Tooltip("The type of seed to use")]
-    [HiddenSender("SeedGenerator", "SeedGenerator", SeedGenerator.UseSeed)]
+    [PropSender("SeedGenerator", "SeedGenerator", SeedGenerator.UseSeed)]
     public SeedGenerator SeedGenerator;
     [Tooltip("The seed used to generate the map")]
-    [HiddenReceiver("SeedGenerator")]
+    [PropReceiver("SeedGenerator")]
     public int Seed = 0;
     [Tooltip("A list of room prefabs to use")]
     public List<GameObject> Rooms = new List<GameObject>();
 
-    public static List<PlayerSpawn> PlayerSpawnPoints = new List<PlayerSpawn>();
+    public static List<PlayerSpawn> PlayerSpawnPoints = new List<PlayerSpawn>(); //The list of player spawnpoints
     public static MapGenerator Generator { get; private set; } //The singleton for the map generator
 
     private void Start()
@@ -42,6 +42,7 @@ public class MapGenerator : MonoBehaviour
 
     public void ResetSeed()
     {
+        //Reset the seed based on the type of seed generator used
         switch (SeedGenerator)
         {
             case SeedGenerator.UseSeed:
@@ -56,16 +57,22 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    //Generates the map
     public void GenerateMap()
     {
+        //Reset the seed
         ResetSeed();
+        //Clear the list of player spawnpoints
         PlayerSpawnPoints.Clear();
+
+        //Loop over each tiles in the grid
         for (int x = 0; x < MapWidth; x++)
         {
             for (int y = 0; y < MapHeight; y++)
             {
+                //Instantiate a random room
                 var NewRoom = Instantiate(Rooms[Random.Range(0, Rooms.Count)], new Vector3(x * TileDimensions.x,0, y * TileDimensions.y), Quaternion.identity);
-                //Open Up the Doors
+                //Open up the doors in the room
                 foreach (var door in NewRoom.GetComponentsInChildren<Door>())
                 {
                     switch (door.direction)
@@ -92,9 +99,12 @@ public class MapGenerator : MonoBehaviour
                 //Spawn Random Enemies
                 foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
                 {
+                    //Instantiate a new random enemy
                     var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], enemySpawn.transform.position, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
+                    //If the enemy has the patrol personality
                     if (enemy.Personality == Personality.Patrol)
                     {
+                        //Get and Set the enemy's patrol points
                         var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();
                         var SelectedPatrolSet = AllPatrolSets[Random.Range(0, AllPatrolSets.GetLength(0))];
 ;                       enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
@@ -117,10 +127,12 @@ public class MapGenerator : MonoBehaviour
 
     private int GetRandomSeed()
     {
+        //Get the time right now and convert it to a hash code for use as a seed
         return DateTime.Now.GetHashCode();
     }
     private int GetSeedOfTheDay()
     {
+        //Get the time for just today and convert it to a hash code for use as a seed
         return DateTime.Today.GetHashCode();
     }
 }

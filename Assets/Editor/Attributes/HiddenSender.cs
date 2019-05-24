@@ -3,41 +3,41 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomPropertyDrawer(typeof(HiddenSenderAttribute))]
+[CustomPropertyDrawer(typeof(PropSenderAttribute))]
 public class HiddenSender : PropertyDrawer
 {
     public static Dictionary<string, bool> Enablers = new Dictionary<string, bool>();
 
-    HiddenSenderAttribute parameters;
+    PropSenderAttribute parameters;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         if (parameters == null)
         {
-            parameters = attribute as HiddenSenderAttribute;
+            parameters = attribute as PropSenderAttribute;
         }
         EditorGUI.PropertyField(position, property, label);
 
         bool result = false;
         if (parameters.PropertyName != null)
         {
-            result = GetValueFromProperty(property.serializedObject.FindProperty(parameters.PropertyName)).Equals(parameters.IfValueEqual);
+            result = GetValueFromProperty(property.serializedObject.FindProperty(parameters.PropertyName)).Equals(parameters.CompareValue);
         }
         else
         {
-            result = parameters.IfValueEqual.Equals(property.boolValue);
+            result = parameters.CompareValue.Equals(property.boolValue);
         }
         if (parameters.NotEqual)
         {
             result = !result;
         }
-        if (!Enablers.ContainsKey(parameters.ValueID))
+        if (!Enablers.ContainsKey(parameters.BindID))
         {
-            Enablers.Add(parameters.ValueID, result);
+            Enablers.Add(parameters.BindID, result);
         }
         else
         {
-            Enablers[parameters.ValueID] = result;
+            Enablers[parameters.BindID] = result;
         }
     }
 

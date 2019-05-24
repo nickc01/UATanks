@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+//Limits an Object field to use a select type
 public class ReferenceLimitAttribute : PropertyAttribute
 {
     public Type limitType;

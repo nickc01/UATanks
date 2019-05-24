@@ -10,8 +10,9 @@ using Object = UnityEngine.Object;
 
 public class PowerupHolder : MonoBehaviour
 {
-    private static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>();
+    private static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game
 
+    //Gets all the powerups of a specific type
     public static ReadOnlyCollection<PowerupHolder> GetAllPowerups<PowerupType>() where PowerupType : PowerUp
     {
         if (!AllPowerups.ContainsKey(typeof(PowerupType)))
@@ -21,7 +22,8 @@ public class PowerupHolder : MonoBehaviour
         return AllPowerups[typeof(PowerupType)].AsReadOnly();
     }
 
-    public static (float Distance, PowerupHolder Holder) GetNearestHolder<T>(Vector3 source) where T : PowerUp
+    //Gets the nearest powerup of a specific type
+    public static (float Distance, PowerupHolder Holder) GetNearestPowerup<T>(Vector3 source) where T : PowerUp
     {
         (float Distance, PowerupHolder Holder) Nearest = (float.PositiveInfinity, null);
         foreach (var holder in GetAllPowerups<T>())
@@ -37,13 +39,13 @@ public class PowerupHolder : MonoBehaviour
 
 
 
-    public PowerUpInfo powerUp;
+    public PowerUpInfo powerUp; //The powerup info
 
-    public bool Activated { get; private set; } = false;
+    public bool Activated { get; private set; } = false; //Whether this powerup holder is activated
 
-    private bool visible = true;
+    private bool visible = true; //Whether this holder is visible
 
-    public bool Visible
+    public bool Visible //The public interface for accessing the visibility of the holder
     {
         get => visible;
         set
@@ -51,6 +53,7 @@ public class PowerupHolder : MonoBehaviour
             if (visible != value)
             {
                 visible = value;
+                //Shows or hides the powerup holder based on the value set
                 foreach (var renderer in GetComponentsInChildren<Renderer>())
                 {
                     renderer.enabled = value;
@@ -60,6 +63,7 @@ public class PowerupHolder : MonoBehaviour
     }
 
 
+    //Adds a powerup to the list
     private void Add(Type type)
     {
         if (type == null)
@@ -73,6 +77,7 @@ public class PowerupHolder : MonoBehaviour
         AllPowerups[type].Add(this);
     }
 
+    //Removes a powerup from the list
     private void Remove(Type type)
     {
         if (type == null)
@@ -89,6 +94,7 @@ public class PowerupHolder : MonoBehaviour
         }
     }
 
+    //Adds itself to the list
     private void Start()
     {
         Add(powerUp.PowerUpType);
@@ -99,6 +105,7 @@ public class PowerupHolder : MonoBehaviour
     {
         if (!Activated)
         {
+            //If the powerup holder has collided with a tank
             var controller = other.GetComponent<Controller>();
             if (controller != null && controller.Data != null)
             {
@@ -112,17 +119,22 @@ public class PowerupHolder : MonoBehaviour
                 Activated = true;
                 //Instantiate the new powerup via the Activator class
                 var NewPowerUp = Activator.CreateInstance(powerupType) as PowerUp;
+                //Set the powerup's stats
                 NewPowerUp.Info = powerUp;
                 NewPowerUp.Tank = controller;
                 NewPowerUp.TankData = controller.Data;
                 NewPowerUp.Holder = this;
 
+                //Set the holder to follow the player
                 transform.parent = controller.transform;
                 transform.localPosition = Vector3.zero;
+                //Hide the holder
                 Visible = false;
 
+                //If the powerup can only be activated one at a time
                 if (powerUp.OneAtATime)
                 {
+                    //Disable the one that is already active
                     var finding = controller.ActivePowerUps.FirstOrDefault(p => p.GetType() == powerupType);
                     if (finding != null)
                     {
@@ -140,6 +152,7 @@ public class PowerupHolder : MonoBehaviour
     {
         if (Application.isPlaying)
         {
+            //Removes itself from the list
             Remove(powerUp.PowerUpType);
         }
     }

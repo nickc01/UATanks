@@ -1,28 +1,28 @@
 ﻿using System;
 using UnityEngine;
 
-public class HiddenSenderAttribute : PropertyAttribute
+public class PropSenderAttribute : PropertyAttribute
 {
-    public object IfValueEqual;
-    public string ValueID;
-    public string PropertyName = null;
-    public bool NotEqual = false;
+    public object CompareValue; //The value to compare to
+    public string BindID; //The bind ID
+    public string PropertyName = null; //the name of the property to get the value from
+    public bool NotEqual = false; //If true, will check for inequality
 
-    public HiddenSenderAttribute(string valueID, bool ifValueEqualTo = true)
+    public PropSenderAttribute(string bindID, bool compareValue = true)
     {
-        ValueID = valueID;
-        IfValueEqual = ifValueEqualTo;
+        BindID = bindID;
+        CompareValue = compareValue;
     }
 
-    public HiddenSenderAttribute(string valueID, string propertyName, object ifValueEqualTo, bool NotEqual = false)
+    public PropSenderAttribute(string valueID, string propertyName, object compareValue, bool notEqual = false)
     {
-        if (ifValueEqualTo is Enum)
+        if (compareValue is Enum)
         {
-            ifValueEqualTo = (int)ifValueEqualTo;
+            compareValue = (int)compareValue;
         }
-        ValueID = valueID;
-        IfValueEqual = ifValueEqualTo;
+        BindID = valueID;
+        CompareValue = compareValue;
         PropertyName = propertyName;
-        this.NotEqual = NotEqual;
+        NotEqual = notEqual;
     }
 }

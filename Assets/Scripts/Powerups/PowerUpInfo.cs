@@ -15,16 +15,16 @@ public class PowerUpInfo
     [ReferenceLimit(typeof(MonoScript))]
 #endif
     [SerializeField]
-    UnityEngine.Object Script;
+    UnityEngine.Object Script = null;
 
     [Header("Powerup Stats")]
     [Tooltip("Whether the powerup will last forever or not")]
-    [HiddenSender("Forever", false)]
+    [PropSender("Forever", false)]
     public bool Forever = false;
     [Tooltip("How long the powerup will last")]
-    [HiddenReceiver("Forever")]
+    [PropReceiver("Forever")]
     public float LifeTime = 9f;
-    [HiddenReceiver("Forever")]
+    [PropReceiver("Forever")]
     [Tooltip("The warning time used to warn the player when the powerup is about to run out")]
     public float WarningTime = 3f;
     [Tooltip("How long it takes for the powerup to spawn in the game")]

@@ -8,7 +8,9 @@ public class HealthPowerup : PowerUp
 {
     protected override void OnActivate()
     {
+        //Increase the source tank's health
         Tank.Health += GameManager.Game.HealthRestoreAmount;
+        //Destroy the powerup
         Destroy();
     }
 

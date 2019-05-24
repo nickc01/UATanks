@@ -20,12 +20,14 @@ public class CampaignLevelButton : MonoBehaviour
                 GetComponent<Button>().onClick.AddListener(OnClick);
                 text = GetComponentInChildren<TextMeshProUGUI>();
             }
+            //Update the level text based on the level number set
             text.text = "Level " + (level + 1);
         }
     }
 
     private void OnClick()
     {
+        //When the button is clicked, play the campaign level
         Callbacks.PlayCampaignLevel(Level);
     }
 }

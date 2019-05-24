@@ -21,16 +21,16 @@ public class EnemyTank : Controller
     [Tooltip("Whether to use Obstacle Avoidance in the enemy movement")]
     [SerializeField] bool UseObstacleAvoidance = true;
     [Tooltip("The personality of the tank. This will determines the type of AI the tank will use")]
-    [HiddenSender("Patrolling","personality",Personality.Patrol)]
+    [PropSender("Patrolling","personality",Personality.Patrol)]
     [SerializeField] Personality personality = Personality.Chase;
     [Tooltip("A list of points the enemy tank should patrol. Used in both the patrol and navigate personalities")]
-    [HiddenReceiver("Patrolling")]
+    [PropReceiver("Patrolling")]
     [SerializeField] List<Transform> patrolPoints = new List<Transform>();
     [Tooltip("How close the tank has to get to a patrol point before it determines that it has reached that point")]
-    [HiddenReceiver("Patrolling")]
+    [PropReceiver("Patrolling")]
     [SerializeField] float PatrolMinimumDistance = 0.4f;
     [Tooltip("Determines what the enemy tank will do once it has run out of patrol points in the list")]
-    [HiddenReceiver("Patrolling")]
+    [PropReceiver("Patrolling")]
     [SerializeField] PatrolLoopMode patrolLoopMode = PatrolLoopMode.End;
 
     /*-----DEBUG FLAGS-----*/
@@ -296,10 +296,13 @@ public class EnemyTank : Controller
         //If the health is less than half
         else
         {
-            var (_, holder) = PowerupHolder.GetNearestHolder<HealthPowerup>(transform.position);
-            if (holder != null)
+            //Get the nearest health powerup
+            var (_, powerup) = PowerupHolder.GetNearestPowerup<HealthPowerup>(transform.position);
+            //If there is a powerup
+            if (powerup != null)
             {
-                Chase(holder.transform);
+                //Move to it
+                Chase(powerup.transform);
             }
             else
             {

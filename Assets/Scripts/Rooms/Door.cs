@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
+    //The direction the door is facing
     public DoorDirection direction = DoorDirection.Up;
 }
