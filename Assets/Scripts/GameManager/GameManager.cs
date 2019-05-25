@@ -25,6 +25,7 @@ public partial class GameManager : MonoBehaviour
     public static GameManager Game { get; private set; } //The singleton for the game manager
     public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
+    public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
 
     [Header("Prefabs")]
     [Tooltip("The prefab used whenever a tank fires a shell")]

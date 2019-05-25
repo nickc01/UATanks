@@ -596,7 +596,7 @@ MonoBehaviour:
   IncreaseHeightEvery: 2
   TileDimensions: {x: 30, y: 30}
   SeedGenerator: 2
-  Seed: 0
+  Seed: 180
   Rooms:
   - {fileID: 4222168820409451953, guid: 9e5ec3e7c7c47d543957813ab384b6b6, type: 3}
   - {fileID: 8882683473859789358, guid: 80fbcf260a25fbd408f3667ddfcbd44f, type: 3}

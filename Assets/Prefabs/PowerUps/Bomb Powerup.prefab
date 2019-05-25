@@ -209,7 +209,7 @@ MonoBehaviour:
     Forever: 0
     LifeTime: 7
     WarningTime: 2
-    SpawnTimeMinMax: {x: 10, y: 30}
+    SpawnTimeMinMax: {x: 9.88, y: 30}
     OneAtATime: 1
 --- !u!135 &1554804744724868590
 SphereCollider:

@@ -10,16 +10,15 @@ using Object = UnityEngine.Object;
 
 public class PowerupHolder : MonoBehaviour
 {
-    private static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game
 
     //Gets all the powerups of a specific type
     public static ReadOnlyCollection<PowerupHolder> GetAllPowerups<PowerupType>() where PowerupType : PowerUp
     {
-        if (!AllPowerups.ContainsKey(typeof(PowerupType)))
+        if (!GameManager.AllPowerups.ContainsKey(typeof(PowerupType)))
         {
-            AllPowerups.Add(typeof(PowerupType), new List<PowerupHolder>());
+            GameManager.AllPowerups.Add(typeof(PowerupType), new List<PowerupHolder>());
         }
-        return AllPowerups[typeof(PowerupType)].AsReadOnly();
+        return GameManager.AllPowerups[typeof(PowerupType)].AsReadOnly();
     }
 
     //Gets the nearest powerup of a specific type
@@ -70,11 +69,11 @@ public class PowerupHolder : MonoBehaviour
         {
             return;
         }
-        if (!AllPowerups.ContainsKey(type))
+        if (!GameManager.AllPowerups.ContainsKey(type))
         {
-            AllPowerups.Add(type, new List<PowerupHolder>());
+            GameManager.AllPowerups.Add(type, new List<PowerupHolder>());
         }
-        AllPowerups[type].Add(this);
+        GameManager.AllPowerups[type].Add(this);
     }
 
     //Removes a powerup from the list
@@ -84,12 +83,12 @@ public class PowerupHolder : MonoBehaviour
         {
             return;
         }
-        if (AllPowerups.ContainsKey(type))
+        if (GameManager.AllPowerups.ContainsKey(type))
         {
-            AllPowerups[type].Remove(this);
-            if (AllPowerups[type].Count == 0)
+            GameManager.AllPowerups[type].Remove(this);
+            if (GameManager.AllPowerups[type].Count == 0)
             {
-                AllPowerups.Remove(type);
+                GameManager.AllPowerups.Remove(type);
             }
         }
     }
