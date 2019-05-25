@@ -96,6 +96,8 @@ public static class Callbacks
         GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
     }
 
+
+
     //Called when the random button is pressed
     public static void RandomLevel()
     {
