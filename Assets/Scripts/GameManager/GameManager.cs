@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public partial class GameManager : MonoBehaviour
@@ -76,6 +78,10 @@ public partial class GameManager : MonoBehaviour
     public float BombExplosionSize;
     [Tooltip("How much damage the explosion will do to tanks")]
     public float BombDamage;
+
+    [Header("Audio")]
+    [Tooltip("The Main Audio Group")]
+    public AudioMixer MainAudio;
 
     private void Start()
     {

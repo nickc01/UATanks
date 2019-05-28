@@ -12,9 +12,23 @@ public static class Callbacks
     #region Main Menu
 
     //Called when the single player button is pressed
-    public static void SinglePlayer()
+    public static void PlayGame()
     {
-        GameManager.UI.ToModeSelectScreen();
+        //GameManager.UI.ToModeSelectScreen();
+        var dropdownValue = Options.MapType.value;
+        if (dropdownValue == 0)
+        {
+            Map_Day();
+        }
+        else
+        {
+            RandomLevel();
+        }
+    }
+
+    public static void OptionsButton()
+    {
+        GameManager.UI.GoToOptions();
     }
 
     //Called when any main menu button is pressed

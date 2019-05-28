@@ -22,6 +22,11 @@ public partial class GameManager
             Game.StartCoroutine(LoadGameScene(loadMode));
         }
 
+        public static void GoToOptions()
+        {
+            UIManager.SetUIState("Options", Curves.Smooth, TransitionMode.TopToBottom);
+        }
+
         //The routine for showing the ready sequence at the beginning of each level
         public static IEnumerator ShowReadySequence()
         {
