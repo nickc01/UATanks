@@ -111,7 +111,7 @@ public class EnemyTank : Tank
     {
         base.Update();
         //If there is a player in the scene
-        if (GameManager.Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
+        if (!Dead && GameManager.Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)
@@ -337,13 +337,16 @@ public class EnemyTank : Tank
     protected override void OnDeath()
     {
         base.OnDeath();
-        //Remove this enemy data from the list of enemy data's
-        GameManager.Enemies.Remove((this, Data));
-        //If there are no enemies in the Enemies list
-        if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel)
+        if (Lives == 0)
         {
-            //Trigger the win condition
-            GameManager.Win();
+            //Remove this enemy data from the list of enemy data's
+            GameManager.Enemies.Remove((this, Data));
+            //If there are no enemies in the Enemies list
+            if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel)
+            {
+                //Trigger the win condition
+                GameManager.Win();
+            }
         }
     }
 

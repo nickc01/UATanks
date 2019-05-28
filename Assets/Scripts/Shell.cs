@@ -31,7 +31,11 @@ public class Shell : MonoBehaviour
         //Destroy the shell after a set lifetime
         Destroy(gameObject, Lifetime);
         //Play the shell fire sound
-        AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
+        //AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
+        foreach (var listener in AudioPlayer.Listeners)
+        {
+            AudioPlayer.Play(GameManager.Game.FireSound, 1f,transform,listener);
+        }
     }
 
     //When the shell has collided with anything

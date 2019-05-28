@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
         set => SetTarget(value);
     }
 
-    public AudioSource Sound { get; private set; } //The Audio Source of the Camera
+    //public AudioSource Sound { get; private set; } //The Audio Source of the Camera
 
     private void Start()
     {
@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
             return;
         }
         //Set the Audio Source
-        Sound = GetComponent<AudioSource>();
+        //Sound = GetComponent<AudioSource>();
     }
 
     private void Update()

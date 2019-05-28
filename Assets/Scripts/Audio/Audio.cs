@@ -17,7 +17,6 @@ public static class Audio
         }
         set
         {
-            Debug.Log("RESULT = " + Mathf.Lerp(-80f, 0f, value));
             GameManager.Game.MainAudio.SetFloat("MasterVolume", Mathf.Lerp(-80f, 0f, value));
         }
     }

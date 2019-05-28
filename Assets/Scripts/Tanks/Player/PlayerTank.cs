@@ -16,6 +16,7 @@ public class PlayerTank : Tank
         GameManager.Player = (this, Data);
         //Set the camera target to be the player tank
         CameraController.Target = gameObject;
+        AudioPlayer.Listeners.Add(transform);
     }
 
     //The health of the player
@@ -58,7 +59,7 @@ public class PlayerTank : Tank
     {
         base.Update();
         Noise = 0;
-        if (GameManager.PlayingLevel)
+        if (!Dead && GameManager.PlayingLevel)
         {
             //If the spacebar is pressed
             if (Input.GetKey(KeyCode.Space))
@@ -127,6 +128,7 @@ public class PlayerTank : Tank
         {
             //Set the main player to null
             GameManager.Player = (null, null);
+            AudioPlayer.Listeners.Remove(transform);
             GameManager.Lose();
         }
     }

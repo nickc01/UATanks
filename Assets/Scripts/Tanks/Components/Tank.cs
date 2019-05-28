@@ -74,6 +74,10 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
 
         AllTanks.Add(this);
 
+        /*Score = 0;
+        Health = Data.MaxHealth;
+        Lives = Data.MaxLives;*/
+
         //Set the color of any colorizers on this object
         foreach (var colorizer in GetComponentsInChildren<TankColorer>())
         {
@@ -131,8 +135,9 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         Visible = false;
         yield return new WaitForSeconds(Data.RespawnDelay);
         transform.position = Spawnpoint;
+        Health = Data.MaxHealth;
         Visible = true;
-        new Invincibility(this, Data.RespawnInvincibility);
+        new Invincibility(this, Data.RespawnInvincibility,Data.RespawnFlashRate);
         Dead = false;
     }
 }

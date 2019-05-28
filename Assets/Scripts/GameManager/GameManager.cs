@@ -116,8 +116,9 @@ public partial class GameManager : MonoBehaviour
         //Show the win screen
         UIManager.SetUIState("Win",Curves.Smooth,FromIsHidden: true);
         //Play the Win Sound
-        CameraController.Main.Sound.clip = Game.WinSound;
-        CameraController.Main.Sound.Play();
+        //CameraController.Main.Sound.clip = Game.WinSound;
+        //CameraController.Main.Sound.Play();
+        AudioPlayer.Play(Game.WinSound);
         PlayingLevel = false;
     }
 
@@ -127,8 +128,7 @@ public partial class GameManager : MonoBehaviour
         //Show the lose screen
         UIManager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
         //Play the Lose Sound
-        CameraController.Main.Sound.clip = Game.LoseSound;
-        CameraController.Main.Sound.Play();
+        AudioPlayer.Play(Game.LoseSound);
         PlayingLevel = false;
     }
 
@@ -140,6 +140,7 @@ public partial class GameManager : MonoBehaviour
         {
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
+            AudioPlayer.Listeners.Clear();
         }
     }
 
