@@ -4,7 +4,7 @@ using UnityEngine;
 
 //The Controller used for the player tank
 //Primarilly handles inputs and moves the tank depending on said inputs
-public class PlayerTank : Controller
+public class PlayerTank : Tank
 {
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
@@ -39,6 +39,17 @@ public class PlayerTank : Controller
             base.Score = value;
             //Update the score display
             ScoreDisplay.Score = value;
+        }
+    }
+
+    public override int Lives
+    {
+        get => base.Lives;
+        set
+        {
+            base.Lives = value;
+
+            LivesDisplay.Lives = value;
         }
     }
 
@@ -99,7 +110,7 @@ public class PlayerTank : Controller
             return false;
         }
         //If the shell came from a enemy tank
-        if (shell.Source is Controller)
+        if (shell.Source is Tank)
         {
             //Decrease the tank's health
             //Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
@@ -111,11 +122,11 @@ public class PlayerTank : Controller
     protected override void OnDeath()
     {
         base.OnDeath();
-        //Set the main player to null
-        GameManager.Player = (null, null);
         //Trigger the lose condition
-        if (GameManager.PlayingLevel)
+        if (GameManager.PlayingLevel && Lives == 0)
         {
+            //Set the main player to null
+            GameManager.Player = (null, null);
             GameManager.Lose();
         }
     }

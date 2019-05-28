@@ -27,6 +27,12 @@ public class TankData : MonoBehaviour
     public Color color = Color.white;
     [Tooltip("How much damage the tank will be able to resist per hit")]
     public float DamageResistance = 0f;
+    [Tooltip("How many lives the tank has before it dies completely")]
+    public int Lives = 1;
+    [Tooltip("How long the tank will take to respawn when it dies")]
+    public float RespawnDelay = 1f;
+    [Tooltip("How long the respawn invincibility will last")]
+    public float RespawnInvincibility = 3f;
 
     [Header("Shell Stats")]
 

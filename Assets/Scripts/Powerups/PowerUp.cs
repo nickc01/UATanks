@@ -10,7 +10,7 @@ using UnityEngine;
 public abstract class PowerUp
 {
     public PowerUpInfo Info { get; set; } //The configurable info of the powerup
-    public Controller Tank { get; set; } //The source tank
+    public Tank Tank { get; set; } //The source tank
     public TankData TankData { get; set; } //The source tank's data
     public PowerupHolder Holder { get; set; } //The holder that spawned the powerup
 
@@ -88,6 +88,9 @@ public abstract class PowerUp
         //Remove this powerup from the tank's list of powerups
         Tank.ActivePowerUps.Remove(this);
         //Destroy the original holder
-        GameObject.Destroy(Holder);
+        if (Holder != null)
+        {
+            GameObject.Destroy(Holder);
+        }
     }
 }

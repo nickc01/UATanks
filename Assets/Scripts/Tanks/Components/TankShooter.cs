@@ -6,7 +6,7 @@ using static GameManager;
 
 public class TankShooter : MonoBehaviour
 {
-    private Controller controller; //The tank controller of this object
+    private Tank controller; //The tank controller of this object
     private TankData data; //The tank data of this object
     public float FireRate { get; set; } = 0f; //The cooldown timer before another shell can be fired
     public bool Firing { get; private set; } = false; //Whether the tank is shooting a bullet or not
@@ -16,7 +16,7 @@ public class TankShooter : MonoBehaviour
     private void Start()
     {
         //Get the tank controller
-        controller = GetComponent<Controller>();
+        controller = GetComponent<Tank>();
         //Get the tank data
         data = GetComponent<TankData>();
     }

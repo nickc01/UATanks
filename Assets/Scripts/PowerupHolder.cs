@@ -105,7 +105,7 @@ public class PowerupHolder : MonoBehaviour
         if (!Activated)
         {
             //If the powerup holder has collided with a tank
-            var controller = other.GetComponent<Controller>();
+            var controller = other.GetComponent<Tank>();
             if (controller != null && controller.Data != null)
             {
                 //Get the powerup type

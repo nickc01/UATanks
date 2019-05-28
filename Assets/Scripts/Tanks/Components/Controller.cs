@@ -1,17 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 [RequireComponent(typeof(TankMover), typeof(TankShooter), typeof(TankData))]
-public abstract class Controller : MonoBehaviour, IOnShellHit
+public abstract class Tank : MonoBehaviour, IOnShellHit
 {
-    public static List<Controller> AllTanks = new List<Controller>();
+    public static List<Tank> AllTanks = new List<Tank>();
 
     protected TankMover Mover; //The mover component for the tank
     protected TankShooter Shooter; //The shooter component of the tank
     public TankData Data { get; protected set; } //The data of the tank
     [HideInInspector]
     public List<PowerUp> ActivePowerUps = new List<PowerUp>();
+
+    public Vector3 Spawnpoint { get; private set; } //The place the tank spawned at
+    public bool Dead { get; private set; } = false; //Whether the tank is dead or not
+
+    private ReadOnlyCollection<Renderer> TankRenderers;
+    Coroutine Respawner;
 
     public virtual float Health //The health of the tank
     {
@@ -28,13 +35,34 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
             }
         }
     }
+
+    private bool visible = true;
+    public bool Visible
+    {
+        get => visible;
+        set
+        {
+            if (visible != value)
+            {
+                visible = value;
+                foreach (var renderer in TankRenderers)
+                {
+                    renderer.enabled = value;
+                }
+            }
+        }
+    }
+
     public virtual float Score { get => Data.Score; set => Data.Score = value; } //A public accessor for the score
+    public virtual int Lives { get => Data.Lives; set => Data.Lives = value; } //A public accessor for the lives
 
     //When the tank is hit by a shell
     public abstract bool OnShellHit(Shell shell);
 
     public virtual void Start()
     {
+        TankRenderers = new ReadOnlyCollection<Renderer>(GetComponentsInChildren<Renderer>());
+        Spawnpoint = transform.position;
         //Get the main tank components
         Mover = GetComponent<TankMover>();
         Shooter = GetComponent<TankShooter>();
@@ -71,13 +99,40 @@ public abstract class Controller : MonoBehaviour, IOnShellHit
     //Called when the tank's health is zero
     protected virtual void OnDeath()
     {
-        AllTanks.Remove(this);
+        if (Dead)
+        {
+            return;
+        }
+        Dead = true;
         //Deactivate all the active powerups
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {
             ActivePowerUps[i].Destroy();
         }
-        //Destroy the tank
-        Destroy(gameObject);
+        Lives--;
+        if (Lives == 0)
+        {
+            //Destroy the tank
+            AllTanks.Remove(this);
+            Destroy(gameObject);
+        }
+        else
+        {
+            if (Respawner != null)
+            {
+                StopCoroutine(Respawner);
+            }
+            Respawner = StartCoroutine(RespawnRoutine());
+        }
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        Visible = false;
+        yield return new WaitForSeconds(Data.RespawnDelay);
+        transform.position = Spawnpoint;
+        Visible = true;
+        new Invincibility(this, Data.RespawnInvincibility);
+        Dead = false;
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class EnemyTank : Controller
+public class EnemyTank : Tank
 {
     /*-----MAIN TANK STATS-----*/
 

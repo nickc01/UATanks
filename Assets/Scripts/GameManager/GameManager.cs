@@ -149,7 +149,7 @@ public partial class GameManager : MonoBehaviour
         //Reset all the tank stats
         Player = (null, null);
         Enemies.Clear();
-        Controller.AllTanks.Clear();
+        Tank.AllTanks.Clear();
         //Set the seed of the map generator depending on the level load mode
         CurrentLoadMode = loadMode;
         switch (loadMode)
