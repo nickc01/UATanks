@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScoreDisplay : MonoBehaviour
+public class ScoreDisplay : MonoBehaviour, IIsPlayerSpecific
 {
     private static ScoreDisplay Singleton; //The main singleton of the score display
     private TextMeshProUGUI Text; //The text object that represents the score
@@ -20,6 +20,8 @@ public class ScoreDisplay : MonoBehaviour
             Singleton.Text.text = Singleton.baseText + value.ToString();
         }
     }
+
+    public int PlayerID { get; set; }
 
     private void Start()
     {

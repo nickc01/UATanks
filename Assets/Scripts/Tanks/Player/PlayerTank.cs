@@ -4,7 +4,7 @@ using UnityEngine;
 
 //The Controller used for the player tank
 //Primarilly handles inputs and moves the tank depending on said inputs
-public class PlayerTank : Tank
+public class PlayerTank : Tank, IIsPlayerSpecific
 {
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
@@ -53,6 +53,8 @@ public class PlayerTank : Tank
             LivesDisplay.Lives = value;
         }
     }
+
+    public int PlayerID { get; set; } = 1;
 
     //Used to control input
     public override void Update()

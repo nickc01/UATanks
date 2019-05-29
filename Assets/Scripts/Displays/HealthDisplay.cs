@@ -4,13 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthDisplay : MonoBehaviour
+public class HealthDisplay : MonoBehaviour, IIsPlayerSpecific
 {
     private static HealthDisplay Singleton; //The main singleton of the health display
     private Slider healthSlider; //The slider that represents the health object
     private float healthInternal; //The internal variable for storing the health
     [SerializeField] bool Interpolate = true; //Whether to interpolate to the new health value or not
     [SerializeField] float InterpolationSpeed = 7f; //How fast to interpolate to the new health value
+
+    public int PlayerID { get; set; }
 
     public static float Health
     {

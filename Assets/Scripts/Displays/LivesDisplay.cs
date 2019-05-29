@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LivesDisplay : MonoBehaviour
+public class LivesDisplay : MonoBehaviour, IIsPlayerSpecific
 {
     private static LivesDisplay Singleton; //The main singleton of the lives display
     private TextMeshProUGUI Text; //The text object that represents the lives
     private float livesInternal = 0.0f; //The internal variable for storing the lives
     private string baseText; //The base text that is inserted before the lives number
+
+    public int PlayerID { get; set; }
 
     public static float Lives
     {
