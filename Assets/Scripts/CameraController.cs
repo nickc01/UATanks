@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoBehaviour, IIsPlayerSpecific
 {
     public float Speed = 7f; //How fast the camera moves towards the target
 
@@ -14,6 +14,9 @@ public class CameraController : MonoBehaviour
         get => targetInternal;
         set => SetTarget(value);
     }
+    //int IIsPlayerSpecific.PlayerID { get; set; }
+
+    public int PlayerID { get; set; }
 
     //public AudioSource Sound { get; private set; } //The Audio Source of the Camera
 

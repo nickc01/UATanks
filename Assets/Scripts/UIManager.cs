@@ -9,13 +9,14 @@ public static class Curves
     public static AnimationCurve ReadyCurve => UIManager.Singleton.ReadyScreenCurve; //Gives easy access to the ready screen curve
 }
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviour, IIsPlayerSpecific
 {
     public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
     [SerializeField] string defaultState = "Game"; //The starting UI State for the manager
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
     public static string CurrentState { get; private set; } //The current state of the UI
+    public int PlayerID { get; set; }
 
     static Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
