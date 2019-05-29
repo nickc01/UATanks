@@ -17,21 +17,31 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
     public string CurrentState { get; private set; } //The current state of the UI
-    public int PlayerID { get; set; }
+    public int PlayerID { get; set; } = 1;
 
-    static Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
+    private Canvas UICanvas;
 
+    Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
-    public HealthDisplay Health { get; private set; }
-    public LivesDisplay Lives { get; private set; }
-    public ScoreDisplay Score { get; private set; }
+    private HealthDisplay healthInternal;
+    public HealthDisplay Health => healthInternal != null ? healthInternal : (healthInternal = GetComponentInChildren<HealthDisplay>(true));
+    private LivesDisplay livesInternal;
+    public LivesDisplay Lives => livesInternal != null ? livesInternal : (livesInternal = GetComponentInChildren<LivesDisplay>(true));
+    private ScoreDisplay scoreInternal;
+    public ScoreDisplay Score => scoreInternal != null ? scoreInternal : (scoreInternal = GetComponentInChildren<ScoreDisplay>(true));
+
+    bool started = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        Health = GetComponentInChildren<HealthDisplay>();
-        Lives = GetComponentInChildren<LivesDisplay>();
-        Score = GetComponentInChildren<ScoreDisplay>();
+        if (started)
+        {
+            return;
+        }
+        started = true;
+        UICanvas = GetComponent<Canvas>();
+        MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
         //Get all valid UI States
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -40,10 +50,41 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         }
         //Set the current state to the default one
         SetUIState(defaultState);
+        PlayerCountChanged();
+    }
+
+    private void PlayerCountChanged()
+    {
+        Debug.Log("SETTING");
+        gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerID);
+        Debug.Log("Player Component =  " + PlayerID);
+        Debug.Log("CAMERA COMPONENT = " + MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent);
+        UICanvas.worldCamera = MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent;
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying)
+        {
+            MultiplayerManager.AddedPlayersUpdate -= PlayerCountChanged;
+        }
+    }
+
+    public static void SetUIStateAll(string newState)
+    {
+        foreach (var specific in MultiplayerManager.GetAllSpecifics())
+        {
+            specific.Manager.SetUIState(newState);
+        }
     }
 
     public void SetUIState(string newState)
     {
+        if (!started)
+        {
+            defaultState = newState;
+            return;
+        }
         //Disable all states
         foreach (var state in validStates)
         {
@@ -72,6 +113,11 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
     //Sets the UI State with transitioning
     public void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
     {
+        if (!started)
+        {
+            defaultState = newState;
+            return;
+        }
         //If there is no transition set
         if (transitionCurve == null)
         {
@@ -90,6 +136,14 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         transitionTo = newState;
         //Star the transition routine
         TransitionRoutine = CoroutineManager.StartCoroutine(SetUIStateRoutine(transitionCurve,mode,Speed,FromIsHidden));
+    }
+
+    public static void SetUIStateAll(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+    {
+        foreach (var specific in MultiplayerManager.GetAllSpecifics())
+        {
+            specific.Manager.SetUIState(newState,transitionCurve,mode,Speed,FromIsHidden);
+        }
     }
 
     private void FinishTransition()
@@ -176,5 +230,4 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         FinishTransition();
 
     }
-
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -25,7 +26,8 @@ public partial class GameManager : MonoBehaviour
     public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.Random; //The mode the map generator will use
     public static int CurrentCampaignLevel { get; set; } = 0; //The current campaign level loaded
     public static GameManager Game { get; private set; } //The singleton for the game manager
-    public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
+    //public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
+    public static List<(PlayerTank Tank, TankData Data)> Players = new List<(PlayerTank Tank, TankData Data)>();
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
     public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
 
@@ -103,6 +105,35 @@ public partial class GameManager : MonoBehaviour
         }
     }
 
+    public static (PlayerTank Tank, TankData Data) GetNearestPlayer(Vector3 Position)
+    {
+        (float distance, PlayerTank tank) result = (float.PositiveInfinity, null);
+        foreach (var player in Players)
+        {
+            var distance = Vector3.Distance(player.Tank.transform.position, Position);
+            if (distance <= result.distance)
+            {
+                result = (distance, player.Tank);
+            }
+        }
+        return (result.tank, result.tank.Data);
+    }
+
+    public static (PlayerTank Tank, TankData Data) GetNearestPlayer(Transform transform)
+    {
+        return GetNearestPlayer(transform.position);
+    }
+
+    public static (PlayerTank Tank, TankData Data) GetNearestPlayer(GameObject gameObject)
+    {
+        return GetNearestPlayer(gameObject.transform.position);
+    }
+
+    public static (PlayerTank Tank, TankData Data) GetNearestPlayer<T>(T component) where T : Component
+    {
+        return GetNearestPlayer(component.gameObject);
+    }
+
     //A function to quit the game
     public static void Quit()
     {
@@ -111,27 +142,33 @@ public partial class GameManager : MonoBehaviour
     }
 
     //Called when all the enemy tanks in the map have been destroyed
-    public static void Win()
+    public static void Win(PlayerTank Winner)
     {
         //Show the win screen
-        UIManager.Primary.SetUIState("Win",Curves.Smooth,FromIsHidden: true);
+        UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
         //Play the Win Sound
         //CameraController.Main.Sound.clip = Game.WinSound;
         //CameraController.Main.Sound.Play();
         AudioPlayer.Play(Game.WinSound);
         PlayingLevel = false;
-        MultiplayerManager.DeletePlayers();
+        //MultiplayerManager.DeletePlayers();
     }
 
     //Called when the player tank has been destroyed
-    public static void Lose()
+    public static void Lose(PlayerTank Loser)
     {
+        MultiplayerManager.GetPlayerSpecifics(Loser.PlayerID).Manager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        AudioPlayer.Play(Game.LoseSound);
+        if (Players.Count == 1)
+        {
+            Win(Players.First().Tank);
+        }
         //Show the lose screen
-        UIManager.Primary.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        /*UIManager.SetUIStateAll("Lose", Curves.Smooth, FromIsHidden: true);
         //Play the Lose Sound
         AudioPlayer.Play(Game.LoseSound);
-        PlayingLevel = false;
-        MultiplayerManager.DeletePlayers();
+        PlayingLevel = false;*/
+        //MultiplayerManager.DeletePlayers();
     }
 
     //A routine to unload the level
@@ -150,7 +187,8 @@ public partial class GameManager : MonoBehaviour
     static IEnumerator LoadGameScene(LevelLoadMode loadMode)
     {
         //Reset all the tank stats
-        Player = (null, null);
+        //Player = (null, null);
+        Players.Clear();
         Enemies.Clear();
         Tank.AllTanks.Clear();
         //Set the seed of the map generator depending on the level load mode
@@ -190,7 +228,7 @@ public partial class GameManager : MonoBehaviour
         }
         yield return UI.ShowReadySequence();
         //Show the game UI
-        UIManager.Primary.SetUIState("Game");
+        UIManager.SetUIStateAll("Game");
         //Set the playing level flag
         PlayingLevel = true;
     }

@@ -107,6 +107,14 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
+    public static IEnumerable<PlayerSpecifics> GetAllSpecifics()
+    {
+        for (int i = 1; i <= PlayersAdded; i++)
+        {
+            yield return GetPlayerSpecifics(i);
+        }
+    }
+
     public static void DeletePlayers()
     {
         if (PlayersAdded > 1)

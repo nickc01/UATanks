@@ -110,26 +110,27 @@ public class EnemyTank : Tank
     public override void Update()
     {
         base.Update();
+        var Player = GameManager.GetNearestPlayer(this);
         //If there is a player in the scene
-        if (!Dead && GameManager.Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(GameManager.Player.Tank.transform.position,transform.position) < 75f)
+        if (!Dead && Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(Player.Tank.transform.position,transform.position) < 75f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)
             {
                 case Personality.Chase:
-                    Chase(); //Run the chase AI state
+                    Chase(Player.Tank); //Run the chase AI state
                     break;
                 case Personality.Flee:
-                    Flee(); //Run the flee AI state
+                    Flee(Player.Tank); //Run the flee AI state
                     break;
                 case Personality.Patrol:
-                    Patrol(); //Run the patrol AI state
+                    Patrol(Player.Tank); //Run the patrol AI state
                     break;
                 case Personality.Navigate:
-                    Navigate(); //Run the navigate AI state
+                    Navigate(Player.Tank); //Run the navigate AI state
                     break;
                 case Personality.Strategic:
-                    Strategic(); //Run the strategic AI state
+                    Strategic(Player.Tank); //Run the strategic AI state
                     break;
             }
         }
@@ -152,11 +153,11 @@ public class EnemyTank : Tank
     }
 
     //Chase towards the player
-    protected void Chase(Transform target = null)
+    protected void Chase(PlayerTank Player,Transform target = null)
     {
-        target = target ?? GameManager.Player.Tank.transform;
+        target = target ?? Player.transform;
         //If the tank can hear the player
-        if (Hearing.CanHearTarget(target.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(target.position, Player.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
@@ -168,25 +169,25 @@ public class EnemyTank : Tank
     }
 
     //Flee from the player
-    protected void Flee()
+    protected void Flee(PlayerTank Player)
     {
         //If the tank can hear the player
-        if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position, GameManager.Player.Tank.Noise))
+        if (Hearing.CanHearTarget(Player.transform.position, Player.Noise))
         {
             //Shoot forwards
             Shooter.Shoot();
         }
         //Rotate away from the player, with obstacle avoidance enabled
-        Mover.RotateTowards(GameManager.Player.Tank.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
+        Mover.RotateTowards(Player.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
 
     //Patrol the area
-    protected void Patrol()
+    protected void Patrol(PlayerTank Player)
     {
         //Set the target to be the player in the scene
-        var target = GameManager.Player.Tank.transform.position;
+        var target = Player.transform.position;
         //If the enemy is able to see the target
         if (Vision.CanSeeTarget(target))
         {
@@ -195,7 +196,7 @@ public class EnemyTank : Tank
             Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime);
         }
         //If the enemy can hear the player
-        else if (Hearing.CanHearTarget(target,GameManager.Player.Tank.Noise))
+        else if (Hearing.CanHearTarget(target,Player.Noise))
         {
             //Rotate towards the player
             Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
@@ -206,7 +207,7 @@ public class EnemyTank : Tank
         else
         {
             //Navigate through the patrol points
-            Navigate(false);
+            Navigate(Player,false);
         }
     }
 
@@ -215,13 +216,13 @@ public class EnemyTank : Tank
                                    //If false, then the enemy is going backwards through the patrol list
 
     //Navigate the area
-    protected void Navigate(bool Shoot = true)
+    protected void Navigate(PlayerTank Player, bool Shoot = true)
     {
         //If shoot mode is enabled
         if (Shoot)
         {
             //If the enemy can hear the player
-            if (Hearing.CanHearTarget(GameManager.Player.Tank.transform.position,GameManager.Player.Tank.Noise))
+            if (Hearing.CanHearTarget(Player.transform.position,Player.Noise))
             {
                 //Shoot forwards
                 Shooter.Shoot();
@@ -285,13 +286,13 @@ public class EnemyTank : Tank
         }
     }
 
-    protected void Strategic()
+    protected void Strategic(PlayerTank Player)
     {
         //If the enemy's health is above half way
         if (Health > Data.MaxHealth / 2f)
         {
             //Then chase the player
-            Chase();
+            Chase(Player);
         }
         //If the health is less than half
         else
@@ -302,12 +303,12 @@ public class EnemyTank : Tank
             if (powerup != null)
             {
                 //Move to it
-                Chase(powerup.transform);
+                Chase(Player,powerup.transform);
             }
             else
             {
                 //Flee from the player
-                Flee();
+                Flee(Player);
             }
         }
     }

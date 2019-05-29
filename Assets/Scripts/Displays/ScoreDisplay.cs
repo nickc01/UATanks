@@ -8,7 +8,7 @@ public abstract class Display<ValueType> : MonoBehaviour,IIsPlayerSpecific
 {
     private ValueType value = default; //The internal variable for storing the score
 
-    public int PlayerID { get; set; }
+    public int PlayerID { get; set; } = 1;
 
     public virtual ValueType Value
     {

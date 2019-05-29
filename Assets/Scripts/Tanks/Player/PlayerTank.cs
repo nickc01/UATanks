@@ -15,7 +15,8 @@ public class PlayerTank : Tank, IIsPlayerSpecific
     {
         base.Start();
         //Set the main player data
-        GameManager.Player = (this, Data);
+        //GameManager.Player = (this, Data);
+        GameManager.Players.Add((this, Data));
         //Set the camera target to be the player tank
         Specifics.Camera.Target = gameObject;
         //CameraController.Target = gameObject;
@@ -120,9 +121,10 @@ public class PlayerTank : Tank, IIsPlayerSpecific
         if (GameManager.PlayingLevel && Lives == 0)
         {
             //Set the main player to null
-            GameManager.Player = (null, null);
+            //GameManager.Player = (null, null);
+            GameManager.Players.Remove((this,Data));
             AudioPlayer.Listeners.Remove(transform);
-            GameManager.Lose();
+            GameManager.Lose(this);
         }
     }
 

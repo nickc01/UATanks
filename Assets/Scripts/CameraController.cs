@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour, IIsPlayerSpecific
 {
-    Camera currentCamera;
+    public Camera CameraComponent { get; private set; }
     public float Speed = 7f; //How fast the camera moves towards the target
 
     //private static GameObject targetInternal; //The target the camera will move towards
@@ -24,27 +24,14 @@ public class CameraController : MonoBehaviour, IIsPlayerSpecific
         set => SetTarget(value);
     }
 
-    public int PlayerID { get; set; }
+    public int PlayerID { get; set; } = 1;
 
-    //public AudioSource Sound { get; private set; } //The Audio Source of the Camera
 
     private void Start()
     {
-        //Set the singleton
-        /*if (Main == null)
-        {
-            Main = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }*/
         MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
-        currentCamera = GetComponent<Camera>();
-        //Set the Audio Source
-        //Sound = GetComponent<AudioSource>();
+        CameraComponent = GetComponent<Camera>();
+        PlayerCountChanged();
     }
 
     private void OnDestroy()
@@ -55,24 +42,42 @@ public class CameraController : MonoBehaviour, IIsPlayerSpecific
         }
     }
 
+    private int AddToMask(int originalMask,int layerNumber)
+    {
+        return originalMask | (1 << layerNumber);
+    }
+
+    private int RemoveFromMask(int originalMask, int layerNumber)
+    {
+        return originalMask & ~(1 << layerNumber);
+    }
+
     private void PlayerCountChanged()
     {
+        if (PlayerID > 1)
+        {
+            var originalMask = MultiplayerManager.Primary.Camera.CameraComponent.cullingMask;
+            originalMask = RemoveFromMask(originalMask, LayerMask.NameToLayer("UIPlayer1"));
+            originalMask = AddToMask(originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerID));
+            MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent.cullingMask = originalMask;
+        }
+        //Debug.Log("CurrentPlayerCount = " + PlayerID);
         if (MultiplayerManager.PlayersAdded == 1)
         {
-            currentCamera.depth = -1;
-            currentCamera.rect = new Rect(0, 0, 1, 1);
+            CameraComponent.depth = -1;
+            CameraComponent.rect = new Rect(0, 0, 1, 1);
         }
         else if (MultiplayerManager.PlayersAdded == 2)
         {
             if (PlayerID == 1)
             {
-                currentCamera.depth = -1;
-                currentCamera.rect = new Rect(0, 0, 0.5f, 0.5f);
+                CameraComponent.depth = -1;
+                CameraComponent.rect = new Rect(0, 0, 0.5f, 1);
             }
             else
             {
-                currentCamera.depth = 0;
-                currentCamera.rect = new Rect(0.5f, 0.5f, 1, 1);
+                CameraComponent.depth = 0;
+                CameraComponent.rect = new Rect(0.5f, 0, 1, 1);
             }
         }
     }
