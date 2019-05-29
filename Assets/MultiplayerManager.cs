@@ -10,6 +10,7 @@ using Object = UnityEngine.Object;
 public class PlayerSpecifics
 {
     public CameraController Camera;
+    //public UIManager Manager;
     public ScoreDisplay ScoreDisplay;
     public LivesDisplay LivesDisplay;
     public HealthDisplay HealthDisplay;
@@ -67,14 +68,14 @@ public class MultiplayerManager : MonoBehaviour
         foreach (var field in playerSpecificFields)
         {
             Object copy = null;// = Instantiate(field.GetValue(Singleton.BasePlayerSpecifics) as Object);
-            var original = field.GetValue(Singleton.BasePlayerSpecifics) as Object;
+            var original = field.GetValue(Singleton.BasePlayerSpecifics) as Component;
             if (original is IPlayerSpecificInstantiation duper)
             {
                 copy = duper.DupeObject();
             }
             else
             {
-                copy = Instantiate(original);
+                copy = Instantiate(original.gameObject).GetComponent(field.FieldType);
             }
             if (copy is IIsPlayerSpecific psCopy)
             {
@@ -82,6 +83,7 @@ public class MultiplayerManager : MonoBehaviour
             }
             field.SetValue(specifics, copy);
         }
+        PlayerClones.Add(PlayersAdded, specifics);
         AddedPlayersUpdate?.Invoke();
         return specifics;
     }
@@ -103,7 +105,7 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    public static void DeletePlayer()
+    public static void DeletePlayers()
     {
         if (PlayersAdded > 1)
         {

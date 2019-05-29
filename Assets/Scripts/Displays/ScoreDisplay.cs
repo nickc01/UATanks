@@ -1,23 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScoreDisplay : MonoBehaviour, IIsPlayerSpecific
+public abstract class Display<ValueType> : MonoBehaviour,IIsPlayerSpecific
 {
-    private static ScoreDisplay Singleton; //The main singleton of the score display
-    private TextMeshProUGUI Text; //The text object that represents the score
+    private ValueType value = default; //The internal variable for storing the score
+
+    public int PlayerID { get; set; }
+
+    public virtual ValueType Value
+    {
+        get => value;
+        set
+        {
+            this.value = value;
+        }
+    }
+
+    protected virtual void Start() { }
+}
+
+public class ScoreDisplay : Display<float>
+{
+    TextMeshProUGUI Text; //The text object that represents the score
+
+    public override float Value
+    {
+        get => base.Value;
+        set
+        {
+            if (Text == null)
+            {
+                Text = GetComponent<TextMeshProUGUI>();
+            }
+            Text.text = (base.Value = value).ToString();
+        }
+        //set => Text.text = (base.Value = value).ToString();
+    }
+
+    protected override void Start()
+    {
+        Text = GetComponent<TextMeshProUGUI>();
+    }
+
+    /*private TextMeshProUGUI Text; //The text object that represents the score
     private float scoreInternal = 0.0f; //The internal variable for storing the score
     private string baseText; //The base text that is inserted before the score number
 
-    public static float Score
+    public float Score
     {
-        get => Singleton.scoreInternal;
+        get => scoreInternal;
         set
         {
-            Singleton.scoreInternal = value;
+            scoreInternal = value;
             //Update the score display
-            Singleton.Text.text = Singleton.baseText + value.ToString();
+            Text.text = baseText + value.ToString();
         }
     }
 
@@ -25,19 +64,9 @@ public class ScoreDisplay : MonoBehaviour, IIsPlayerSpecific
 
     private void Start()
     {
-        //Set the singleton
-        if (Singleton == null)
-        {
-            Singleton = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
         //Get the text object
         Text = GetComponent<TextMeshProUGUI>();
         baseText = Text.text;
         Text.text = baseText + scoreInternal.ToString();
-    }
+    }*/
 }

@@ -9,49 +9,40 @@ public class PlayerTank : Tank, IIsPlayerSpecific
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
 
+    private PlayerSpecifics Specifics => MultiplayerManager.GetPlayerSpecifics(PlayerID);
+
     public override void Start()
     {
         base.Start();
         //Set the main player data
         GameManager.Player = (this, Data);
         //Set the camera target to be the player tank
-        CameraController.Target = gameObject;
+        Specifics.Camera.Target = gameObject;
+        //CameraController.Target = gameObject;
         AudioPlayer.Listeners.Add(transform);
+        Health = Data.MaxHealth;
+        Lives = Data.MaxLives;
+        Score = 0;
     }
 
     //The health of the player
     public override float Health
     {
         get => base.Health;
-        set
-        {
-            base.Health = value;
-            //Update the health display
-            HealthDisplay.Health = value / Data.MaxHealth;
-        }
+        set => Specifics.HealthDisplay.Value = (base.Health = value) / Data.MaxHealth;
     }
 
     //The Score for the player
     public override float Score
     {
         get => base.Score;
-        set
-        {
-            base.Score = value;
-            //Update the score display
-            ScoreDisplay.Score = value;
-        }
+        set => Specifics.ScoreDisplay.Value = base.Score = value;
     }
 
     public override int Lives
     {
         get => base.Lives;
-        set
-        {
-            base.Lives = value;
-
-            LivesDisplay.Lives = value;
-        }
+        set => Specifics.LivesDisplay.Value = base.Lives = value;
     }
 
     public int PlayerID { get; set; } = 1;
@@ -133,5 +124,12 @@ public class PlayerTank : Tank, IIsPlayerSpecific
             AudioPlayer.Listeners.Remove(transform);
             GameManager.Lose();
         }
+    }
+
+    public static PlayerTank Create(Vector3 spawnPoint,int playerID,Quaternion? Rotation = null)
+    {
+        var newPlayer = Instantiate(GameManager.Game.PlayerPrefab, spawnPoint, Rotation.GetValueOrDefault(Quaternion.identity)).GetComponent<PlayerTank>();
+        newPlayer.PlayerID = playerID;
+        return newPlayer;
     }
 }

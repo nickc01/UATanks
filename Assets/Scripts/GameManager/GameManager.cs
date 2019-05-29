@@ -120,6 +120,7 @@ public partial class GameManager : MonoBehaviour
         //CameraController.Main.Sound.Play();
         AudioPlayer.Play(Game.WinSound);
         PlayingLevel = false;
+        MultiplayerManager.DeletePlayers();
     }
 
     //Called when the player tank has been destroyed
@@ -130,6 +131,7 @@ public partial class GameManager : MonoBehaviour
         //Play the Lose Sound
         AudioPlayer.Play(Game.LoseSound);
         PlayingLevel = false;
+        MultiplayerManager.DeletePlayers();
     }
 
     //A routine to unload the level
@@ -177,15 +179,20 @@ public partial class GameManager : MonoBehaviour
         //Generate the map
         MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Campaign ? CurrentCampaignLevel : 0);
         //Spawn the player at a random spawnpoint
-        var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
-        Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        //var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
+        //Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 1);
+        //If there are two players playing
+        if (Options.PlayerCount.value == 1)
+        {
+            MultiplayerManager.CreateNewPlayerSpecifics();
+            PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 2);
+        }
         yield return UI.ShowReadySequence();
         //Show the game UI
         UIManager.SetUIState("Game");
         //Set the playing level flag
         PlayingLevel = true;
-        //Reset the health UI
-        HealthDisplay.Health = Player.Tank.Health;
     }
 
 }
