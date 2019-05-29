@@ -5,35 +5,33 @@ using UnityEngine.UI;
 
 public static class Curves
 {
-    public static AnimationCurve Smooth => UIManager.Singleton.SmoothCurve; //Gives easy access to the smooth curve
-    public static AnimationCurve ReadyCurve => UIManager.Singleton.ReadyScreenCurve; //Gives easy access to the ready screen curve
+    public static AnimationCurve Smooth => UIManager.Primary.SmoothCurve; //Gives easy access to the smooth curve
+    public static AnimationCurve ReadyCurve => UIManager.Primary.ReadyScreenCurve; //Gives easy access to the ready screen curve
 }
 
 public class UIManager : MonoBehaviour, IIsPlayerSpecific
 {
-    public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
+    //public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
+    public static UIManager Primary => MultiplayerManager.Primary.Manager;
     [SerializeField] string defaultState = "Game"; //The starting UI State for the manager
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
-    public static string CurrentState { get; private set; } //The current state of the UI
+    public string CurrentState { get; private set; } //The current state of the UI
     public int PlayerID { get; set; }
 
     static Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
+
+    public HealthDisplay Health { get; private set; }
+    public LivesDisplay Lives { get; private set; }
+    public ScoreDisplay Score { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
-        //Set the singleton
-        if (Singleton == null)
-        {
-            Singleton = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        Health = GetComponentInChildren<HealthDisplay>();
+        Lives = GetComponentInChildren<LivesDisplay>();
+        Score = GetComponentInChildren<ScoreDisplay>();
         //Get all valid UI States
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -44,7 +42,7 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         SetUIState(defaultState);
     }
 
-    public static void SetUIState(string newState)
+    public void SetUIState(string newState)
     {
         //Disable all states
         foreach (var state in validStates)
@@ -67,12 +65,12 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         }
     }
 
-    static string transitionFrom; //The state to transition from
-    static string transitionTo; //The state to transition to
-    static Coroutine TransitionRoutine; //The transition routine
+    string transitionFrom; //The state to transition from
+    string transitionTo; //The state to transition to
+    Coroutine TransitionRoutine; //The transition routine
 
     //Sets the UI State with transitioning
-    public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
+    public void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
     {
         //If there is no transition set
         if (transitionCurve == null)
@@ -94,7 +92,7 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         TransitionRoutine = CoroutineManager.StartCoroutine(SetUIStateRoutine(transitionCurve,mode,Speed,FromIsHidden));
     }
 
-    private static void FinishTransition()
+    private void FinishTransition()
     {
         //Stop the transition routine if it's running
         if (TransitionRoutine != null)
@@ -122,7 +120,7 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         }
     }
 
-    private static IEnumerator SetUIStateRoutine(AnimationCurve transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
+    private IEnumerator SetUIStateRoutine(AnimationCurve transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
     {
         float T = 0f;
         RectTransform From = validStates[transitionFrom].GetComponent<RectTransform>();

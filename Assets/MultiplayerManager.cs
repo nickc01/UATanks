@@ -10,10 +10,10 @@ using Object = UnityEngine.Object;
 public class PlayerSpecifics
 {
     public CameraController Camera;
-    //public UIManager Manager;
-    public ScoreDisplay ScoreDisplay;
-    public LivesDisplay LivesDisplay;
-    public HealthDisplay HealthDisplay;
+    public UIManager Manager;
+    //public ScoreDisplay ScoreDisplay
+    //public LivesDisplay LivesDisplay;
+    //public HealthDisplay HealthDisplay;
 }
 
 public interface IIsPlayerSpecific
@@ -41,6 +41,8 @@ public class MultiplayerManager : MonoBehaviour
     private static MultiplayerManager Singleton;
 
     public static event Action AddedPlayersUpdate;
+
+    public static PlayerSpecifics Primary => GetPlayerSpecifics(1);
 
     private void Start()
     {

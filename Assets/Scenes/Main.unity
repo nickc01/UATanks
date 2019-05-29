@@ -3302,9 +3302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BasePlayerSpecifics:
     Camera: {fileID: 963194229}
-    ScoreDisplay: {fileID: 112491358}
-    LivesDisplay: {fileID: 85646870}
-    HealthDisplay: {fileID: 1783189740}
+    Manager: {fileID: 876446427}
 --- !u!4 &413214708
 Transform:
   m_ObjectHideFlags: 0
@@ -7114,7 +7112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100.1, y: 25}
+  m_AnchoredPosition: {x: 100.1, y: 24.999992}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &992622879

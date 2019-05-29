@@ -29,20 +29,20 @@ public class PlayerTank : Tank, IIsPlayerSpecific
     public override float Health
     {
         get => base.Health;
-        set => Specifics.HealthDisplay.Value = (base.Health = value) / Data.MaxHealth;
+        set => Specifics.Manager.Health.Value = (base.Health = value) / Data.MaxHealth;
     }
 
     //The Score for the player
     public override float Score
     {
         get => base.Score;
-        set => Specifics.ScoreDisplay.Value = base.Score = value;
+        set => Specifics.Manager.Score.Value = base.Score = value;
     }
 
     public override int Lives
     {
         get => base.Lives;
-        set => Specifics.LivesDisplay.Value = base.Lives = value;
+        set => Specifics.Manager.Lives.Value = base.Lives = value;
     }
 
     public int PlayerID { get; set; } = 1;
