@@ -3301,9 +3301,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BasePlayerSpecifics:
-    UIManager: {fileID: 0}
-    Camera: {fileID: 0}
-  OtherBaseSpecifics: []
+    Camera: {fileID: 963194229}
+    ScoreDisplay: {fileID: 112491358}
+    LivesDisplay: {fileID: 85646870}
+    HealthDisplay: {fileID: 1783189740}
 --- !u!4 &413214708
 Transform:
   m_ObjectHideFlags: 0
