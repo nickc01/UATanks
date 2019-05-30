@@ -317,7 +317,7 @@ public class EnemyTank : Tank
     //if the tank's health is zero, the tank is destroyed
     public override bool OnShellHit(Shell shell)
     {
-        if (shell.Source == this)
+        if (shell.Source == this || Dead)
         {
             return false;
         }

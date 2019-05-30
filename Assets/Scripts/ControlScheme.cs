@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System.Reflection;
 
-[CreateAssetMenu(fileName = "NewControlScheme", menuName = "Control Scheme", order = 1)]
-public class ControlScheme : ScriptableObject
+//[CreateAssetMenu(fileName = "NewControlScheme", menuName = "Control Scheme", order = 1)]
+public abstract class ControlScheme : ScriptableObject
 {
-    public KeyCode ForwardKey;
-    public KeyCode BackwardKey;
-    public KeyCode LeftKey;
-    public KeyCode RightKey;
-    public KeyCode FireKey;
+    public abstract bool Firing { get; }
+    public abstract bool MovingForward { get; }
+    public abstract bool MovingBackward { get; }
+    public abstract bool MovingLeft { get; }
+    public abstract bool MovingRight { get; }
+
 
     public static ControlScheme GetScheme(int PlayerNumber)
     {
@@ -24,5 +25,4 @@ public class ControlScheme : ScriptableObject
         }
         return field.GetValue(GameManager.Game) as ControlScheme;
     }
-
 }

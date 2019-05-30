@@ -9,19 +9,12 @@ using Object = UnityEngine.Object;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    [SerializeField] PlayerSpecifics BasePlayerSpecifics;
-    //[SerializeField] List<GameObject> OtherBaseSpecifics;
-
-    //private static Dictionary<int, List<GameObject>> OtherPlayerClones = new Dictionary<int, List<GameObject>>();
-    private static Dictionary<int, PlayerSpecifics> PlayerClones = new Dictionary<int, PlayerSpecifics>();
-
+    [SerializeField] PlayerInfo BasePlayerInfo;
+    private static Dictionary<int, PlayerInfo> PlayerClones = new Dictionary<int, PlayerInfo>();
     public static int PlayersAdded { get; private set; } = 1;
-
     private static MultiplayerManager Singleton;
 
-    //public static event Action AddedPlayersUpdate;
-
-    public static PlayerSpecifics Primary => GetPlayerSpecifics(1);
+    public static PlayerInfo Primary => GetPlayerInfo(1);
 
     private void Start()
     {
@@ -36,40 +29,30 @@ public class MultiplayerManager : MonoBehaviour
         }
     }
 
-    static FieldInfo[] playerSpecificFields;
+    static FieldInfo[] playerInfoFields;
 
-    public static PlayerSpecifics CreateNewPlayerSpecifics()
+    public static PlayerInfo AddNewPlayer()
     {
         PlayersAdded++;
-        if (playerSpecificFields == null)
+        if (playerInfoFields == null)
         {
-            playerSpecificFields = typeof(PlayerSpecifics).GetFields();
+            playerInfoFields = typeof(PlayerInfo).GetFields();
         }
-        PlayerSpecifics specifics = new PlayerSpecifics();
-        foreach (var field in playerSpecificFields)
+        PlayerInfo info = new PlayerInfo();
+        foreach (var field in playerInfoFields)
         {
-            Object copy = null;// = Instantiate(field.GetValue(Singleton.BasePlayerSpecifics) as Object);
-            var original = field.GetValue(Singleton.BasePlayerSpecifics) as Component;
-            if (original is IPlayerSpecificInstantiation duper)
-            {
-                copy = duper.DupeObject(original);
-            }
-            else
-            {
-                copy = Instantiate(original.gameObject).GetComponent(field.FieldType);
-            }
+            var original = field.GetValue(Singleton.BasePlayerInfo) as Component;
+            Object copy = Instantiate(original.gameObject).GetComponent(field.FieldType);
             if (copy is IPlayerSpecific psCopy)
             {
-                psCopy.PlayerID = PlayersAdded;
+                psCopy.PlayerNumber = PlayersAdded;
             }
-            field.SetValue(specifics, copy);
+            field.SetValue(info, copy);
         }
-        //foreach (var otherSpecifics in GetAllSpecifics())
-        //{
         for (int i = 1; i < PlayersAdded; i++)
             {
-            var otherSpecifics = GetPlayerSpecifics(i);
-            foreach (var field in playerSpecificFields)
+            var otherSpecifics = GetPlayerInfo(i);
+            foreach (var field in playerInfoFields)
             {
                 var value = field.GetValue(otherSpecifics);
                 if (value is PlayerSpecific ps)
@@ -78,29 +61,27 @@ public class MultiplayerManager : MonoBehaviour
                 }
             }
         }
-        //}
-        PlayerClones.Add(PlayersAdded, specifics);
-        //AddedPlayersUpdate?.Invoke();
-        return specifics;
+        PlayerClones.Add(PlayersAdded, info);
+        return info;
     }
 
-    public static PlayerSpecifics GetPlayerSpecifics(int playerID)
+    public static PlayerInfo GetPlayerInfo(int playerNumber)
     {
-        if (playerID == 1)
+        if (playerNumber == 1)
         {
-            return Singleton.BasePlayerSpecifics;
+            return Singleton.BasePlayerInfo;
         }
         else
         {
-            return PlayerClones.TryGetValue(playerID, out var r) ? r : throw new Exception($"There is no player {playerID} ");
+            return PlayerClones.TryGetValue(playerNumber, out var r) ? r : throw new Exception($"There is no player {playerNumber} ");
         }
     }
 
-    public static IEnumerable<PlayerSpecifics> GetAllSpecifics()
+    public static IEnumerable<PlayerInfo> GetAllPlayerInfo()
     {
         for (int i = 1; i <= PlayersAdded; i++)
         {
-            yield return GetPlayerSpecifics(i);
+            yield return GetPlayerInfo(i);
         }
     }
 
@@ -112,23 +93,16 @@ public class MultiplayerManager : MonoBehaviour
             {
                 var specifics = PlayerClones[i];
                 PlayerClones.Remove(i);
-                foreach (var field in playerSpecificFields)
+                foreach (var field in playerInfoFields)
                 {
                     var value = field.GetValue(specifics) as Object;
-                    if (value is IPlayerSpecificInstantiation destroyer)
-                    {
-                        destroyer.DestroyObject(value);
-                    }
-                    else
-                    {
-                        Destroy(value);
-                    }
+                    Destroy(value);
                 }
             }
             PlayersAdded = 1;
-            foreach (var otherSpecifics in GetAllSpecifics())
+            foreach (var otherSpecifics in GetAllPlayerInfo())
             {
-                foreach (var field in playerSpecificFields)
+                foreach (var field in playerInfoFields)
                 {
                     var value = field.GetValue(otherSpecifics);
                     if (value is PlayerSpecific ps)
@@ -137,7 +111,6 @@ public class MultiplayerManager : MonoBehaviour
                     }
                 }
             }
-            //AddedPlayersUpdate?.Invoke();
         }
     }
 }

@@ -9,7 +9,8 @@ public class PlayerTank : Tank
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
 
-    private PlayerSpecifics Specifics => MultiplayerManager.GetPlayerSpecifics(PlayerID);
+    public PlayerInfo Info => MultiplayerManager.GetPlayerInfo(PlayerNumber);
+    public UIManager UI => Info.PlayerUI;
 
     ControlScheme CurrentScheme;
 
@@ -19,9 +20,9 @@ public class PlayerTank : Tank
         //Set the main player data
         //GameManager.Player = (this, Data);
         GameManager.Players.Add((this, Data));
-        CurrentScheme = ControlScheme.GetScheme(PlayerID);
+        CurrentScheme = ControlScheme.GetScheme(PlayerNumber);
         //Set the camera target to be the player tank
-        Specifics.Camera.Target = gameObject;
+        Info.PlayerCamera.Target = gameObject;
         //CameraController.Target = gameObject;
         AudioPlayer.Listeners.Add(transform);
         Health = Data.MaxHealth;
@@ -33,23 +34,23 @@ public class PlayerTank : Tank
     public override float Health
     {
         get => base.Health;
-        set => Specifics.Health.Value = (base.Health = value) / Data.MaxHealth;
+        set => Info.HealthDisplay.Value = (base.Health = value) / Data.MaxHealth;
     }
 
     //The Score for the player
     public override float Score
     {
         get => base.Score;
-        set => Specifics.Score.Value = base.Score = value;
+        set => Info.ScoreDisplay.Value = base.Score = value;
     }
 
     public override int Lives
     {
         get => base.Lives;
-        set => Specifics.Lives.Value = base.Lives = value;
+        set => Info.LivesDisplay.Value = base.Lives = value;
     }
 
-    public int PlayerID { get; set; } = 1;
+    public int PlayerNumber { get; set; } = 1;
 
     //Used to control input
     public override void Update()
@@ -59,21 +60,21 @@ public class PlayerTank : Tank
         if (!Dead && GameManager.PlayingLevel)
         {
             //If the spacebar is pressed
-            if (Input.GetKey(CurrentScheme.FireKey))
+            if (CurrentScheme.Firing)
             {
                 //Shoot a shell
                 Shooter.Shoot();
                 Noise += 3f;
             }
             //If the W or Up Arrow Keys are currently held down
-            if (Input.GetKey(CurrentScheme.ForwardKey))
+            if (CurrentScheme.MovingForward)
             {
                 //Move the tank forward
                 Mover.Move(Data.ForwardSpeed);
                 Noise += 3f;
             }
             //If the S or Down Arrow Keys are currently held down
-            else if (Input.GetKey(CurrentScheme.BackwardKey))
+            else if (CurrentScheme.MovingBackward)
             {
                 //Move the tank backwards
                 Mover.Move(-Data.BackwardSpeed);
@@ -86,13 +87,13 @@ public class PlayerTank : Tank
                 Mover.Move(0);
             }
             //If the A or Left Arrow Keys are currently held down
-            if (Input.GetKey(CurrentScheme.LeftKey))
+            if (CurrentScheme.MovingLeft)
             {
                 //Rotate the tank to the left
                 Mover.Rotate(-Data.RotateSpeed * Time.deltaTime);
             }
             //If the D or Right Arrow Keys are currently held down
-            if (Input.GetKey(CurrentScheme.RightKey))
+            if (CurrentScheme.MovingRight)
             {
                 //Rotate the tank to the right
                 Mover.Rotate(Data.RotateSpeed * Time.deltaTime);
@@ -103,7 +104,7 @@ public class PlayerTank : Tank
 
     public override bool OnShellHit(Shell shell)
     {
-        if (shell.Source == this)
+        if (shell.Source == this || Dead)
         {
             return false;
         }
@@ -111,8 +112,11 @@ public class PlayerTank : Tank
         if (shell.Source is Tank)
         {
             //Decrease the tank's health
-            //Health -= Mathf.Clamp(shell.Damage - Data.DamageResistance,0f,shell.Damage);
             Attack(shell.Damage);
+            if (Health == 0)
+            {
+                shell.Source.Score += Data.TankValue;
+            }
         }
         return true;
     }
@@ -134,7 +138,7 @@ public class PlayerTank : Tank
     public static PlayerTank Create(Vector3 spawnPoint,int playerID,Quaternion? Rotation = null)
     {
         var newPlayer = Instantiate(GameManager.Game.PlayerPrefab, spawnPoint, Rotation.GetValueOrDefault(Quaternion.identity)).GetComponent<PlayerTank>();
-        newPlayer.PlayerID = playerID;
+        newPlayer.PlayerNumber = playerID;
         return newPlayer;
     }
 }

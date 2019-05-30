@@ -1,4 +1,4 @@
 ﻿public interface IPlayerSpecific
 {
-    int PlayerID { get; set; }
+    int PlayerNumber { get; set; }
 }

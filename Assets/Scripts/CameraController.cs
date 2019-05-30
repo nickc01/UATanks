@@ -52,12 +52,12 @@ public class CameraController : PlayerSpecific
 
     public override void OnNewPlayerChange()
     {
-        if (PlayerID > 1)
+        if (PlayerNumber > 1)
         {
-            var originalMask = MultiplayerManager.Primary.Camera.CameraComponent.cullingMask;
+            var originalMask = MultiplayerManager.Primary.PlayerCamera.CameraComponent.cullingMask;
             originalMask = RemoveFromMask(originalMask, LayerMask.NameToLayer("UIPlayer1"));
-            originalMask = AddToMask(originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerID));
-            MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent.cullingMask = originalMask;
+            originalMask = AddToMask(originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
+            MultiplayerManager.GetPlayerInfo(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = originalMask;
         }
         if (MultiplayerManager.PlayersAdded == 1)
         {
@@ -66,7 +66,7 @@ public class CameraController : PlayerSpecific
         }
         else if (MultiplayerManager.PlayersAdded == 2)
         {
-            if (PlayerID == 1)
+            if (PlayerNumber == 1)
             {
                 CameraComponent.depth = -1;
                 CameraComponent.rect = new Rect(0, 0, 0.5f, 1);
@@ -99,6 +99,6 @@ public class CameraController : PlayerSpecific
     }
 
     //Get the width and height of the main camera
-    public static (float Width, float Height) GetCameraBounds() => (Camera.main.pixelWidth, Camera.main.pixelHeight);
+    //public static (float Width, float Height) GetCameraBounds() => (Camera.main.pixelWidth, Camera.main.pixelHeight);
 
 }

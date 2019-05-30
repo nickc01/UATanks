@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6063de0423979ae4d91e3e618b53a772, type: 3}
+  m_Script: {fileID: 11500000, guid: c8fbb5577076d374ba69154ceec3697b, type: 3}
   m_Name: Player 2 Scheme
   m_EditorClassIdentifier: 
   ForwardKey: 273

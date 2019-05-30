@@ -1,24 +1,87 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : PlayerSpecific
 {
     //public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
-    public static UIManager Primary => MultiplayerManager.Primary.Manager;
+    public static UIManager Primary => MultiplayerManager.Primary.PlayerUI;
     [SerializeField] string defaultState = "Game"; //The starting UI State for the manager
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
     public string CurrentState { get; private set; } //The current state of the UI
 
     private Canvas UICanvas;
+    private RectTransform RTransform;
+    private Image GradientImage;
+    private ScoreResults[] ResultDisplays;
 
     Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
     bool started = false;
 
     public bool ButtonsEnabled = true;
+
+    private bool gradientInternal = false;
+    public bool Gradient
+    {
+        get => gradientInternal;
+        set
+        {
+            gradientInternal = value;
+            if (GradientImage == null)
+            {
+                GradientImage = GetComponent<Image>();
+            }
+            GradientImage.enabled = value;
+        }
+    }
+
+    public float ScoreResult
+    {
+        get => ResultDisplays.First().Score;
+        set
+        {
+            foreach (var result in ResultDisplays)
+            {
+                result.Score = value;
+            }
+        }
+    }
+
+    public float HighscoreResult
+    {
+        get => ResultDisplays.First().Highscore;
+        set
+        {
+            foreach (var result in ResultDisplays)
+            {
+                result.Highscore = value;
+            }
+        }
+    }
+
+    public float ResultsScore
+    {
+        set
+        {
+            ScoreResult = value;
+            Debug.Log("Player Number + " + PlayerNumber);
+            var previousHighScore = Highscore.GetScoreFor(PlayerNumber);
+            Debug.Log("prev highscore = " + previousHighScore);
+            Debug.Log("New Score = " + value);
+            if (value > previousHighScore)
+            {
+                Debug.Log("Setting New Score");
+                previousHighScore = value;
+                Highscore.SetScoreFor(PlayerNumber, value);
+            }
+            Debug.Log("Final = " + previousHighScore);
+            HighscoreResult = previousHighScore;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +92,8 @@ public class UIManager : PlayerSpecific
         }
         started = true;
         UICanvas = GetComponent<Canvas>();
-        //MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
+        RTransform = GetComponent<RectTransform>();
+        ResultDisplays = GetComponentsInChildren<ScoreResults>(true);
         //Get all valid UI States
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -43,25 +107,8 @@ public class UIManager : PlayerSpecific
 
     public override void OnNewPlayerChange()
     {
-        Debug.Log("TEST = " + PlayerID);
-        gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerID);
-        UICanvas.worldCamera = MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent;
-    }
-
-    /*private void OnDestroy()
-    {
-        if (Application.isPlaying)
-        {
-            MultiplayerManager.AddedPlayersUpdate -= PlayerCountChanged;
-        }
-    }*/
-
-    public static void SetUIStateAll(string newState)
-    {
-        foreach (var specific in MultiplayerManager.GetAllSpecifics())
-        {
-            specific.Manager.SetUIState(newState);
-        }
+        gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerNumber);
+        UICanvas.worldCamera = MultiplayerManager.GetPlayerInfo(PlayerNumber).PlayerCamera.CameraComponent;
     }
 
     public void SetUIState(string newState)
@@ -123,12 +170,23 @@ public class UIManager : PlayerSpecific
         //Star the transition routine
         TransitionRoutine = CoroutineManager.StartCoroutine(SetUIStateRoutine(transitionCurve,mode,Speed,FromIsHidden));
     }
-
-    public static void SetUIStateAll(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+    public static class All
     {
-        foreach (var specific in MultiplayerManager.GetAllSpecifics())
+
+        public static void SetUIState(string newState)
         {
-            specific.Manager.SetUIState(newState,transitionCurve,mode,Speed,FromIsHidden);
+            foreach (var specific in MultiplayerManager.GetAllPlayerInfo())
+            {
+                specific.PlayerUI.SetUIState(newState);
+            }
+        }
+
+        public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+        {
+            foreach (var specific in MultiplayerManager.GetAllPlayerInfo())
+            {
+                specific.PlayerUI.SetUIState(newState, transitionCurve, mode, Speed, FromIsHidden);
+            }
         }
     }
 
@@ -186,7 +244,7 @@ public class UIManager : PlayerSpecific
             //Increment the transition timer
             T += Time.deltaTime * Speed;
             //Get the camera bounds
-            (var Width, var Height) = CameraController.GetCameraBounds();
+            (var Width, var Height) = GetDimensions();
             //Interpolate the states to transition between them, based on the transition mode set
             switch (mode)
             {
@@ -215,5 +273,10 @@ public class UIManager : PlayerSpecific
         //Finish the transition
         FinishTransition();
 
+    }
+
+    public (float Width, float Height) GetDimensions()
+    {
+        return (RTransform.rect.width,RTransform.rect.height);
     }
 }

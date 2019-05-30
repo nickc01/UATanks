@@ -122,7 +122,7 @@ public partial class GameManager : MonoBehaviour
                 result = (distance, player.Tank);
             }
         }
-        return (result.tank, result.tank.Data);
+        return (result.tank, result.tank?.Data);
     }
 
     public static (PlayerTank Tank, TankData Data) GetNearestPlayer(Transform transform)
@@ -152,37 +152,36 @@ public partial class GameManager : MonoBehaviour
     {
         //Show the win screen
         //UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
-        var Manager = MultiplayerManager.GetPlayerSpecifics(Winner.PlayerID).Manager;
-        Manager.ButtonsEnabled = true;
-        Manager.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
+        //var UI = MultiplayerManager.GetPlayerInfo(Winner.PlayerNumber).PlayerUI;
+        var UI = Winner.UI;
+        UI.ButtonsEnabled = true;
+        UI.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
         //Play the Win Sound
         //CameraController.Main.Sound.clip = Game.WinSound;
         //CameraController.Main.Sound.Play();
         AudioPlayer.Play(Game.WinSound);
         PlayingLevel = false;
+        UI.ResultsScore = Winner.Score;
         //MultiplayerManager.DeletePlayers();
     }
 
     //Called when the player tank has been destroyed
     public static void Lose(PlayerTank Loser)
     {
-        var Manager = MultiplayerManager.GetPlayerSpecifics(Loser.PlayerID).Manager;
+        //var UI = MultiplayerManager.GetPlayerInfo(Loser.PlayerNumber).PlayerUI;
+        var UI = Loser.UI;
         if (Players.Count == 0)
         {
-            Manager.ButtonsEnabled = true;
+            UI.ButtonsEnabled = true;
+            PlayingLevel = false;
         }
         else
         {
-            Manager.ButtonsEnabled = false;
+            UI.ButtonsEnabled = false;
         }
-        Manager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
         AudioPlayer.Play(Game.LoseSound);
-        //Show the lose screen
-        /*UIManager.SetUIStateAll("Lose", Curves.Smooth, FromIsHidden: true);
-        //Play the Lose Sound
-        AudioPlayer.Play(Game.LoseSound);
-        PlayingLevel = false;*/
-        //MultiplayerManager.DeletePlayers();
+        UI.ResultsScore = Loser.Score;
     }
 
     //A routine to unload the level
@@ -192,6 +191,7 @@ public partial class GameManager : MonoBehaviour
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
             MultiplayerManager.DeletePlayers();
+            UIManager.Primary.Gradient = false;
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
             AudioPlayer.Listeners.Clear();
@@ -238,12 +238,16 @@ public partial class GameManager : MonoBehaviour
         //If there are two players playing
         if (Options.PlayerCount.value == 1)
         {
-            MultiplayerManager.CreateNewPlayerSpecifics();
+            MultiplayerManager.AddNewPlayer();
             PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 2);
+        }
+        foreach (var info in MultiplayerManager.GetAllPlayerInfo())
+        {
+            info.PlayerUI.Gradient = true;
         }
         yield return UI.ShowReadySequence();
         //Show the game UI
-        UIManager.SetUIStateAll("Game");
+        UIManager.All.SetUIState("Game");
         //Set the playing level flag
         PlayingLevel = true;
     }
