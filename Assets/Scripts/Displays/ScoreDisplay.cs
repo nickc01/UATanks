@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public abstract class Display<ValueType> : MonoBehaviour,IIsPlayerSpecific
+public abstract class Display<ValueType> : PlayerSpecific
 {
     private ValueType value = default; //The internal variable for storing the score
-
-    public int PlayerID { get; set; } = 1;
 
     public virtual ValueType Value
     {

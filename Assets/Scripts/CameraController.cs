@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour, IIsPlayerSpecific
+public class CameraController : PlayerSpecific
 {
     public Camera CameraComponent { get; private set; }
     public float Speed = 7f; //How fast the camera moves towards the target
@@ -24,23 +24,21 @@ public class CameraController : MonoBehaviour, IIsPlayerSpecific
         set => SetTarget(value);
     }
 
-    public int PlayerID { get; set; } = 1;
-
 
     private void Start()
     {
-        MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
+        //MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
         CameraComponent = GetComponent<Camera>();
-        PlayerCountChanged();
+        OnNewPlayerChange();
     }
 
-    private void OnDestroy()
+    /*private void OnDestroy()
     {
         if (Application.isPlaying)
         {
             MultiplayerManager.AddedPlayersUpdate -= PlayerCountChanged;
         }
-    }
+    }*/
 
     private int AddToMask(int originalMask,int layerNumber)
     {
@@ -52,7 +50,7 @@ public class CameraController : MonoBehaviour, IIsPlayerSpecific
         return originalMask & ~(1 << layerNumber);
     }
 
-    private void PlayerCountChanged()
+    public override void OnNewPlayerChange()
     {
         if (PlayerID > 1)
         {
@@ -61,7 +59,6 @@ public class CameraController : MonoBehaviour, IIsPlayerSpecific
             originalMask = AddToMask(originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerID));
             MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent.cullingMask = originalMask;
         }
-        //Debug.Log("CurrentPlayerCount = " + PlayerID);
         if (MultiplayerManager.PlayersAdded == 1)
         {
             CameraComponent.depth = -1;

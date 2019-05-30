@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class Curves
-{
-    public static AnimationCurve Smooth => UIManager.Primary.SmoothCurve; //Gives easy access to the smooth curve
-    public static AnimationCurve ReadyCurve => UIManager.Primary.ReadyScreenCurve; //Gives easy access to the ready screen curve
-}
-
-public class UIManager : MonoBehaviour, IIsPlayerSpecific
+public class UIManager : PlayerSpecific
 {
     //public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
     public static UIManager Primary => MultiplayerManager.Primary.Manager;
@@ -17,20 +11,14 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
     public string CurrentState { get; private set; } //The current state of the UI
-    public int PlayerID { get; set; } = 1;
 
     private Canvas UICanvas;
 
     Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
-    private HealthDisplay healthInternal;
-    public HealthDisplay Health => healthInternal != null ? healthInternal : (healthInternal = GetComponentInChildren<HealthDisplay>(true));
-    private LivesDisplay livesInternal;
-    public LivesDisplay Lives => livesInternal != null ? livesInternal : (livesInternal = GetComponentInChildren<LivesDisplay>(true));
-    private ScoreDisplay scoreInternal;
-    public ScoreDisplay Score => scoreInternal != null ? scoreInternal : (scoreInternal = GetComponentInChildren<ScoreDisplay>(true));
-
     bool started = false;
+
+    public bool ButtonsEnabled = true;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +29,7 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         }
         started = true;
         UICanvas = GetComponent<Canvas>();
-        MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
+        //MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
         //Get all valid UI States
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -50,25 +38,23 @@ public class UIManager : MonoBehaviour, IIsPlayerSpecific
         }
         //Set the current state to the default one
         SetUIState(defaultState);
-        PlayerCountChanged();
+        OnNewPlayerChange();
     }
 
-    private void PlayerCountChanged()
+    public override void OnNewPlayerChange()
     {
-        Debug.Log("SETTING");
+        Debug.Log("TEST = " + PlayerID);
         gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerID);
-        Debug.Log("Player Component =  " + PlayerID);
-        Debug.Log("CAMERA COMPONENT = " + MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent);
         UICanvas.worldCamera = MultiplayerManager.GetPlayerSpecifics(PlayerID).Camera.CameraComponent;
     }
 
-    private void OnDestroy()
+    /*private void OnDestroy()
     {
         if (Application.isPlaying)
         {
             MultiplayerManager.AddedPlayersUpdate -= PlayerCountChanged;
         }
-    }
+    }*/
 
     public static void SetUIStateAll(string newState)
     {

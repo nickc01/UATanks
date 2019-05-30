@@ -103,9 +103,6 @@ public static class Callbacks
     //Called when the map of the day button is pressed
     public static void Map_Day()
     {
-        //Reset the map's width and height
-        MapGenerator.Generator.MapHeight = 5;
-        MapGenerator.Generator.MapWidth = 5;
         //Play the map of the day
         GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
     }
@@ -115,9 +112,6 @@ public static class Callbacks
     //Called when the random button is pressed
     public static void RandomLevel()
     {
-        //Reset the map's width and height
-        MapGenerator.Generator.MapHeight = 5;
-        MapGenerator.Generator.MapWidth = 5;
         //Play a random level
         GameManager.UI.Play(LevelLoadMode.Random);
     }

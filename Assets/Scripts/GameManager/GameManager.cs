@@ -85,6 +85,12 @@ public partial class GameManager : MonoBehaviour
     [Tooltip("The Main Audio Group")]
     public AudioMixer MainAudio;
 
+    [Header("Control Schemes")]
+    [Tooltip("The control scheme for player 1")]
+    public ControlScheme Player1Scheme;
+    [Tooltip("The control scheme for player 2")]
+    public ControlScheme Player2Scheme;
+
     private void Start()
     {
         //Set the singleton
@@ -145,7 +151,10 @@ public partial class GameManager : MonoBehaviour
     public static void Win(PlayerTank Winner)
     {
         //Show the win screen
-        UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
+        //UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
+        var Manager = MultiplayerManager.GetPlayerSpecifics(Winner.PlayerID).Manager;
+        Manager.ButtonsEnabled = true;
+        Manager.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
         //Play the Win Sound
         //CameraController.Main.Sound.clip = Game.WinSound;
         //CameraController.Main.Sound.Play();
@@ -157,12 +166,17 @@ public partial class GameManager : MonoBehaviour
     //Called when the player tank has been destroyed
     public static void Lose(PlayerTank Loser)
     {
-        MultiplayerManager.GetPlayerSpecifics(Loser.PlayerID).Manager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
-        AudioPlayer.Play(Game.LoseSound);
-        if (Players.Count == 1)
+        var Manager = MultiplayerManager.GetPlayerSpecifics(Loser.PlayerID).Manager;
+        if (Players.Count == 0)
         {
-            Win(Players.First().Tank);
+            Manager.ButtonsEnabled = true;
         }
+        else
+        {
+            Manager.ButtonsEnabled = false;
+        }
+        Manager.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        AudioPlayer.Play(Game.LoseSound);
         //Show the lose screen
         /*UIManager.SetUIStateAll("Lose", Curves.Smooth, FromIsHidden: true);
         //Play the Lose Sound
@@ -177,6 +191,7 @@ public partial class GameManager : MonoBehaviour
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            MultiplayerManager.DeletePlayers();
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
             AudioPlayer.Listeners.Clear();

@@ -343,10 +343,10 @@ public class EnemyTank : Tank
             //Remove this enemy data from the list of enemy data's
             GameManager.Enemies.Remove((this, Data));
             //If there are no enemies in the Enemies list
-            if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel)
+            if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel && GameManager.Players.Count == 1)
             {
                 //Trigger the win condition
-                GameManager.Win();
+                GameManager.Win(GameManager.Players.First().Tank);
             }
         }
     }

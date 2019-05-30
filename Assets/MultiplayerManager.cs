@@ -6,27 +6,6 @@ using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-[Serializable]
-public class PlayerSpecifics
-{
-    public CameraController Camera;
-    public UIManager Manager;
-    //public ScoreDisplay ScoreDisplay
-    //public LivesDisplay LivesDisplay;
-    //public HealthDisplay HealthDisplay;
-}
-
-public interface IIsPlayerSpecific
-{
-    int PlayerID { get; set; }
-}
-
-public interface IPlayerSpecificInstantiation
-{
-    Object DupeObject();
-    void DestroyObject(Object instance);
-}
-
 
 public class MultiplayerManager : MonoBehaviour
 {
@@ -40,7 +19,7 @@ public class MultiplayerManager : MonoBehaviour
 
     private static MultiplayerManager Singleton;
 
-    public static event Action AddedPlayersUpdate;
+    //public static event Action AddedPlayersUpdate;
 
     public static PlayerSpecifics Primary => GetPlayerSpecifics(1);
 
@@ -73,27 +52,37 @@ public class MultiplayerManager : MonoBehaviour
             var original = field.GetValue(Singleton.BasePlayerSpecifics) as Component;
             if (original is IPlayerSpecificInstantiation duper)
             {
-                copy = duper.DupeObject();
+                copy = duper.DupeObject(original);
             }
             else
             {
                 copy = Instantiate(original.gameObject).GetComponent(field.FieldType);
             }
-            if (copy is IIsPlayerSpecific psCopy)
+            if (copy is IPlayerSpecific psCopy)
             {
                 psCopy.PlayerID = PlayersAdded;
             }
             field.SetValue(specifics, copy);
         }
+        //foreach (var otherSpecifics in GetAllSpecifics())
+        //{
+        for (int i = 1; i < PlayersAdded; i++)
+            {
+            var otherSpecifics = GetPlayerSpecifics(i);
+            foreach (var field in playerSpecificFields)
+            {
+                var value = field.GetValue(otherSpecifics);
+                if (value is PlayerSpecific ps)
+                {
+                    ps.OnNewPlayerChange();
+                }
+            }
+        }
+        //}
         PlayerClones.Add(PlayersAdded, specifics);
-        AddedPlayersUpdate?.Invoke();
+        //AddedPlayersUpdate?.Invoke();
         return specifics;
     }
-
-    /*public static ReadOnlyCollection<GameObject> GetOtherPlayerSpecifics(int playerID)
-    {
-        return OtherPlayerClones.TryGetValue(playerID, out var result) ? result.AsReadOnly() : throw new Exception($"There is no player {playerID} ");
-    }*/
 
     public static PlayerSpecifics GetPlayerSpecifics(int playerID)
     {
@@ -136,7 +125,19 @@ public class MultiplayerManager : MonoBehaviour
                     }
                 }
             }
-            AddedPlayersUpdate?.Invoke();
+            PlayersAdded = 1;
+            foreach (var otherSpecifics in GetAllSpecifics())
+            {
+                foreach (var field in playerSpecificFields)
+                {
+                    var value = field.GetValue(otherSpecifics);
+                    if (value is PlayerSpecific ps)
+                    {
+                        ps.OnNewPlayerChange();
+                    }
+                }
+            }
+            //AddedPlayersUpdate?.Invoke();
         }
     }
 }

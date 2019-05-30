@@ -4,12 +4,14 @@ using UnityEngine;
 
 //The Controller used for the player tank
 //Primarilly handles inputs and moves the tank depending on said inputs
-public class PlayerTank : Tank, IIsPlayerSpecific
+public class PlayerTank : Tank
 {
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
 
     private PlayerSpecifics Specifics => MultiplayerManager.GetPlayerSpecifics(PlayerID);
+
+    ControlScheme CurrentScheme;
 
     public override void Start()
     {
@@ -17,6 +19,7 @@ public class PlayerTank : Tank, IIsPlayerSpecific
         //Set the main player data
         //GameManager.Player = (this, Data);
         GameManager.Players.Add((this, Data));
+        CurrentScheme = ControlScheme.GetScheme(PlayerID);
         //Set the camera target to be the player tank
         Specifics.Camera.Target = gameObject;
         //CameraController.Target = gameObject;
@@ -30,20 +33,20 @@ public class PlayerTank : Tank, IIsPlayerSpecific
     public override float Health
     {
         get => base.Health;
-        set => Specifics.Manager.Health.Value = (base.Health = value) / Data.MaxHealth;
+        set => Specifics.Health.Value = (base.Health = value) / Data.MaxHealth;
     }
 
     //The Score for the player
     public override float Score
     {
         get => base.Score;
-        set => Specifics.Manager.Score.Value = base.Score = value;
+        set => Specifics.Score.Value = base.Score = value;
     }
 
     public override int Lives
     {
         get => base.Lives;
-        set => Specifics.Manager.Lives.Value = base.Lives = value;
+        set => Specifics.Lives.Value = base.Lives = value;
     }
 
     public int PlayerID { get; set; } = 1;
@@ -56,21 +59,21 @@ public class PlayerTank : Tank, IIsPlayerSpecific
         if (!Dead && GameManager.PlayingLevel)
         {
             //If the spacebar is pressed
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(CurrentScheme.FireKey))
             {
                 //Shoot a shell
                 Shooter.Shoot();
                 Noise += 3f;
             }
             //If the W or Up Arrow Keys are currently held down
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(CurrentScheme.ForwardKey))
             {
                 //Move the tank forward
                 Mover.Move(Data.ForwardSpeed);
                 Noise += 3f;
             }
             //If the S or Down Arrow Keys are currently held down
-            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(CurrentScheme.BackwardKey))
             {
                 //Move the tank backwards
                 Mover.Move(-Data.BackwardSpeed);
@@ -83,13 +86,13 @@ public class PlayerTank : Tank, IIsPlayerSpecific
                 Mover.Move(0);
             }
             //If the A or Left Arrow Keys are currently held down
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(CurrentScheme.LeftKey))
             {
                 //Rotate the tank to the left
                 Mover.Rotate(-Data.RotateSpeed * Time.deltaTime);
             }
             //If the D or Right Arrow Keys are currently held down
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(CurrentScheme.RightKey))
             {
                 //Rotate the tank to the right
                 Mover.Rotate(Data.RotateSpeed * Time.deltaTime);
