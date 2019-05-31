@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 
@@ -34,6 +35,8 @@ public class MultiplayerScreens : MonoBehaviour
 
     public static PlayerScreen AddPlayerScreen()
     {
+        var activeScene = SceneManager.GetActiveScene();
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main"));
         PlayersAdded++;
         if (playerInfoFields == null)
         {
@@ -63,6 +66,7 @@ public class MultiplayerScreens : MonoBehaviour
             }
         }
         OtherPlayerScreens.Add(PlayersAdded, screen);
+        SceneManager.SetActiveScene(activeScene);
         return screen;
     }
 

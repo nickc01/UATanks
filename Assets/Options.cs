@@ -26,12 +26,10 @@ public class Options : MonoBehaviour
     {
         MapType.value = PlayerPrefs.GetInt("MapType");
         PlayerCount.value = PlayerPrefs.GetInt("PlayerCount");
-        Debug.Log("MASTER VOLUME = " + PlayerPrefs.GetFloat("MasterVolume"));
     }
 
     private void SaveSettings()
     {
-        Debug.Log("Master Volume = " + Audio.Master);
         PlayerPrefs.SetInt("MapType", MapType.value);
         PlayerPrefs.SetInt("PlayerCount", PlayerCount.value);
     }

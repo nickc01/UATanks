@@ -22,6 +22,18 @@ public partial class GameManager
             Game.StartCoroutine(LoadGameScene(loadMode));
         }
 
+        public static void Restart()
+        {
+            CoroutineManager.StartCoroutine(RestartRoutine());
+        }
+
+        private static IEnumerator RestartRoutine()
+        {
+            yield return UnloadLevel();
+            LevelSeed = MapGenerator.Generator.Seed;
+            Play(LevelLoadMode.Specific);
+        }
+
         public static void GoToOptions()
         {
             UIManager.All.SetUIState("Options", Curves.Smooth, TransitionMode.TopToBottom);

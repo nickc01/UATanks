@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //The Controller used for the player tank
@@ -132,6 +133,10 @@ public class PlayerTank : Tank
             GameManager.Players.Remove((this,Data));
             AudioPlayer.Listeners.Remove(transform);
             GameManager.Lose(this);
+            if (GameManager.Players.Count == 1 && GameManager.Enemies.Count == 0)
+            {
+                GameManager.Win(GameManager.Players.First().Tank);
+            }
         }
     }
 

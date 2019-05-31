@@ -12,10 +12,10 @@ public class MapGenerator : MonoBehaviour
     public int MapWidth = 1;
     [Tooltip("How many tiles long the map will be")]
     public int MapHeight = 2;
-    [Tooltip("Increases the width by 1 after a set amount of levels")]
-    public int IncreaseWidthEvery = 2;
-    [Tooltip("Increases the height by 1 after a set amount of levels")]
-    public int IncreaseHeightEvery = 2;
+    //[Tooltip("Increases the width by 1 after a set amount of levels")]
+    //public int IncreaseWidthEvery = 2;
+    //[Tooltip("Increases the height by 1 after a set amount of levels")]
+    //public int IncreaseHeightEvery = 2;
     [Tooltip("How wide and how long each tile in the map will be")]
     public Vector2Int TileDimensions;
     [Tooltip("The type of seed to use")]
@@ -70,13 +70,13 @@ public class MapGenerator : MonoBehaviour
         PlayerSpawnPoints.Clear();
 
         //Set the width and height of the map generator
-        var width = Mathf.FloorToInt(level / (float)IncreaseWidthEvery) + MapWidth;
-        var height = Mathf.FloorToInt(level / (float)IncreaseHeightEvery) + MapHeight;
+        //var width = Mathf.FloorToInt(level / (float)IncreaseWidthEvery) + MapWidth;
+        //var height = Mathf.FloorToInt(level / (float)IncreaseHeightEvery) + MapHeight;
 
         //Loop over each tiles in the grid
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < MapWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < MapHeight; y++)
             {
                 //Instantiate a random room
                 var NewRoom = Instantiate(Rooms[Random.Range(0, Rooms.Count)], new Vector3(x * TileDimensions.x,0, y * TileDimensions.y), Quaternion.identity);
@@ -85,7 +85,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     switch (door.direction)
                     {
-                        case DoorDirection.Up when y < height - 1:
+                        case DoorDirection.Up when y < MapHeight - 1:
                             door.gameObject.SetActive(false);
                             break;
                         case DoorDirection.Down when y > 0:
@@ -94,7 +94,7 @@ public class MapGenerator : MonoBehaviour
                         case DoorDirection.Left when x > 0:
                             door.gameObject.SetActive(false);
                             break;
-                        case DoorDirection.Right when x < width - 1:
+                        case DoorDirection.Right when x < MapWidth - 1:
                             door.gameObject.SetActive(false);
                             break;
                         default:

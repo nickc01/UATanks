@@ -18,11 +18,11 @@ public static class Callbacks
         var dropdownValue = Options.MapType.value;
         if (dropdownValue == 0)
         {
-            Map_Day();
+            GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
         }
         else
         {
-            RandomLevel();
+            GameManager.UI.Play(LevelLoadMode.Random);
         }
     }
 
@@ -38,12 +38,17 @@ public static class Callbacks
         CoroutineManager.StartCoroutine(MainMenuRoutine());
     }
 
+    public static void Restart()
+    {
+        GameManager.UI.Restart();
+    }
+
     //Called when the next level button is pressed
-    public static void NextLevel()
+    /*public static void NextLevel()
     {
         //Start the next level routine
         CoroutineManager.StartCoroutine(NextLevelRoutine());
-    }
+    }*/
 
     //Called when the help button is pressed
     public static void Help()
@@ -60,7 +65,7 @@ public static class Callbacks
     }
 
     //The next level routine
-    static IEnumerator NextLevelRoutine()
+    /*static IEnumerator NextLevelRoutine()
     {
         //Unload the current level
         yield return GameManager.UnloadLevel();
@@ -68,7 +73,7 @@ public static class Callbacks
         PlayCampaignLevel(GameManager.LevelSeed + 1);
         //GameManager.CurrentCampaignLevel++;
         //GameManager.UI.Play(LevelLoadMode.Campaign);
-    }
+    }*/
 
     //The main menu routine
     static IEnumerator MainMenuRoutine()
@@ -85,7 +90,7 @@ public static class Callbacks
     #region Single Player Mode Select
 
     //Called when the campaign button is pressed
-    public static void Campaign()
+    /*public static void Campaign()
     {
         //Go to the campaign screen
         GameManager.UI.GoToCampaign();
@@ -114,7 +119,7 @@ public static class Callbacks
     {
         //Play a random level
         GameManager.UI.Play(LevelLoadMode.Random);
-    }
+    }*/
 
     #endregion
 }
