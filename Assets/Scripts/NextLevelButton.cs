@@ -13,6 +13,6 @@ public class NextLevelButton : MonoBehaviour
         {
             button = GetComponent<Button>();
         }
-        button.enabled = GameManager.CurrentCampaignLevel + 1 < GameManager.Game.Levels && GameManager.CurrentLoadMode == LevelLoadMode.Campaign;
+        button.enabled = GameManager.LevelSeed + 1 < GameManager.Game.Levels && GameManager.CurrentLoadMode == LevelLoadMode.Specific;
     }
 }

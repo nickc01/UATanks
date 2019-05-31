@@ -24,7 +24,7 @@ public partial class GameManager : MonoBehaviour
     }
     public static event Action<bool> PlayingLevelEvent; //An event that is called whenever the game is playing or not
     public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.Random; //The mode the map generator will use
-    public static int CurrentCampaignLevel { get; set; } = 0; //The current campaign level loaded
+    public static int LevelSeed { get; set; } = 0; //The current campaign level loaded
     public static GameManager Game { get; private set; } //The singleton for the game manager
     //public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
     public static List<(PlayerTank Tank, TankData Data)> Players = new List<(PlayerTank Tank, TankData Data)>();
@@ -153,15 +153,14 @@ public partial class GameManager : MonoBehaviour
         //Show the win screen
         //UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
         //var UI = MultiplayerManager.GetPlayerInfo(Winner.PlayerNumber).PlayerUI;
-        var UI = Winner.UI;
-        UI.ButtonsEnabled = true;
-        UI.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
+        Winner.UI.ButtonsEnabled = true;
+        Winner.UI.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
         //Play the Win Sound
         //CameraController.Main.Sound.clip = Game.WinSound;
         //CameraController.Main.Sound.Play();
         AudioPlayer.Play(Game.WinSound);
         PlayingLevel = false;
-        UI.ResultsScore = Winner.Score;
+        Winner.UI.ResultsScore = Winner.Score;
         //MultiplayerManager.DeletePlayers();
     }
 
@@ -169,19 +168,19 @@ public partial class GameManager : MonoBehaviour
     public static void Lose(PlayerTank Loser)
     {
         //var UI = MultiplayerManager.GetPlayerInfo(Loser.PlayerNumber).PlayerUI;
-        var UI = Loser.UI;
+        //var UI = Loser.UI;
         if (Players.Count == 0)
         {
-            UI.ButtonsEnabled = true;
+            Loser.UI.ButtonsEnabled = true;
             PlayingLevel = false;
         }
         else
         {
-            UI.ButtonsEnabled = false;
+            Loser.UI.ButtonsEnabled = false;
         }
-        UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        Loser.UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
         AudioPlayer.Play(Game.LoseSound);
-        UI.ResultsScore = Loser.Score;
+        Loser.UI.ResultsScore = Loser.Score;
     }
 
     //A routine to unload the level
@@ -190,7 +189,7 @@ public partial class GameManager : MonoBehaviour
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
-            MultiplayerManager.DeletePlayers();
+            MultiplayerScreens.DeletePlayerScreens();
             UIManager.Primary.Gradient = false;
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
@@ -210,9 +209,9 @@ public partial class GameManager : MonoBehaviour
         CurrentLoadMode = loadMode;
         switch (loadMode)
         {
-            case LevelLoadMode.Campaign:
+            case LevelLoadMode.Specific:
                 MapGenerator.Generator.SeedGenerator = SeedGenerator.UseSeed;
-                MapGenerator.Generator.Seed = CurrentCampaignLevel;
+                MapGenerator.Generator.Seed = LevelSeed;
                 break;
             case LevelLoadMode.MapOfTheDay:
                 MapGenerator.Generator.SeedGenerator = SeedGenerator.MapOfTheDay;
@@ -230,23 +229,26 @@ public partial class GameManager : MonoBehaviour
         //Set the scene active
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
         //Generate the map
-        MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Campaign ? CurrentCampaignLevel : 0);
+        MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Specific ? LevelSeed : 0);
         //Spawn the player at a random spawnpoint
         //var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
         //Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-        PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 1);
+        PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 1,false);
         //If there are two players playing
         if (Options.PlayerCount.value == 1)
         {
-            MultiplayerManager.AddNewPlayer();
             PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 2);
         }
-        foreach (var info in MultiplayerManager.GetAllPlayerInfo())
+        /*foreach (var info in MultiplayerManager.GetAllPlayerInfo())
         {
             info.PlayerUI.Gradient = true;
+        }*/
+        foreach (var player in Players)
+        {
+            player.Tank.UI.Gradient = true;
         }
         yield return UI.ShowReadySequence();
-        //Show the game UI
+        //Show the game UI for all screens
         UIManager.All.SetUIState("Game");
         //Set the playing level flag
         PlayingLevel = true;

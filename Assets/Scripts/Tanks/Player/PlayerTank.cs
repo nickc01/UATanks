@@ -9,7 +9,7 @@ public class PlayerTank : Tank
     public float Noise { get; private set; } //The amound of audio noise the player is emitting.
                                              //The higher the number, the easier the player can be heard by the enemies
 
-    public PlayerInfo Info => MultiplayerManager.GetPlayerInfo(PlayerNumber);
+    public PlayerScreen Info { get; private set; }
     public UIManager UI => Info.PlayerUI;
 
     ControlScheme CurrentScheme;
@@ -135,10 +135,20 @@ public class PlayerTank : Tank
         }
     }
 
-    public static PlayerTank Create(Vector3 spawnPoint,int playerID,Quaternion? Rotation = null)
+    public static PlayerTank Create(Vector3 spawnPoint,int playerID,bool MakeNewScreen = true,Quaternion? Rotation = null)
     {
+        PlayerScreen newInfo;
+        if (MakeNewScreen)
+        {
+            newInfo = MultiplayerScreens.AddPlayerScreen();
+        }
+        else
+        {
+            newInfo = MultiplayerScreens.GetPlayerScreen(playerID);
+        }
         var newPlayer = Instantiate(GameManager.Game.PlayerPrefab, spawnPoint, Rotation.GetValueOrDefault(Quaternion.identity)).GetComponent<PlayerTank>();
         newPlayer.PlayerNumber = playerID;
+        newPlayer.Info = newInfo;
         return newPlayer;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 
 [Serializable]
-public class PlayerInfo
+public class PlayerScreen
 {
     public CameraController PlayerCamera;
     public UIManager PlayerUI;

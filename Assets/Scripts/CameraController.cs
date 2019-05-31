@@ -7,16 +7,6 @@ public class CameraController : PlayerSpecific
     public Camera CameraComponent { get; private set; }
     public float Speed = 7f; //How fast the camera moves towards the target
 
-    //private static GameObject targetInternal; //The target the camera will move towards
-    //public static CameraController Main { get; private set; } //The singleton for the camera controller
-
-    /*public static GameObject Target
-    {
-        get => targetInternal;
-        set => SetTarget(value);
-    }*/
-    //int IIsPlayerSpecific.PlayerID { get; set; }
-
     private GameObject targetInternal;
     public GameObject Target
     {
@@ -32,39 +22,31 @@ public class CameraController : PlayerSpecific
         OnNewPlayerChange();
     }
 
-    /*private void OnDestroy()
+    private void AddToMask(ref int originalMask,int layerNumber)
     {
-        if (Application.isPlaying)
-        {
-            MultiplayerManager.AddedPlayersUpdate -= PlayerCountChanged;
-        }
-    }*/
-
-    private int AddToMask(int originalMask,int layerNumber)
-    {
-        return originalMask | (1 << layerNumber);
+        originalMask |= (1 << layerNumber);
     }
 
-    private int RemoveFromMask(int originalMask, int layerNumber)
+    private void RemoveFromMask(ref int originalMask, int layerNumber)
     {
-        return originalMask & ~(1 << layerNumber);
+        originalMask &= ~(1 << layerNumber);
     }
 
     public override void OnNewPlayerChange()
     {
         if (PlayerNumber > 1)
         {
-            var originalMask = MultiplayerManager.Primary.PlayerCamera.CameraComponent.cullingMask;
-            originalMask = RemoveFromMask(originalMask, LayerMask.NameToLayer("UIPlayer1"));
-            originalMask = AddToMask(originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
-            MultiplayerManager.GetPlayerInfo(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = originalMask;
+            var originalMask = MultiplayerScreens.Primary.PlayerCamera.CameraComponent.cullingMask;
+            RemoveFromMask(ref originalMask, LayerMask.NameToLayer("UIPlayer1"));
+            AddToMask(ref originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
+            MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = originalMask;
         }
-        if (MultiplayerManager.PlayersAdded == 1)
+        if (MultiplayerScreens.PlayersAdded == 1)
         {
             CameraComponent.depth = -1;
             CameraComponent.rect = new Rect(0, 0, 1, 1);
         }
-        else if (MultiplayerManager.PlayersAdded == 2)
+        else if (MultiplayerScreens.PlayersAdded == 2)
         {
             if (PlayerNumber == 1)
             {

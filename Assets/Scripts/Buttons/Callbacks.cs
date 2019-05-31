@@ -65,7 +65,7 @@ public static class Callbacks
         //Unload the current level
         yield return GameManager.UnloadLevel();
         //Play the next level
-        PlayCampaignLevel(GameManager.CurrentCampaignLevel + 1);
+        PlayCampaignLevel(GameManager.LevelSeed + 1);
         //GameManager.CurrentCampaignLevel++;
         //GameManager.UI.Play(LevelLoadMode.Campaign);
     }
@@ -95,9 +95,9 @@ public static class Callbacks
     public static void PlayCampaignLevel(int levelNumber)
     {
         //Set the campaign level number
-        GameManager.CurrentCampaignLevel = levelNumber;
+        GameManager.LevelSeed = levelNumber;
         //Play the selected campaign level
-        GameManager.UI.Play(LevelLoadMode.Campaign);
+        GameManager.UI.Play(LevelLoadMode.Specific);
     }
 
     //Called when the map of the day button is pressed

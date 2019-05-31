@@ -7,14 +7,15 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 
-public class MultiplayerManager : MonoBehaviour
+public class MultiplayerScreens : MonoBehaviour
 {
-    [SerializeField] PlayerInfo BasePlayerInfo;
-    private static Dictionary<int, PlayerInfo> PlayerClones = new Dictionary<int, PlayerInfo>();
+    [Tooltip("The objects that make up a player's screen. These objects will be duplicated for each player in the game")]
+    [SerializeField] PlayerScreen BaseScreenObjects;
+    private static Dictionary<int, PlayerScreen> OtherPlayerScreens = new Dictionary<int, PlayerScreen>();
     public static int PlayersAdded { get; private set; } = 1;
-    private static MultiplayerManager Singleton;
+    private static MultiplayerScreens Singleton;
 
-    public static PlayerInfo Primary => GetPlayerInfo(1);
+    public static PlayerScreen Primary => GetPlayerScreen(1);
 
     private void Start()
     {
@@ -31,27 +32,27 @@ public class MultiplayerManager : MonoBehaviour
 
     static FieldInfo[] playerInfoFields;
 
-    public static PlayerInfo AddNewPlayer()
+    public static PlayerScreen AddPlayerScreen()
     {
         PlayersAdded++;
         if (playerInfoFields == null)
         {
-            playerInfoFields = typeof(PlayerInfo).GetFields();
+            playerInfoFields = typeof(PlayerScreen).GetFields();
         }
-        PlayerInfo info = new PlayerInfo();
+        PlayerScreen screen = new PlayerScreen();
         foreach (var field in playerInfoFields)
         {
-            var original = field.GetValue(Singleton.BasePlayerInfo) as Component;
+            var original = field.GetValue(Singleton.BaseScreenObjects) as Component;
             Object copy = Instantiate(original.gameObject).GetComponent(field.FieldType);
             if (copy is IPlayerSpecific psCopy)
             {
                 psCopy.PlayerNumber = PlayersAdded;
             }
-            field.SetValue(info, copy);
+            field.SetValue(screen, copy);
         }
         for (int i = 1; i < PlayersAdded; i++)
             {
-            var otherSpecifics = GetPlayerInfo(i);
+            var otherSpecifics = GetPlayerScreen(i);
             foreach (var field in playerInfoFields)
             {
                 var value = field.GetValue(otherSpecifics);
@@ -61,38 +62,38 @@ public class MultiplayerManager : MonoBehaviour
                 }
             }
         }
-        PlayerClones.Add(PlayersAdded, info);
-        return info;
+        OtherPlayerScreens.Add(PlayersAdded, screen);
+        return screen;
     }
 
-    public static PlayerInfo GetPlayerInfo(int playerNumber)
+    public static PlayerScreen GetPlayerScreen(int playerNumber)
     {
         if (playerNumber == 1)
         {
-            return Singleton.BasePlayerInfo;
+            return Singleton.BaseScreenObjects;
         }
         else
         {
-            return PlayerClones.TryGetValue(playerNumber, out var r) ? r : throw new Exception($"There is no player {playerNumber} ");
+            return OtherPlayerScreens.TryGetValue(playerNumber, out var r) ? r : throw new Exception($"There is no screen for player {playerNumber}");
         }
     }
 
-    public static IEnumerable<PlayerInfo> GetAllPlayerInfo()
+    public static IEnumerable<PlayerScreen> GetAllScreens()
     {
         for (int i = 1; i <= PlayersAdded; i++)
         {
-            yield return GetPlayerInfo(i);
+            yield return GetPlayerScreen(i);
         }
     }
 
-    public static void DeletePlayers()
+    public static void DeletePlayerScreens()
     {
         if (PlayersAdded > 1)
         {
             for (int i = PlayersAdded; i > 1; i--)
             {
-                var specifics = PlayerClones[i];
-                PlayerClones.Remove(i);
+                var specifics = OtherPlayerScreens[i];
+                OtherPlayerScreens.Remove(i);
                 foreach (var field in playerInfoFields)
                 {
                     var value = field.GetValue(specifics) as Object;
@@ -100,7 +101,7 @@ public class MultiplayerManager : MonoBehaviour
                 }
             }
             PlayersAdded = 1;
-            foreach (var otherSpecifics in GetAllPlayerInfo())
+            foreach (var otherSpecifics in GetAllScreens())
             {
                 foreach (var field in playerInfoFields)
                 {

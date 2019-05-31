@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : PlayerSpecific
 {
     //public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
-    public static UIManager Primary => MultiplayerManager.Primary.PlayerUI;
+    public static UIManager Primary => MultiplayerScreens.Primary.PlayerUI;
     [SerializeField] string defaultState = "Game"; //The starting UI State for the manager
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
@@ -108,7 +108,7 @@ public class UIManager : PlayerSpecific
     public override void OnNewPlayerChange()
     {
         gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerNumber);
-        UICanvas.worldCamera = MultiplayerManager.GetPlayerInfo(PlayerNumber).PlayerCamera.CameraComponent;
+        UICanvas.worldCamera = MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent;
     }
 
     public void SetUIState(string newState)
@@ -175,7 +175,7 @@ public class UIManager : PlayerSpecific
 
         public static void SetUIState(string newState)
         {
-            foreach (var specific in MultiplayerManager.GetAllPlayerInfo())
+            foreach (var specific in MultiplayerScreens.GetAllScreens())
             {
                 specific.PlayerUI.SetUIState(newState);
             }
@@ -183,7 +183,7 @@ public class UIManager : PlayerSpecific
 
         public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
         {
-            foreach (var specific in MultiplayerManager.GetAllPlayerInfo())
+            foreach (var specific in MultiplayerScreens.GetAllScreens())
             {
                 specific.PlayerUI.SetUIState(newState, transitionCurve, mode, Speed, FromIsHidden);
             }

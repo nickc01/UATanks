@@ -27,9 +27,6 @@ public class Options : MonoBehaviour
         MapType.value = PlayerPrefs.GetInt("MapType");
         PlayerCount.value = PlayerPrefs.GetInt("PlayerCount");
         Debug.Log("MASTER VOLUME = " + PlayerPrefs.GetFloat("MasterVolume"));
-        Audio.Master = PlayerPrefs.GetFloat("MasterVolume");
-        Audio.Music = PlayerPrefs.GetFloat("MusicVolume");
-        Audio.SoundEffects = PlayerPrefs.GetFloat("SoundEffectsVolume");
     }
 
     private void SaveSettings()
@@ -37,9 +34,6 @@ public class Options : MonoBehaviour
         Debug.Log("Master Volume = " + Audio.Master);
         PlayerPrefs.SetInt("MapType", MapType.value);
         PlayerPrefs.SetInt("PlayerCount", PlayerCount.value);
-        PlayerPrefs.SetFloat("MasterVolume", Audio.Master);
-        PlayerPrefs.SetFloat("MusicVolume", Audio.Music);
-        PlayerPrefs.SetFloat("SoundEffectsVolume", Audio.SoundEffects);
     }
 
     private void OnApplicationQuit()
