@@ -554,8 +554,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapWidth: 1
   MapHeight: 2
-  IncreaseWidthEvery: 2
-  IncreaseHeightEvery: 2
   TileDimensions: {x: 30, y: 30}
   SeedGenerator: 2
   Seed: 180
@@ -2580,7 +2578,7 @@ MonoBehaviour:
     type: 3}
   BombPrefab: {fileID: 4062654970316953222, guid: e1ea4f942ffc7844b83be0a866cad93a,
     type: 3}
-  ExplosionPrefab: {fileID: 4540478365783236622, guid: 9ea52ffff49c8094f953ddf2e9b2f8e0,
+  ExplosionPrefab: {fileID: 413709203625825857, guid: e9ffdfc68d41db34984ca995028b5906,
     type: 3}
   EnemyPrefabs:
   - {fileID: 2052326719224177851, guid: 5b5d740ec8d8779448e3a2651e268441, type: 3}
@@ -2592,9 +2590,37 @@ MonoBehaviour:
   - {fileID: 4518953824826894254, guid: 2826c83de6df91649951626baaf52e61, type: 3}
   - {fileID: 7821059125058578150, guid: ac53611a9dede2a4fac81425a3aaba7a, type: 3}
   - {fileID: 8354986200551440230, guid: 0c5ab0923a71bfc4daafec10b1a70afa, type: 3}
-  FireSound: {fileID: 8300000, guid: 90a79e17679a4234f8e43ae932a81f36, type: 3}
+  FireSounds:
+  - {fileID: 8300000, guid: ba19f8097abc75545b3865d58b0cc602, type: 3}
+  - {fileID: 8300000, guid: b9debd95dbc6d514aac10e017d9509b8, type: 3}
+  - {fileID: 8300000, guid: ae806e6b3e9f7274fb019421a95c4441, type: 3}
+  - {fileID: 8300000, guid: 7b29b7d288cf16b4083fac908d15d561, type: 3}
   WinSound: {fileID: 8300000, guid: 7f73c5762040bba4c88ae6b7c8dba565, type: 3}
   LoseSound: {fileID: 8300000, guid: 81b6589028f893d408fdb1d928ce1536, type: 3}
+  MenuMusic: {fileID: 0}
+  GameMusic: []
+  ExplosionSounds:
+  - {fileID: 8300000, guid: 94d09d01a400d6640a7e4303ac12400b, type: 3}
+  - {fileID: 8300000, guid: 142f49c1cb58c344d838a84eee945cb6, type: 3}
+  - {fileID: 8300000, guid: 37ca5ed7caa71f143a88e79e9fc7ff37, type: 3}
+  - {fileID: 8300000, guid: 8e818ae5c36aa2f47b55a79b7da39704, type: 3}
+  - {fileID: 8300000, guid: a8107626d4c009b409f71c20af2f8fa1, type: 3}
+  ShellHitSounds:
+  - {fileID: 8300000, guid: 58369dc51dda5924a8bd46cc92bfdf5a, type: 3}
+  - {fileID: 8300000, guid: 02f94e4f17e4edf42b1f1d842fb24f4d, type: 3}
+  - {fileID: 8300000, guid: b094dc2a03ca13b45a64612a6b25a943, type: 3}
+  - {fileID: 8300000, guid: 95b98c5c92cf2044cab8808006bb7215, type: 3}
+  - {fileID: 8300000, guid: 710e6f1bac36b054baa4739051595b46, type: 3}
+  - {fileID: 8300000, guid: f2ee42f0bf0f4dc478bf390f4983ed17, type: 3}
+  - {fileID: 8300000, guid: 7c5add8d3479aff4fa612ceddc43dc3a, type: 3}
+  PowerupPickupSound: {fileID: 8300000, guid: f0770b8a1ca4f064b86ff1a8b26f7b44, type: 3}
+  ButtonClickSounds:
+  - {fileID: 8300000, guid: aacc4b37eea7bd04fa35f2b2bc9bb2e3, type: 3}
+  - {fileID: 8300000, guid: 1b7fcf0261fecbb4b85911f390b19e6c, type: 3}
+  - {fileID: 8300000, guid: 970a3698d0842684d8e3ec4745c94549, type: 3}
+  - {fileID: 8300000, guid: 127a71dab56dd39459d28da31a55ae92, type: 3}
+  - {fileID: 8300000, guid: 85afd04297a555d40b07761ab0366bb7, type: 3}
+  TankMoveSound: {fileID: 8300000, guid: ee1fc8ca1d8439646b38ad5c32b176c8, type: 3}
   ShieldStrength: 10
   ShieldWarningFlashRate: 20
   ShieldDamageResistance: 10

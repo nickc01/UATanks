@@ -38,7 +38,7 @@ public partial class GameManager : MonoBehaviour
     public GameObject PlayerPrefab;
     [Tooltip("The bomb prefab used when the bomb powerup is picked up")]
     public GameObject BombPrefab;
-    [Tooltip("The prefab used when the bomb explodes")]
+    [Tooltip("The prefab used when a tank dies, or when a bomb powerup is used")]
     public GameObject ExplosionPrefab;
     [Tooltip("A list of possible enemies to spawn at the enemy spawnpoints")]
     public List<GameObject> EnemyPrefabs = new List<GameObject>();
@@ -47,11 +47,25 @@ public partial class GameManager : MonoBehaviour
 
     [Header("Sounds")]
     [Tooltip("Played When a shell is fired")]
-    public AudioClip FireSound;
+    public List<AudioClip> FireSounds;
     [Tooltip("Played when you win the game")]
     public AudioClip WinSound;
     [Tooltip("Played when you lose the game")]
     public AudioClip LoseSound;
+    [Tooltip("The music that is played on the main menu")]
+    public AudioClip MenuMusic;
+    [Tooltip("Music Tracks that are played during the course of the game")]
+    public List<AudioClip> GameMusic;
+    [Tooltip("Sounds that are played when a tank dies or when a bomb powerup is used")]
+    public List<AudioClip> ExplosionSounds;
+    [Tooltip("Sound that is played when a shell collides with a tank")]
+    public List<AudioClip> ShellHitSounds;
+    [Tooltip("Sound that is played when a powerup is collected")]
+    public AudioClip PowerupPickupSound;
+    [Tooltip("Sounds that are played when a menu button is clicked")]
+    public List<AudioClip> ButtonClickSounds;
+    [Tooltip("A looping sound effect that is played when a tank moves")]
+    public AudioClip TankMoveSound;
 
     [Header("Shield")]
     [Space]
@@ -148,7 +162,7 @@ public partial class GameManager : MonoBehaviour
     }
 
     //Called when all the enemy tanks in the map have been destroyed
-    public static void Win(PlayerTank Winner)
+    public static void Win(PlayerTank Winner,bool PlayWinSound = true)
     {
         //Show the win screen
         //UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
@@ -158,14 +172,17 @@ public partial class GameManager : MonoBehaviour
         //Play the Win Sound
         //CameraController.Main.Sound.clip = Game.WinSound;
         //CameraController.Main.Sound.Play();
-        AudioPlayer.Play(Game.WinSound);
+        if (PlayWinSound)
+        {
+            AudioPlayer.Play(Game.WinSound, Audio.SoundEffects, Vector3.zero, Vector3.zero);
+        }
         PlayingLevel = false;
         Winner.UI.ResultsScore = Winner.Score;
         //MultiplayerManager.DeletePlayers();
     }
 
     //Called when the player tank has been destroyed
-    public static void Lose(PlayerTank Loser)
+    public static void Lose(PlayerTank Loser,bool PlayLoseSound = true)
     {
         //var UI = MultiplayerManager.GetPlayerInfo(Loser.PlayerNumber).PlayerUI;
         //var UI = Loser.UI;
@@ -178,8 +195,11 @@ public partial class GameManager : MonoBehaviour
         {
             Loser.UI.ButtonsEnabled = false;
         }
+        if (PlayLoseSound)
+        {
+            AudioPlayer.Play(Game.LoseSound, Audio.SoundEffects,Vector3.zero,Vector3.zero);
+        }
         Loser.UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
-        AudioPlayer.Play(Game.LoseSound);
         Loser.UI.ResultsScore = Loser.Score;
     }
 
@@ -243,9 +263,9 @@ public partial class GameManager : MonoBehaviour
         {
             info.PlayerUI.Gradient = true;
         }*/
-        foreach (var player in Players)
+        foreach (var screen in MultiplayerScreens.GetAllScreens())
         {
-            player.Tank.UI.Gradient = true;
+            screen.PlayerUI.Gradient = true;
         }
         yield return UI.ShowReadySequence();
         //Show the game UI for all screens

@@ -72,6 +72,13 @@ public partial class GameManager
         //A function to go to the main menu
         public static void ToMainMenu()
         {
+            CoroutineManager.StartCoroutine(ToMainMenuRoutine());
+            //UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
+        }
+
+        static IEnumerator ToMainMenuRoutine()
+        {
+            yield return UnloadLevel();
             UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
         }
     }

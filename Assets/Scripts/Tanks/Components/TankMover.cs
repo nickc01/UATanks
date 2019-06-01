@@ -9,6 +9,14 @@ public class TankMover : MonoBehaviour
 {
     CharacterController controller;
     public ObstacleAvoidance OA { get; private set; }
+    public bool Moving { get; private set; } = false;
+    public float AudioDelay { get; private set; } = 0.05f;
+    float SoundTimer = 0f;
+    float SoundTimerMax = 0f;
+
+    bool usingMoveCommands = false;
+
+
     private void Start()
     {
         //Gets the character controller of this tank
@@ -16,10 +24,45 @@ public class TankMover : MonoBehaviour
         //Create the Obstacle Avoidance System for this mover
         OA = new ObstacleAvoidance(transform);
     }
+
+    private void LateUpdate()
+    {
+        Moving = usingMoveCommands;
+        if (Moving)
+        {
+            if (GameManager.Game.TankMoveSound != null)
+            {
+                SoundTimer += Time.deltaTime;
+                if (SoundTimerMax == 0)
+                {
+                    SoundTimerMax = GameManager.Game.TankMoveSound.length;
+                }
+                if (SoundTimer >= SoundTimerMax)
+                {
+                    SoundTimer = -AudioDelay;
+                    AudioPlayer.Play(GameManager.Game.TankMoveSound, Audio.SoundEffects / 3f,transform);
+                }
+            }
+            else
+            {
+                SoundTimerMax = 0;
+            }
+        }
+        else
+        {
+            SoundTimer = 0;
+        }
+        usingMoveCommands = false;
+    }
+
     //Moves the tank forward at a set speed
     //Negative values move the tank backwards
     public void Move(float speed)
     {
+        if (speed != 0)
+        {
+            usingMoveCommands = true;
+        }
         controller.SimpleMove(transform.forward * speed);
     }
 
@@ -28,6 +71,10 @@ public class TankMover : MonoBehaviour
     //If Use OA is set to true, then it will make sure to avoid any obstacles as well
     public void Rotate(float degrees, bool UseOA = false)
     {
+        /*if (degrees != 0)
+        {
+            usingMoveCommands = true;
+        }*/
         if (UseOA)
         {
             degrees += degrees * OA.RecommendedDirection;
@@ -39,7 +86,6 @@ public class TankMover : MonoBehaviour
     //If Use OA is set to true, then it will make sure to avoid any obstacles as well
     public void RotateTowards(Vector3 target, float maxDegrees,bool UseOA = false)
     {
-
         var angle = 0f;
         //If the angle is negative, then the tank should move away from the target
         if (maxDegrees < 0f)

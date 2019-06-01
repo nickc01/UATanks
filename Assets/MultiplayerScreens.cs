@@ -100,8 +100,8 @@ public class MultiplayerScreens : MonoBehaviour
                 OtherPlayerScreens.Remove(i);
                 foreach (var field in playerInfoFields)
                 {
-                    var value = field.GetValue(specifics) as Object;
-                    Destroy(value);
+                    var value = field.GetValue(specifics) as Component;
+                    Destroy(value.gameObject);
                 }
             }
             PlayersAdded = 1;

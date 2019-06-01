@@ -265,7 +265,7 @@ MonoBehaviour:
   color: {r: 0, g: 1, b: 0.010810852, a: 1}
   DamageResistance: 0
   Lives: 3
-  MaxLives: 1
+  MaxLives: 3
   RespawnDelay: 1
   RespawnInvincibility: 3
   RespawnFlashRate: 20

@@ -114,6 +114,7 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
             ActivePowerUps[i].Destroy();
         }
         Lives--;
+        Explosion.Spawn(transform.position, 3f);
         if (Lives == 0)
         {
             //Destroy the tank

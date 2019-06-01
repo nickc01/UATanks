@@ -15,17 +15,18 @@ public class Bomb : MonoBehaviour
         //If the timer is up
         if (Timer <= 0)
         {
+            Explosion.Spawn(transform.position, GameManager.Game.BombExplosionSize);
             //Spawn the explosion
-            var explosion = Instantiate(GameManager.Game.ExplosionPrefab, transform.position, Quaternion.identity);
+            //var explosion = Instantiate(GameManager.Game.ExplosionPrefab, transform.position, Quaternion.identity);
             //Set the explosion's size
-            explosion.transform.localScale = Vector3.one * GameManager.Game.BombExplosionSize;
+            //explosion.transform.localScale = Vector3.one * GameManager.Game.BombExplosionSize;
             //Destroy the explosion after 1 second
-            Destroy(explosion, 1f);
+            //Destroy(explosion, 1f);
             //Damage all the tanks that are nearby
             for (int i = Tank.AllTanks.Count - 1; i >= 0; i--)
             {
                 var tank = Tank.AllTanks[i];
-                if (tank != Source && Vector3.Distance(tank.transform.position, explosion.transform.position) <= GameManager.Game.BombExplosionSize)
+                if (tank != Source && Vector3.Distance(tank.transform.position, transform.position) <= GameManager.Game.BombExplosionSize)
                 {
                     tank.Attack(GameManager.Game.BombDamage);
                 }

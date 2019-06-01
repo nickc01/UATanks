@@ -18,9 +18,9 @@ public class PlayerTank : Tank
     public override void Start()
     {
         base.Start();
+        GameManager.Players.Add((this, Data));
         //Set the main player data
         //GameManager.Player = (this, Data);
-        GameManager.Players.Add((this, Data));
         CurrentScheme = ControlScheme.GetScheme(PlayerNumber);
         //Set the camera target to be the player tank
         Info.PlayerCamera.Target = gameObject;
@@ -132,10 +132,14 @@ public class PlayerTank : Tank
             //GameManager.Player = (null, null);
             GameManager.Players.Remove((this,Data));
             AudioPlayer.Listeners.Remove(transform);
-            GameManager.Lose(this);
             if (GameManager.Players.Count == 1 && GameManager.Enemies.Count == 0)
             {
+                GameManager.Lose(this,false);
                 GameManager.Win(GameManager.Players.First().Tank);
+            }
+            else
+            {
+                GameManager.Lose(this,true);
             }
         }
     }

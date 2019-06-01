@@ -11,6 +11,7 @@ using UnityEngine.Events;
 //Uses reflection to find the corresponding callback function within the "Callbacks.cs" class
 public class ButtonCallback : MonoBehaviour
 {
+    [SerializeField] bool PlayButtonSound = true;
     UnityAction action = null;
 
     private void Start()
@@ -36,7 +37,13 @@ public class ButtonCallback : MonoBehaviour
             }
         }
         //Call the callback method when the button is clicked
-        GetComponent<Button>().onClick.AddListener(action);
+        GetComponent<Button>().onClick.AddListener(() => {
+            if (PlayButtonSound)
+            {
+                AudioPlayer.Play(GameManager.Game.ButtonClickSounds.RandomElement());
+            }
+            action();
+        });
     }
 
     private static UnityAction FindMethod(string name)

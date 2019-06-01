@@ -30,6 +30,7 @@ public class UIManager : PlayerSpecific
         get => gradientInternal;
         set
         {
+            //Debug.Log("GRADIENTSET");
             gradientInternal = value;
             if (GradientImage == null)
             {
