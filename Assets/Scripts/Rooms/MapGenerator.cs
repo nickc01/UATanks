@@ -12,10 +12,6 @@ public class MapGenerator : MonoBehaviour
     public int MapWidth = 1;
     [Tooltip("How many tiles long the map will be")]
     public int MapHeight = 2;
-    [Tooltip("Increases the width by 1 after a set amount of levels")]
-    public int IncreaseWidthEvery = 2;
-    [Tooltip("Increases the height by 1 after a set amount of levels")]
-    public int IncreaseHeightEvery = 2;
     [Tooltip("How wide and how long each tile in the map will be")]
     public Vector2Int TileDimensions;
     [Tooltip("The type of seed to use")]
@@ -53,30 +49,27 @@ public class MapGenerator : MonoBehaviour
                 Random.InitState(Seed);
                 break;
             case SeedGenerator.Random:
-                Random.InitState(GetRandomSeed());
+                Random.InitState(Seed = GetRandomSeed());
                 break;
             case SeedGenerator.MapOfTheDay:
-                Random.InitState(GetSeedOfTheDay());
+                Random.InitState(Seed = GetSeedOfTheDay());
                 break;
         }
     }
 
     //Generates the map
-    public void GenerateMap(int level = 0)
+    public void GenerateMap(int seed = 0)
     {
+        Seed = seed;
         //Reset the seed
         ResetSeed();
         //Clear the list of player spawnpoints
         PlayerSpawnPoints.Clear();
 
-        //Set the width and height of the map generator
-        var width = Mathf.FloorToInt(level / (float)IncreaseWidthEvery) + MapWidth;
-        var height = Mathf.FloorToInt(level / (float)IncreaseHeightEvery) + MapHeight;
-
         //Loop over each tiles in the grid
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < MapWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < MapHeight; y++)
             {
                 //Instantiate a random room
                 var NewRoom = Instantiate(Rooms[Random.Range(0, Rooms.Count)], new Vector3(x * TileDimensions.x,0, y * TileDimensions.y), Quaternion.identity);
@@ -85,7 +78,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     switch (door.direction)
                     {
-                        case DoorDirection.Up when y < height - 1:
+                        case DoorDirection.Up when y < MapHeight - 1:
                             door.gameObject.SetActive(false);
                             break;
                         case DoorDirection.Down when y > 0:
@@ -94,7 +87,7 @@ public class MapGenerator : MonoBehaviour
                         case DoorDirection.Left when x > 0:
                             door.gameObject.SetActive(false);
                             break;
-                        case DoorDirection.Right when x < width - 1:
+                        case DoorDirection.Right when x < MapWidth - 1:
                             door.gameObject.SetActive(false);
                             break;
                         default:
@@ -108,7 +101,7 @@ public class MapGenerator : MonoBehaviour
                 foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
                 {
                     //Instantiate a new random enemy
-                    var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], enemySpawn.transform.position, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
+                    var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], enemySpawn.transform.position + new Vector3(Random.value * 2f,0,Random.value * 2f), enemySpawn.transform.rotation).GetComponent<EnemyTank>();
                     //If the enemy has the patrol personality
                     if (enemy.Personality == Personality.Patrol)
                     {
@@ -127,7 +120,7 @@ public class MapGenerator : MonoBehaviour
     public PlayerSpawn PopPlayerSpawnPoint()
     {
         //Initialize the seed
-        ResetSeed();
+        //ResetSeed();
         var spawnPoint = PlayerSpawnPoints[Random.Range(0,PlayerSpawnPoints.Count)];
         PlayerSpawnPoints.Remove(spawnPoint);
         return spawnPoint;

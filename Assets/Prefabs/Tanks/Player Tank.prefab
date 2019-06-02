@@ -261,9 +261,14 @@ MonoBehaviour:
   MaxHealth: 100
   Health: 0
   Score: 0
-  TankValue: 25
+  TankValue: 100
   color: {r: 0, g: 1, b: 0.010810852, a: 1}
   DamageResistance: 0
+  Lives: 3
+  MaxLives: 3
+  RespawnDelay: 1
+  RespawnInvincibility: 3
+  RespawnFlashRate: 20
   FireRate: 0.3
   ShellSpeed: 8
   ShellLifetime: 10

@@ -22,40 +22,57 @@ public partial class GameManager
             Game.StartCoroutine(LoadGameScene(loadMode));
         }
 
+        public static void Restart()
+        {
+            LevelSeed = MapGenerator.Generator.Seed;
+            Play(LevelLoadMode.Specific);
+        }
+
+        public static void GoToOptions()
+        {
+            UIManager.All.SetUIState("Options", Curves.Smooth, TransitionMode.TopToBottom);
+        }
+
         //The routine for showing the ready sequence at the beginning of each level
         public static IEnumerator ShowReadySequence()
         {
-            UIManager.SetUIState("Ready?");
+            UIManager.All.SetUIState("Ready?");
             yield return new WaitForSeconds(1.5f);
-            UIManager.SetUIState("Ready3",Curves.ReadyCurve,TransitionMode.TopToBottom,1f);
+            UIManager.All.SetUIState("Ready3",Curves.ReadyCurve,TransitionMode.TopToBottom,1f);
             yield return new WaitForSeconds(1.2f);
-            UIManager.SetUIState("Ready2", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
+            UIManager.All.SetUIState("Ready2", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
             yield return new WaitForSeconds(1.2f);
-            UIManager.SetUIState("Ready1", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
+            UIManager.All.SetUIState("Ready1", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
             yield return new WaitForSeconds(1.2f);
-            UIManager.SetUIState("Go!", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
+            UIManager.All.SetUIState("Go!", Curves.ReadyCurve, TransitionMode.TopToBottom, 1f);
             yield return new WaitForSeconds(1.2f);
         }
 
         //A function to go to the help screen
         public static void ToHelpScreen()
         {
-            UIManager.SetUIState("Help", Curves.Smooth, TransitionMode.TopToBottom);
+            UIManager.All.SetUIState("Help", Curves.Smooth, TransitionMode.TopToBottom);
         }
         //A function to go to the campaign screen
         public static void GoToCampaign()
         {
-            UIManager.SetUIState("Campaign",Curves.Smooth,TransitionMode.TopToBottom);
+            UIManager.All.SetUIState("Campaign",Curves.Smooth,TransitionMode.TopToBottom);
         }
         //A function to go to the mode select screen
         public static void ToModeSelectScreen()
         {
-            UIManager.SetUIState("SinglePlayerMode", Curves.Smooth, TransitionMode.TopToBottom);
+            UIManager.All.SetUIState("SinglePlayerMode", Curves.Smooth, TransitionMode.TopToBottom);
         }
         //A function to go to the main menu
         public static void ToMainMenu()
         {
-            UIManager.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
+            CoroutineManager.StartCoroutine(ToMainMenuRoutine());
+        }
+
+        static IEnumerator ToMainMenuRoutine()
+        {
+            yield return UnloadLevel(MusicType.Menu);
+            UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
         }
     }
 }

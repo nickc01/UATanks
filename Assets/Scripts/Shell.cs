@@ -8,12 +8,12 @@ public class Shell : MonoBehaviour
     public float Lifetime { get; private set; }
     public float Damage { get; private set; }
     public float Speed { get; private set; }
-    public Controller Source { get; set; }
+    public Tank Source { get; set; }
 
     private Rigidbody body;
 
     //Sets the main parameters of the shell
-    public void Set(float lifetime, float damage, float speed, Controller source, float offset = 0f)
+    public void Set(float lifetime, float damage, float speed, Tank source, float offset = 0f)
     {
         Lifetime = lifetime; //Set the lifetime of the shell
         Damage = damage; //Set the damage the shell inflicts on an opposing tank
@@ -31,7 +31,8 @@ public class Shell : MonoBehaviour
         //Destroy the shell after a set lifetime
         Destroy(gameObject, Lifetime);
         //Play the shell fire sound
-        AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
+        //AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
+        Audio.Play(GameManager.Game.FireSounds.RandomElement(), Audio.SoundEffects, transform);
     }
 
     //When the shell has collided with anything
@@ -52,6 +53,7 @@ public class Shell : MonoBehaviour
             {
                 //Destroy the shell
                 Destroy(gameObject);
+                Audio.Play(GameManager.Game.ShellHitSounds.RandomElement(), Audio.SoundEffects, transform);
             }
         }
     }

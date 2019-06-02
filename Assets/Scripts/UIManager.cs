@@ -1,38 +1,96 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class Curves
+public class UIManager : PlayerSpecific
 {
-    public static AnimationCurve Smooth => UIManager.Singleton.SmoothCurve; //Gives easy access to the smooth curve
-    public static AnimationCurve ReadyCurve => UIManager.Singleton.ReadyScreenCurve; //Gives easy access to the ready screen curve
-}
-
-public class UIManager : MonoBehaviour
-{
-    public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
+    //public static UIManager Singleton { get; private set; } //The singleton for the UI Manager
+    public static UIManager Primary => MultiplayerScreens.Primary.PlayerUI;
     [SerializeField] string defaultState = "Game"; //The starting UI State for the manager
     public AnimationCurve SmoothCurve; //The curve used to create smooth transitions
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
-    public static string CurrentState { get; private set; } //The current state of the UI
+    public string CurrentState { get; private set; } //The current state of the UI
 
-    static Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
+    private Canvas UICanvas; //The canvas of the UI
+    private RectTransform RTransform; //The rect transform of the UI
+    private Image BorderImage; //The border image of the UI 
+    private ScoreResults[] ResultDisplays; //The score result screens
+
+    Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
+
+    bool started = false;
+
+    public bool ButtonsEnabled = true;
+
+    private bool borderInternal = false;
+    public bool Border //Whether the screen border is enabled or not
+    {
+        get => borderInternal;
+        set
+        {
+            //Debug.Log("GRADIENTSET");
+            borderInternal = value;
+            if (BorderImage == null)
+            {
+                BorderImage = GetComponent<Image>();
+            }
+            BorderImage.enabled = value;
+        }
+    }
+
+    private float ScoreResult //Sets the score of all the result screens
+    {
+        get => ResultDisplays.First().Score;
+        set
+        {
+            foreach (var result in ResultDisplays)
+            {
+                result.Score = value;
+            }
+        }
+    }
+
+    private float HighscoreResult //Sets the highscore of all the result screens
+    {
+        get => ResultDisplays.First().Highscore;
+        set
+        {
+            foreach (var result in ResultDisplays)
+            {
+                result.Highscore = value;
+            }
+        }
+    }
+
+    public float FinalScore //The final score of the results screen
+    {
+        set
+        {
+            ScoreResult = value;
+            var previousHighScore = GameManager.GetHighScoreFor(PlayerNumber);
+            if (value > previousHighScore)
+            {
+                previousHighScore = value;
+                GameManager.SetHighScoreFor(PlayerNumber, value);
+            }
+            HighscoreResult = previousHighScore;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //Set the singleton
-        if (Singleton == null)
+        if (started)
         {
-            Singleton = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
             return;
         }
+        started = true;
+        //Set the stats
+        UICanvas = GetComponent<Canvas>();
+        RTransform = GetComponent<RectTransform>();
+        ResultDisplays = GetComponentsInChildren<ScoreResults>(true);
         //Get all valid UI States
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -41,10 +99,23 @@ public class UIManager : MonoBehaviour
         }
         //Set the current state to the default one
         SetUIState(defaultState);
+        OnNewPlayerChange();
     }
 
-    public static void SetUIState(string newState)
+    //When a player screen has been added or removed
+    public override void OnNewPlayerChange()
     {
+        gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerNumber);
+        UICanvas.worldCamera = MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent;
+    }
+
+    public void SetUIState(string newState)
+    {
+        if (!started)
+        {
+            defaultState = newState;
+            return;
+        }
         //Disable all states
         foreach (var state in validStates)
         {
@@ -66,13 +137,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    static string transitionFrom; //The state to transition from
-    static string transitionTo; //The state to transition to
-    static Coroutine TransitionRoutine; //The transition routine
+    string transitionFrom; //The state to transition from
+    string transitionTo; //The state to transition to
+    Coroutine TransitionRoutine; //The transition routine
 
     //Sets the UI State with transitioning
-    public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
+    public void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
     {
+        if (!started)
+        {
+            defaultState = newState;
+            return;
+        }
         //If there is no transition set
         if (transitionCurve == null)
         {
@@ -92,8 +168,27 @@ public class UIManager : MonoBehaviour
         //Star the transition routine
         TransitionRoutine = CoroutineManager.StartCoroutine(SetUIStateRoutine(transitionCurve,mode,Speed,FromIsHidden));
     }
+    public static class All
+    {
 
-    private static void FinishTransition()
+        public static void SetUIState(string newState)
+        {
+            foreach (var specific in MultiplayerScreens.GetAllScreens())
+            {
+                specific.PlayerUI.SetUIState(newState);
+            }
+        }
+
+        public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+        {
+            foreach (var specific in MultiplayerScreens.GetAllScreens())
+            {
+                specific.PlayerUI.SetUIState(newState, transitionCurve, mode, Speed, FromIsHidden);
+            }
+        }
+    }
+
+    private void FinishTransition()
     {
         //Stop the transition routine if it's running
         if (TransitionRoutine != null)
@@ -121,7 +216,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private static IEnumerator SetUIStateRoutine(AnimationCurve transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
+    private IEnumerator SetUIStateRoutine(AnimationCurve transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
     {
         float T = 0f;
         RectTransform From = validStates[transitionFrom].GetComponent<RectTransform>();
@@ -147,7 +242,7 @@ public class UIManager : MonoBehaviour
             //Increment the transition timer
             T += Time.deltaTime * Speed;
             //Get the camera bounds
-            (var Width, var Height) = CameraController.GetCameraBounds();
+            (var Width, var Height) = GetDimensions();
             //Interpolate the states to transition between them, based on the transition mode set
             switch (mode)
             {
@@ -178,4 +273,9 @@ public class UIManager : MonoBehaviour
 
     }
 
+    //Gets the dimensions of the canvas
+    public (float Width, float Height) GetDimensions()
+    {
+        return (RTransform.rect.width,RTransform.rect.height);
+    }
 }

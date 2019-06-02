@@ -2,36 +2,70 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : PlayerSpecific
 {
+    public Camera CameraComponent { get; private set; }
     public float Speed = 7f; //How fast the camera moves towards the target
 
-    private static GameObject targetInternal; //The target the camera will move towards
-    public static CameraController Main { get; private set; } //The singleton for the camera controller
-
-    public static GameObject Target
+    private GameObject targetInternal;
+    public GameObject Target
     {
         get => targetInternal;
         set => SetTarget(value);
     }
 
-    public AudioSource Sound { get; private set; } //The Audio Source of the Camera
 
     private void Start()
     {
-        //Set the singleton
-        if (Main == null)
+        //MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
+        CameraComponent = GetComponent<Camera>();
+        OnNewPlayerChange();
+    }
+
+    //Adds a layer to the mask
+    private void AddToMask(ref int originalMask,int layerNumber)
+    {
+        originalMask |= (1 << layerNumber);
+    }
+
+    //Removes a layer from the mask
+    private void RemoveFromMask(ref int originalMask, int layerNumber)
+    {
+        originalMask &= ~(1 << layerNumber);
+    }
+
+    public override void OnNewPlayerChange()
+    {
+        if (PlayerNumber > 1)
         {
-            Main = this;
-            DontDestroyOnLoad(gameObject);
+            //Get the original mask
+            var mask = MultiplayerScreens.Primary.PlayerCamera.CameraComponent.cullingMask;
+            //Remove the "UIPlayer1" Layer
+            RemoveFromMask(ref mask, LayerMask.NameToLayer("UIPlayer1"));
+            //Add the layer that corresponds to the current player number
+            AddToMask(ref mask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
+            //Set the cameras culling mask to the new mask
+            MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = mask;
         }
-        else
+        //Set the camera's viewport
+        if (MultiplayerScreens.PlayersAdded == 1)
         {
-            Destroy(gameObject);
-            return;
+            CameraComponent.depth = -1;
+            CameraComponent.rect = new Rect(0, 0, 1, 1);
         }
-        //Set the Audio Source
-        Sound = GetComponent<AudioSource>();
+        else if (MultiplayerScreens.PlayersAdded == 2)
+        {
+            if (PlayerNumber == 1)
+            {
+                CameraComponent.depth = -1;
+                CameraComponent.rect = new Rect(0, 0, 0.5f, 1);
+            }
+            else
+            {
+                CameraComponent.depth = 0;
+                CameraComponent.rect = new Rect(0.5f, 0, 1, 1);
+            }
+        }
     }
 
     private void Update()
@@ -46,14 +80,11 @@ public class CameraController : MonoBehaviour
     }
 
     //Sets the target that the camera should move to
-    private static void SetTarget(GameObject target)
+    private void SetTarget(GameObject target)
     {
         targetInternal = target;
         //Set the position of the camera to the target
-        Main.transform.position = new Vector3(target.transform.position.x,Main.transform.position.y,target.transform.position.z);
+        transform.position = new Vector3(target.transform.position.x,transform.position.y,target.transform.position.z);
     }
-
-    //Get the width and height of the camera
-    public static (float Width, float Height) GetCameraBounds() => (Camera.main.pixelWidth, Camera.main.pixelHeight);
 
 }
