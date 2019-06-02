@@ -18,7 +18,7 @@ public class Explosion : MonoBehaviour
 
     private IEnumerator PlayExplosion()
     {
-        AudioPlayer.Play(GameManager.Game.ExplosionSounds.RandomElement(),Audio.SoundEffects,transform);
+        Audio.Play(GameManager.Game.ExplosionSounds.RandomElement(),Audio.SoundEffects,transform);
         foreach (var sprite in ExplosionSprites)
         {
             renderer.sprite = sprite;

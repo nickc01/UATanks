@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public abstract class AudioSlider : MonoBehaviour
 {
-    protected abstract float VolumeSetter { get; set; }
-    protected Slider slider;
+    protected abstract float VolumeSetter { get; set; } //The property that is called when the slider changes
+    protected Slider slider; //The slider for the volume bar
 
     bool started = false;
-    // Start is called before the first frame update
     protected virtual void Start()
     {
         if (!started)
         {
             started = true;
+            //Add a callback to the volume slider that gets called when the slider changes
             slider = GetComponent<Slider>();
             slider.onValueChanged.AddListener(v =>
             {
@@ -29,6 +29,7 @@ public abstract class AudioSlider : MonoBehaviour
         {
             Start();
         }
+        //Refresh the slider when it becomes visible
         slider.value = VolumeSetter;
     }
 }

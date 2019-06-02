@@ -346,7 +346,7 @@ public class EnemyTank : Tank
             if (GameManager.Enemies.Count == 0 && GameManager.PlayingLevel && GameManager.Players.Count == 1)
             {
                 //Trigger the win condition
-                GameManager.Win(GameManager.Players.First().Tank);
+                GameManager.Win(GameManager.Players[0].Tank);
             }
         }
     }

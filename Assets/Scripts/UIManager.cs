@@ -13,10 +13,10 @@ public class UIManager : PlayerSpecific
     public AnimationCurve ReadyScreenCurve; //The curve used for the ready screen transitions
     public string CurrentState { get; private set; } //The current state of the UI
 
-    private Canvas UICanvas;
-    private RectTransform RTransform;
-    private Image GradientImage;
-    private ScoreResults[] ResultDisplays;
+    private Canvas UICanvas; //The canvas of the UI
+    private RectTransform RTransform; //The rect transform of the UI
+    private Image BorderImage; //The border image of the UI 
+    private ScoreResults[] ResultDisplays; //The score result screens
 
     Dictionary<string, GameObject> validStates = new Dictionary<string, GameObject>(); //A list of possible UI States
 
@@ -24,23 +24,23 @@ public class UIManager : PlayerSpecific
 
     public bool ButtonsEnabled = true;
 
-    private bool gradientInternal = false;
-    public bool Gradient
+    private bool borderInternal = false;
+    public bool Border //Whether the screen border is enabled or not
     {
-        get => gradientInternal;
+        get => borderInternal;
         set
         {
             //Debug.Log("GRADIENTSET");
-            gradientInternal = value;
-            if (GradientImage == null)
+            borderInternal = value;
+            if (BorderImage == null)
             {
-                GradientImage = GetComponent<Image>();
+                BorderImage = GetComponent<Image>();
             }
-            GradientImage.enabled = value;
+            BorderImage.enabled = value;
         }
     }
 
-    public float ScoreResult
+    private float ScoreResult //Sets the score of all the result screens
     {
         get => ResultDisplays.First().Score;
         set
@@ -52,7 +52,7 @@ public class UIManager : PlayerSpecific
         }
     }
 
-    public float HighscoreResult
+    private float HighscoreResult //Sets the highscore of all the result screens
     {
         get => ResultDisplays.First().Highscore;
         set
@@ -64,22 +64,17 @@ public class UIManager : PlayerSpecific
         }
     }
 
-    public float ResultsScore
+    public float FinalScore //The final score of the results screen
     {
         set
         {
             ScoreResult = value;
-            Debug.Log("Player Number + " + PlayerNumber);
-            var previousHighScore = Highscore.GetScoreFor(PlayerNumber);
-            Debug.Log("prev highscore = " + previousHighScore);
-            Debug.Log("New Score = " + value);
+            var previousHighScore = GameManager.GetHighScoreFor(PlayerNumber);
             if (value > previousHighScore)
             {
-                Debug.Log("Setting New Score");
                 previousHighScore = value;
-                Highscore.SetScoreFor(PlayerNumber, value);
+                GameManager.SetHighScoreFor(PlayerNumber, value);
             }
-            Debug.Log("Final = " + previousHighScore);
             HighscoreResult = previousHighScore;
         }
     }
@@ -92,6 +87,7 @@ public class UIManager : PlayerSpecific
             return;
         }
         started = true;
+        //Set the stats
         UICanvas = GetComponent<Canvas>();
         RTransform = GetComponent<RectTransform>();
         ResultDisplays = GetComponentsInChildren<ScoreResults>(true);
@@ -106,6 +102,7 @@ public class UIManager : PlayerSpecific
         OnNewPlayerChange();
     }
 
+    //When a player screen has been added or removed
     public override void OnNewPlayerChange()
     {
         gameObject.layer = LayerMask.NameToLayer("UIPlayer" + PlayerNumber);
@@ -276,6 +273,7 @@ public class UIManager : PlayerSpecific
 
     }
 
+    //Gets the dimensions of the canvas
     public (float Width, float Height) GetDimensions()
     {
         return (RTransform.rect.width,RTransform.rect.height);

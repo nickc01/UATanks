@@ -6,6 +6,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
+
+public enum MusicType
+{
+    None, //Plays no music
+    Menu, //Plays the main menu music
+    Game //Plays the game music
+}
 
 public partial class GameManager : MonoBehaviour
 {
@@ -105,6 +113,25 @@ public partial class GameManager : MonoBehaviour
     [Tooltip("The control scheme for player 2")]
     public ControlScheme Player2Scheme;
 
+    [Header("Materials")]
+    [Tooltip("The material for the obstacles and walls")]
+    public Material ObstacleMaterial;
+    [Tooltip("The material for the floor")]
+    public Material FloorMaterial;
+
+    private AudioObject MusicObject;
+
+    private static Color currentColorInternal;
+    public static Color CurrentGameColor
+    {
+        get => currentColorInternal;
+        set
+        {
+            currentColorInternal = value;
+            Game.ObstacleMaterial.color = value;
+        }
+    }
+
     private void Start()
     {
         //Set the singleton
@@ -118,13 +145,24 @@ public partial class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        //Set the current color of the game to a default color
+        CurrentGameColor = new Color32(0, 162, 255, 255);
         //If the game scene is already active
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            //Play a random level
             UI.Play(LevelLoadMode.Random);
+        }
+        else
+        {
+            //Play the main menu music
+            PlayMusic(MusicType.Menu);
+            //Start the background panorama
+            StartCoroutine(PanoramaGenerator.StartPanorama());
         }
     }
 
+    //Gets the nearest player to a set position
     public static (PlayerTank Tank, TankData Data) GetNearestPlayer(Vector3 Position)
     {
         (float distance, PlayerTank tank) result = (float.PositiveInfinity, null);
@@ -139,16 +177,19 @@ public partial class GameManager : MonoBehaviour
         return (result.tank, result.tank?.Data);
     }
 
+    //Gets the nearest player to a transform
     public static (PlayerTank Tank, TankData Data) GetNearestPlayer(Transform transform)
     {
         return GetNearestPlayer(transform.position);
     }
 
+    //Gets the nearest player to a gameobject
     public static (PlayerTank Tank, TankData Data) GetNearestPlayer(GameObject gameObject)
     {
         return GetNearestPlayer(gameObject.transform.position);
     }
 
+    //Gets the nearest player to a component
     public static (PlayerTank Tank, TankData Data) GetNearestPlayer<T>(T component) where T : Component
     {
         return GetNearestPlayer(component.gameObject);
@@ -164,64 +205,104 @@ public partial class GameManager : MonoBehaviour
     //Called when all the enemy tanks in the map have been destroyed
     public static void Win(PlayerTank Winner,bool PlayWinSound = true)
     {
-        //Show the win screen
-        //UIManager.SetUIStateAll("Win",Curves.Smooth,FromIsHidden: true);
-        //var UI = MultiplayerManager.GetPlayerInfo(Winner.PlayerNumber).PlayerUI;
+        //Set the winning player's UI to the win screen and allow that player to access the menu buttons
         Winner.UI.ButtonsEnabled = true;
         Winner.UI.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
-        //Play the Win Sound
-        //CameraController.Main.Sound.clip = Game.WinSound;
-        //CameraController.Main.Sound.Play();
+        //Play the win sound if set to true
         if (PlayWinSound)
         {
-            AudioPlayer.Play(Game.WinSound, Audio.SoundEffects, Vector3.zero, Vector3.zero);
+            Audio.Play(Game.WinSound, Audio.SoundEffects, Vector3.zero, Vector3.zero);
         }
+        //Stop playing the level
         PlayingLevel = false;
-        Winner.UI.ResultsScore = Winner.Score;
-        //MultiplayerManager.DeletePlayers();
+        //Show the winner's final score on the results screen
+        Winner.UI.FinalScore = Winner.Score;
     }
 
     //Called when the player tank has been destroyed
     public static void Lose(PlayerTank Loser,bool PlayLoseSound = true)
     {
-        //var UI = MultiplayerManager.GetPlayerInfo(Loser.PlayerNumber).PlayerUI;
-        //var UI = Loser.UI;
+        //If this player is the last player to die
         if (Players.Count == 0)
         {
+            //Enable the buttons for this player
             Loser.UI.ButtonsEnabled = true;
+            //Stop playing the level
             PlayingLevel = false;
         }
         else
         {
+            //Hide the buttons to prevent the player from closing down the level, while another player is still playing
             Loser.UI.ButtonsEnabled = false;
         }
+        //Play the lose sound if enabled
         if (PlayLoseSound)
         {
-            AudioPlayer.Play(Game.LoseSound, Audio.SoundEffects,Vector3.zero,Vector3.zero);
+            Audio.Play(Game.LoseSound, Audio.SoundEffects,Vector3.zero,Vector3.zero);
         }
+        //Show the losing screen
         Loser.UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
-        Loser.UI.ResultsScore = Loser.Score;
+        //Show the player's final score
+        Loser.UI.FinalScore = Loser.Score;
     }
 
     //A routine to unload the level
-    public static IEnumerator UnloadLevel()
+    public static IEnumerator UnloadLevel(MusicType? type = null)
     {
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            //Delete the other player screens
             MultiplayerScreens.DeletePlayerScreens();
-            UIManager.Primary.Gradient = false;
+            //Disable the border on the primary UI
+            UIManager.Primary.Border = false;
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
-            AudioPlayer.Listeners.Clear();
+            //Remove the audio listeners from the game
+            Audio.Listeners.Clear();
+            if (type != null)
+            {
+                PlayMusic(type.Value);
+                if (type.Value == MusicType.Menu)
+                {
+                    yield return PanoramaGenerator.StartPanorama();
+                }
+            }
+        }
+    }
+
+    //Plays a specific type of music
+    private static void PlayMusic(MusicType type,float volumeModifier = 1f)
+    {
+        //Stop the existing music from playing
+        if (Game.MusicObject != null)
+        {
+            Game.MusicObject.Stop();
+            Game.MusicObject = null;
+        }
+        switch (type)
+        {
+            case MusicType.None: //Play nothing
+                break;
+            case MusicType.Menu: //Play the menu music
+                Game.MusicObject = Audio.Play(Game.MenuMusic, () => Audio.MusicVolume * volumeModifier, true, AudioPlayType.Stereo);
+                break;
+            case MusicType.Game: //Play the game music
+                Game.MusicObject = Audio.Play(Game.GameMusic.RandomElement(), () => Audio.MusicVolume * volumeModifier, true, AudioPlayType.Stereo);
+                break;
         }
     }
 
     //A routine to load the level and play the game
     static IEnumerator LoadGameScene(LevelLoadMode loadMode)
     {
-        //Reset all the tank stats
-        //Player = (null, null);
+        //If there is a level already loaded, unload it
+        yield return UnloadLevel();
+        //Stop the panorama
+        yield return PanoramaGenerator.StopPanorama();
+        //Stop playing the music
+        PlayMusic(MusicType.None);
+        //Reset the tank stats
         Players.Clear();
         Enemies.Clear();
         Tank.AllTanks.Clear();
@@ -250,28 +331,39 @@ public partial class GameManager : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
         //Generate the map
         MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Specific ? LevelSeed : 0);
-        //Spawn the player at a random spawnpoint
-        //var spawnPoint = MapGenerator.Generator.PopPlayerSpawnPoint();
-        //Instantiate(Game.PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        CurrentGameColor = Color.HSVToRGB(Random.value, 1f, 1f);
+        //Spawn the first player at a random spawnpoint
         PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 1,false);
         //If there are two players playing
         if (Options.PlayerCount.value == 1)
         {
+            //Spawn the second player tank at a random spawnpoint
             PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 2);
         }
-        /*foreach (var info in MultiplayerManager.GetAllPlayerInfo())
-        {
-            info.PlayerUI.Gradient = true;
-        }*/
+        //Enable the border for all of the player screens
         foreach (var screen in MultiplayerScreens.GetAllScreens())
         {
-            screen.PlayerUI.Gradient = true;
+            screen.PlayerUI.Border = true;
         }
+        //Show the ready sequence
         yield return UI.ShowReadySequence();
-        //Show the game UI for all screens
+        //Show the game UI for all screens and play the game music
+        PlayMusic(MusicType.Game,0.5f);
         UIManager.All.SetUIState("Game");
         //Set the playing level flag
         PlayingLevel = true;
+    }
+
+    //Gets the highscore for a specific player
+    public static float GetHighScoreFor(int PlayerNumber)
+    {
+        return PlayerPrefs.GetFloat("HighscorePlayer" + PlayerNumber);
+    }
+
+    //Sets the highscore for a specific player
+    public static void SetHighScoreFor(int PlayerNumber, float score)
+    {
+        PlayerPrefs.SetFloat("HighscorePlayer" + PlayerNumber, score);
     }
 
 }

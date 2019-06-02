@@ -20,14 +20,15 @@ public class PlayerTank : Tank
         base.Start();
         GameManager.Players.Add((this, Data));
         //Set the main player data
-        //GameManager.Player = (this, Data);
         CurrentScheme = ControlScheme.GetScheme(PlayerNumber);
         //Set the camera target to be the player tank
         Info.PlayerCamera.Target = gameObject;
-        //CameraController.Target = gameObject;
-        AudioPlayer.Listeners.Add(transform);
+        //Add this tank as a listener
+        Audio.Listeners.Add(transform);
+        //Reset the tank's stats
         Health = Data.MaxHealth;
         Lives = Data.MaxLives;
+        HighScore = GameManager.GetHighScoreFor(PlayerNumber);
         Score = 0;
     }
 
@@ -42,7 +43,14 @@ public class PlayerTank : Tank
     public override float Score
     {
         get => base.Score;
-        set => Info.ScoreDisplay.Value = base.Score = value;
+        set
+        {
+            Info.ScoreDisplay.Value = base.Score = value;
+            if (value > HighScore)
+            {
+                HighScore = value;
+            }
+        }
     }
 
     public override int Lives
@@ -51,7 +59,16 @@ public class PlayerTank : Tank
         set => Info.LivesDisplay.Value = base.Lives = value;
     }
 
-    public int PlayerNumber { get; set; } = 1;
+    public float HighScore
+    {
+        get => Info.HighscoreDisplay.Value;
+        set
+        {
+            Info.HighscoreDisplay.Value = value;
+        }
+    }
+
+    public int PlayerNumber { get; set; } = 1; //The player's number
 
     //Used to control input
     public override void Update()
@@ -131,7 +148,7 @@ public class PlayerTank : Tank
             //Set the main player to null
             //GameManager.Player = (null, null);
             GameManager.Players.Remove((this,Data));
-            AudioPlayer.Listeners.Remove(transform);
+            Audio.Listeners.Remove(transform);
             if (GameManager.Players.Count == 1 && GameManager.Enemies.Count == 0)
             {
                 GameManager.Lose(this,false);
@@ -144,6 +161,7 @@ public class PlayerTank : Tank
         }
     }
 
+    //Creates a new player tank
     public static PlayerTank Create(Vector3 spawnPoint,int playerID,bool MakeNewScreen = true,Quaternion? Rotation = null)
     {
         PlayerScreen newInfo;

@@ -37,7 +37,7 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
     }
 
     private bool visible = true;
-    public bool Visible
+    public bool Visible //Whether the tank is visible or not
     {
         get => visible;
         set
@@ -74,10 +74,6 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
 
         AllTanks.Add(this);
 
-        /*Score = 0;
-        Health = Data.MaxHealth;
-        Lives = Data.MaxLives;*/
-
         //Set the color of any colorizers on this object
         foreach (var colorizer in GetComponentsInChildren<TankColorer>())
         {
@@ -113,7 +109,9 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         {
             ActivePowerUps[i].Destroy();
         }
+        //Decrease the number of lives on the tank
         Lives--;
+        //Spawn an explosion
         Explosion.Spawn(transform.position, 3f);
         if (Lives == 0)
         {
@@ -123,6 +121,7 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         }
         else
         {
+            //Start the respawn routine
             if (Respawner != null)
             {
                 StopCoroutine(Respawner);
@@ -131,13 +130,17 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         }
     }
 
+    //Respawns the tank
     private IEnumerator RespawnRoutine()
     {
         Visible = false;
         yield return new WaitForSeconds(Data.RespawnDelay);
+        //Reset the tank to it's spawnpoint
         transform.position = Spawnpoint;
+        //Reset the tank's health
         Health = Data.MaxHealth;
         Visible = true;
+        //Give the tank invincibility
         new Invincibility(this, Data.RespawnInvincibility,Data.RespawnFlashRate);
         Dead = false;
     }

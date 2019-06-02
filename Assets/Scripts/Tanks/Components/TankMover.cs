@@ -28,8 +28,10 @@ public class TankMover : MonoBehaviour
     private void LateUpdate()
     {
         Moving = usingMoveCommands;
+        //If the tank was moving
         if (Moving)
         {
+            //Play the tank sound
             if (GameManager.Game.TankMoveSound != null)
             {
                 SoundTimer += Time.deltaTime;
@@ -40,7 +42,7 @@ public class TankMover : MonoBehaviour
                 if (SoundTimer >= SoundTimerMax)
                 {
                     SoundTimer = -AudioDelay;
-                    AudioPlayer.Play(GameManager.Game.TankMoveSound, Audio.SoundEffects / 3f,transform);
+                    Audio.Play(GameManager.Game.TankMoveSound, () => Audio.SoundEffectsVolume / 3f,transform);
                 }
             }
             else

@@ -40,7 +40,7 @@ public class ButtonCallback : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(() => {
             if (PlayButtonSound)
             {
-                AudioPlayer.Play(GameManager.Game.ButtonClickSounds.RandomElement());
+                Audio.Play(GameManager.Game.ButtonClickSounds.RandomElement(),Audio.SoundEffects);
             }
             action();
         });

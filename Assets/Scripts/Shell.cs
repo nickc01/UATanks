@@ -32,7 +32,7 @@ public class Shell : MonoBehaviour
         Destroy(gameObject, Lifetime);
         //Play the shell fire sound
         //AudioSource.PlayClipAtPoint(GameManager.Game.FireSound, transform.position,2f);
-        AudioPlayer.Play(GameManager.Game.FireSounds.RandomElement(), Audio.SoundEffects, transform);
+        Audio.Play(GameManager.Game.FireSounds.RandomElement(), Audio.SoundEffects, transform);
     }
 
     //When the shell has collided with anything
@@ -53,7 +53,7 @@ public class Shell : MonoBehaviour
             {
                 //Destroy the shell
                 Destroy(gameObject);
-                AudioPlayer.Play(GameManager.Game.ShellHitSounds.RandomElement(), Audio.SoundEffects, transform);
+                Audio.Play(GameManager.Game.ShellHitSounds.RandomElement(), Audio.SoundEffects, transform);
             }
         }
     }

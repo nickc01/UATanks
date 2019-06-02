@@ -9,12 +9,10 @@ using UnityEngine;
 //A list of all the button callbacks in the game
 public static class Callbacks
 {
-    #region Main Menu
-
     //Called when the single player button is pressed
+    //Plays either a random map or the map of the day depending on the dropdown selection
     public static void PlayGame()
     {
-        //GameManager.UI.ToModeSelectScreen();
         var dropdownValue = Options.MapType.value;
         if (dropdownValue == 0)
         {
@@ -26,6 +24,7 @@ public static class Callbacks
         }
     }
 
+    //Called when the option button is pressed
     public static void OptionsButton()
     {
         GameManager.UI.GoToOptions();
@@ -34,21 +33,14 @@ public static class Callbacks
     //Called when any main menu button is pressed
     public static void MainMenu()
     {
-        //Start the main menu routine
-        CoroutineManager.StartCoroutine(MainMenuRoutine());
+        GameManager.UI.ToMainMenu();
     }
 
+    //Called when the restart button is pressed
     public static void Restart()
     {
         GameManager.UI.Restart();
     }
-
-    //Called when the next level button is pressed
-    /*public static void NextLevel()
-    {
-        //Start the next level routine
-        CoroutineManager.StartCoroutine(NextLevelRoutine());
-    }*/
 
     //Called when the help button is pressed
     public static void Help()
@@ -63,63 +55,4 @@ public static class Callbacks
         //Quit the game
         GameManager.Quit();
     }
-
-    //The next level routine
-    /*static IEnumerator NextLevelRoutine()
-    {
-        //Unload the current level
-        yield return GameManager.UnloadLevel();
-        //Play the next level
-        PlayCampaignLevel(GameManager.LevelSeed + 1);
-        //GameManager.CurrentCampaignLevel++;
-        //GameManager.UI.Play(LevelLoadMode.Campaign);
-    }*/
-
-    //The main menu routine
-    static IEnumerator MainMenuRoutine()
-    {
-        //Unload the current level
-        yield return GameManager.UnloadLevel();
-        //Go to the main menu
-        GameManager.UI.ToMainMenu();
-    }
-
-
-    #endregion
-
-    #region Single Player Mode Select
-
-    //Called when the campaign button is pressed
-    /*public static void Campaign()
-    {
-        //Go to the campaign screen
-        GameManager.UI.GoToCampaign();
-    }
-
-    //Called to play a selected campaign level
-    public static void PlayCampaignLevel(int levelNumber)
-    {
-        //Set the campaign level number
-        GameManager.LevelSeed = levelNumber;
-        //Play the selected campaign level
-        GameManager.UI.Play(LevelLoadMode.Specific);
-    }
-
-    //Called when the map of the day button is pressed
-    public static void Map_Day()
-    {
-        //Play the map of the day
-        GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
-    }
-
-
-
-    //Called when the random button is pressed
-    public static void RandomLevel()
-    {
-        //Play a random level
-        GameManager.UI.Play(LevelLoadMode.Random);
-    }*/
-
-    #endregion
 }

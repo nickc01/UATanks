@@ -2,8 +2,8 @@
 {
     protected override float VolumeSetter
     {
-        get => Audio.SoundEffects;
-        set => Audio.SoundEffects = value;
+        get => Audio.SoundEffectsVolume;
+        set => Audio.SoundEffectsVolume = value;
     }
 }
 

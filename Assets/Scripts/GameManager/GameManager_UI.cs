@@ -24,12 +24,6 @@ public partial class GameManager
 
         public static void Restart()
         {
-            CoroutineManager.StartCoroutine(RestartRoutine());
-        }
-
-        private static IEnumerator RestartRoutine()
-        {
-            yield return UnloadLevel();
             LevelSeed = MapGenerator.Generator.Seed;
             Play(LevelLoadMode.Specific);
         }
@@ -73,12 +67,11 @@ public partial class GameManager
         public static void ToMainMenu()
         {
             CoroutineManager.StartCoroutine(ToMainMenuRoutine());
-            //UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
         }
 
         static IEnumerator ToMainMenuRoutine()
         {
-            yield return UnloadLevel();
+            yield return UnloadLevel(MusicType.Menu);
             UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
         }
     }

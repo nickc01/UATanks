@@ -9,13 +9,13 @@ using System.Reflection;
 //[CreateAssetMenu(fileName = "NewControlScheme", menuName = "Control Scheme", order = 1)]
 public abstract class ControlScheme : ScriptableObject
 {
-    public abstract bool Firing { get; }
-    public abstract bool MovingForward { get; }
-    public abstract bool MovingBackward { get; }
-    public abstract bool MovingLeft { get; }
-    public abstract bool MovingRight { get; }
+    public abstract bool Firing { get; } //Whether the tank should be firing or not
+    public abstract bool MovingForward { get; } //Whether the tank should be moving forward or not
+    public abstract bool MovingBackward { get; } //Whether the tank should be moving backward or not
+    public abstract bool MovingLeft { get; } //Whether the tank should be moving left or not
+    public abstract bool MovingRight { get; } //Whether the tank should be moving right or not
 
-
+    //Gets the current control scheme for the player
     public static ControlScheme GetScheme(int PlayerNumber)
     {
         var field = typeof(GameManager).GetField("Player" + PlayerNumber + "Scheme");

@@ -22,11 +22,13 @@ public class CameraController : PlayerSpecific
         OnNewPlayerChange();
     }
 
+    //Adds a layer to the mask
     private void AddToMask(ref int originalMask,int layerNumber)
     {
         originalMask |= (1 << layerNumber);
     }
 
+    //Removes a layer from the mask
     private void RemoveFromMask(ref int originalMask, int layerNumber)
     {
         originalMask &= ~(1 << layerNumber);
@@ -36,11 +38,16 @@ public class CameraController : PlayerSpecific
     {
         if (PlayerNumber > 1)
         {
-            var originalMask = MultiplayerScreens.Primary.PlayerCamera.CameraComponent.cullingMask;
-            RemoveFromMask(ref originalMask, LayerMask.NameToLayer("UIPlayer1"));
-            AddToMask(ref originalMask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
-            MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = originalMask;
+            //Get the original mask
+            var mask = MultiplayerScreens.Primary.PlayerCamera.CameraComponent.cullingMask;
+            //Remove the "UIPlayer1" Layer
+            RemoveFromMask(ref mask, LayerMask.NameToLayer("UIPlayer1"));
+            //Add the layer that corresponds to the current player number
+            AddToMask(ref mask, LayerMask.NameToLayer("UIPlayer" + PlayerNumber));
+            //Set the cameras culling mask to the new mask
+            MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = mask;
         }
+        //Set the camera's viewport
         if (MultiplayerScreens.PlayersAdded == 1)
         {
             CameraComponent.depth = -1;
@@ -79,8 +86,5 @@ public class CameraController : PlayerSpecific
         //Set the position of the camera to the target
         transform.position = new Vector3(target.transform.position.x,transform.position.y,target.transform.position.z);
     }
-
-    //Get the width and height of the main camera
-    //public static (float Width, float Height) GetCameraBounds() => (Camera.main.pixelWidth, Camera.main.pixelHeight);
 
 }

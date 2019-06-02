@@ -2,8 +2,8 @@
 {
     protected override float VolumeSetter
     {
-        get => Audio.Master;
-        set => Audio.Master = value;
+        get => Audio.MasterVolume;
+        set => Audio.MasterVolume = value;
     }
 }
 
