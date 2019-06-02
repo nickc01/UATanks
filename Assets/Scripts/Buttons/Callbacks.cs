@@ -53,6 +53,6 @@ public static class Callbacks
     public static void Quit()
     {
         //Quit the game
-        GameManager.Quit();
+        Application.Quit();
     }
 }

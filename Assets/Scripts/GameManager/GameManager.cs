@@ -195,13 +195,6 @@ public partial class GameManager : MonoBehaviour
         return GetNearestPlayer(component.gameObject);
     }
 
-    //A function to quit the game
-    public static void Quit()
-    {
-        //Quit the game
-        Application.Quit();
-    }
-
     //Called when all the enemy tanks in the map have been destroyed
     public static void Win(PlayerTank Winner,bool PlayWinSound = true)
     {

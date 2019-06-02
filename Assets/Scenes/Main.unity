@@ -3914,6 +3914,7 @@ GameObject:
   - component: {fileID: 652125225}
   - component: {fileID: 652125226}
   - component: {fileID: 652125227}
+  - component: {fileID: 652125228}
   m_Layer: 0
   m_Name: Audio Listener
   m_TagString: Untagged
@@ -3953,6 +3954,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 189375f04a56e1943b8b5582da0af1f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &652125228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652125224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 430ee94bc9cb2cd43b4bcce44f9ed4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &669008581
@@ -7892,7 +7905,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1096514100}
-    characterCount: 10
+    characterCount: 13
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
