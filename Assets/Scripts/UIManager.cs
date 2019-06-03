@@ -30,7 +30,6 @@ public class UIManager : PlayerSpecific
         get => borderInternal;
         set
         {
-            //Debug.Log("GRADIENTSET");
             borderInternal = value;
             if (BorderImage == null)
             {

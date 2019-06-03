@@ -52,6 +52,7 @@ public static class Callbacks
     //Called when the quit button is pressed
     public static void Quit()
     {
+        Debug.Log("QUITTING GAME");
         //Quit the game
         Application.Quit();
     }

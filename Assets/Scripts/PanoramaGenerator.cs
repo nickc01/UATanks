@@ -22,7 +22,6 @@ public class PanoramaGenerator : MonoBehaviour
     public static IEnumerator StartPanorama()
     {
         var panorama = SceneManager.GetSceneByName("Panorama");
-        Debug.Log("IS LOADED = " + panorama.isLoaded);
         if (!panorama.isLoaded)
         {
             yield return SceneManager.LoadSceneAsync("Panorama",LoadSceneMode.Additive);
@@ -41,6 +40,8 @@ public class PanoramaGenerator : MonoBehaviour
 
     private void Start()
     {
+        //Set the panorama scene as active
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Panorama"));
         //Initialize the room offset for centering of the rooms
         RoomOffset = ((Vector2)RoomArraySize) / 2f * Map.TileDimensions;
         //Initialize the direction vector
@@ -62,7 +63,9 @@ public class PanoramaGenerator : MonoBehaviour
             }
         }
         //Set the boundaries
-        Boundaries = new Rect(new Vector2(-RoomOffset.x, -RoomOffset.y), new Vector2((RoomArraySize.x * Map.TileDimensions.x), (RoomArraySize.y * Map.TileDimensions.y)));
+        Boundaries = new Rect(-RoomOffset, RoomArraySize * Map.TileDimensions);
+        //Set the main scene as active
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main"));
     }
 
     private void Update()

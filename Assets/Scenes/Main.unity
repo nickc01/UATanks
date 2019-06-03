@@ -552,8 +552,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeaaf0b2ecf08f446a7aef1f6616be3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapWidth: 1
-  MapHeight: 1
+  MapWidth: 2
+  MapHeight: 2
   TileDimensions: {x: 30, y: 30}
   SeedGenerator: 2
   Seed: 180
@@ -3913,7 +3913,6 @@ GameObject:
   m_Component:
   - component: {fileID: 652125225}
   - component: {fileID: 652125226}
-  - component: {fileID: 652125227}
   - component: {fileID: 652125228}
   m_Layer: 0
   m_Name: Audio Listener
@@ -3944,18 +3943,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652125224}
   m_Enabled: 1
---- !u!114 &652125227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652125224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 189375f04a56e1943b8b5582da0af1f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &652125228
 MonoBehaviour:
   m_ObjectHideFlags: 0

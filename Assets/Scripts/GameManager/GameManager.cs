@@ -33,7 +33,7 @@ public partial class GameManager : MonoBehaviour
     public static event Action<bool> PlayingLevelEvent; //An event that is called whenever the game is playing or not
     public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.Random; //The mode the map generator will use
     public static int LevelSeed { get; set; } = 0; //The current campaign level loaded
-    public static GameManager Game { get; private set; } //The singleton for the game manager
+    public static GameManager Game { get; private set; } //The singleton for the game manager //---------------------------------------------------------------//
     //public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
     public static List<(PlayerTank Tank, TankData Data)> Players = new List<(PlayerTank Tank, TankData Data)>();
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
@@ -105,7 +105,7 @@ public partial class GameManager : MonoBehaviour
 
     [Header("Audio")]
     [Tooltip("The Main Audio Group")]
-    public AudioMixer MainAudio;
+    public AudioMixer MainAudio; //---------------------------------------------------------------//
 
     [Header("Control Schemes")]
     [Tooltip("The control scheme for player 1")]

@@ -12,7 +12,6 @@ public class TextColorizer : MonoBehaviour
         {
             text = GetComponent<TextMeshProUGUI>();
         }
-        Debug.Log("TESTING");
         text.color = GameManager.CurrentGameColor;
     }
 }
