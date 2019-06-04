@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class HealthDisplay : Display<float>
 {
     Slider healthSlider; //The slider that represents the health object
-    [SerializeField] bool Interpolate = true; //Whether to interpolate to the new health value or not
-    [SerializeField] float InterpolationSpeed = 7f; //How fast to interpolate to the new health value
 
     public override float Value
     {
@@ -19,7 +17,11 @@ public class HealthDisplay : Display<float>
             {
                 healthSlider = GetComponent<Slider>();
             }
-            healthSlider.value = base.Value = value;
+            base.Value = value;
+            if (!Interpolate)
+            {
+                healthSlider.value = value;
+            }
         }
     }
 
@@ -28,7 +30,19 @@ public class HealthDisplay : Display<float>
         healthSlider = GetComponent<Slider>();
     }
 
-    private void Update()
+    public override void SetDirect(float value)
+    {
+        base.SetDirect(value);
+        healthSlider.value = Value;
+    }
+
+    protected override void InterpolateTo(float newValue, float Speed)
+    {
+        //Interpolate to the current health value
+        healthSlider.value = Mathf.Lerp(healthSlider.value, newValue, Speed * Time.deltaTime);
+    }
+
+    /*protected override void Update()
     {
         //If interpolation is enabled
         if (Interpolate)
@@ -36,5 +50,5 @@ public class HealthDisplay : Display<float>
             //Interpolate to the current health value
             healthSlider.value = Mathf.Lerp(healthSlider.value, Value, InterpolationSpeed * Time.deltaTime);
         }
-    }
+    }*/
 }

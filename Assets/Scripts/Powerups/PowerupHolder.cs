@@ -141,7 +141,7 @@ public class PowerupHolder : MonoBehaviour
                         finding.Destroy();
                     }
                 }
-                Audio.Play(GameManager.Game.PowerupPickupSound, Audio.SoundEffects);
+                Audio.Play(GameManager.Game.PowerupPickupSound, Audio.SoundEffects,transform);
                 NewPowerUp.Activate();
             }
         }

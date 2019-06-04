@@ -30,7 +30,7 @@ public partial class GameManager
 
         public static void GoToOptions()
         {
-            UIManager.All.SetUIState("Options", Curves.Smooth, TransitionMode.TopToBottom);
+            UIManager.All.SetUIState("Options", Curves.Smoothest, TransitionMode.TopToBottom);
         }
 
         //The routine for showing the ready sequence at the beginning of each level
@@ -51,17 +51,7 @@ public partial class GameManager
         //A function to go to the help screen
         public static void ToHelpScreen()
         {
-            UIManager.All.SetUIState("Help", Curves.Smooth, TransitionMode.TopToBottom);
-        }
-        //A function to go to the campaign screen
-        public static void GoToCampaign()
-        {
-            UIManager.All.SetUIState("Campaign",Curves.Smooth,TransitionMode.TopToBottom);
-        }
-        //A function to go to the mode select screen
-        public static void ToModeSelectScreen()
-        {
-            UIManager.All.SetUIState("SinglePlayerMode", Curves.Smooth, TransitionMode.TopToBottom);
+            UIManager.All.SetUIState("Help", Curves.Smoothest, TransitionMode.TopToBottom);
         }
         //A function to go to the main menu
         public static void ToMainMenu()
@@ -72,7 +62,7 @@ public partial class GameManager
         static IEnumerator ToMainMenuRoutine()
         {
             yield return UnloadLevel(MusicType.Menu);
-            UIManager.All.SetUIState("Main Menu", Curves.Smooth, TransitionMode.BottomToTop);
+            UIManager.All.SetUIState("Main Menu", Curves.Smoothest, TransitionMode.BottomToTop);
         }
     }
 }

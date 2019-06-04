@@ -26,10 +26,12 @@ public class PlayerTank : Tank
         //Add this tank as a listener
         Audio.Listeners.Add(transform);
         //Reset the tank's stats
-        Health = Data.MaxHealth;
         Lives = Data.MaxLives;
-        HighScore = GameManager.GetHighScoreFor(PlayerNumber);
         Score = 0;
+        HighScore = GameManager.GetHighScoreFor(PlayerNumber);
+        Health = Data.MaxHealth;
+        Info.HighscoreDisplay.SetDirect(GameManager.GetHighScoreFor(PlayerNumber));
+        Info.HealthDisplay.SetDirect(Data.MaxHealth);
     }
 
     //The health of the player

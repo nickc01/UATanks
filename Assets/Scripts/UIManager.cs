@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -140,8 +141,13 @@ public class UIManager : PlayerSpecific
     string transitionTo; //The state to transition to
     Coroutine TransitionRoutine; //The transition routine
 
+    public void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+    {
+        SetUIState(newState, v => transitionCurve.Evaluate(v), mode, Speed, FromIsHidden);
+    }
+
     //Sets the UI State with transitioning
-    public void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
+    public void SetUIState(string newState, Func<float,float> transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f,bool FromIsHidden = false)
     {
         if (!started)
         {
@@ -180,6 +186,11 @@ public class UIManager : PlayerSpecific
 
         public static void SetUIState(string newState, AnimationCurve transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
         {
+            SetUIState(newState, v => transitionCurve.Evaluate(v),mode,Speed,FromIsHidden);
+        }
+
+        public static void SetUIState(string newState, Func<float,float> transitionCurve = null, TransitionMode mode = TransitionMode.TopToBottom, float Speed = 2f, bool FromIsHidden = false)
+        {
             foreach (var specific in MultiplayerScreens.GetAllScreens())
             {
                 specific.PlayerUI.SetUIState(newState, transitionCurve, mode, Speed, FromIsHidden);
@@ -215,7 +226,7 @@ public class UIManager : PlayerSpecific
         }
     }
 
-    private IEnumerator SetUIStateRoutine(AnimationCurve transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
+    private IEnumerator SetUIStateRoutine(Func<float,float> transitionType,TransitionMode mode,float Speed,bool FromIsHidden)
     {
         float T = 0f;
         RectTransform From = validStates[transitionFrom].GetComponent<RectTransform>();
@@ -246,20 +257,20 @@ public class UIManager : PlayerSpecific
             switch (mode)
             {
                 case TransitionMode.TopToBottom:
-                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(0f, -Height), transitionType.Evaluate(T));
-                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(0f, Height), Vector2.zero, transitionType.Evaluate(T));
+                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(0f, -Height), transitionType(T));
+                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(0f, Height), Vector2.zero, transitionType(T));
                     break;
                 case TransitionMode.BottomToTop:
-                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(0f, Height), transitionType.Evaluate(T));
-                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(0f, -Height), Vector2.zero, transitionType.Evaluate(T));
+                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(0f, Height), transitionType(T));
+                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(0f, -Height), Vector2.zero, transitionType(T));
                     break;
                 case TransitionMode.LeftToRight:
-                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(Width, 0f), transitionType.Evaluate(T));
-                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(-Width,0f), Vector2.zero, transitionType.Evaluate(T));
+                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(Width, 0f), transitionType(T));
+                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(-Width,0f), Vector2.zero, transitionType(T));
                     break;
                 case TransitionMode.RightToLeft:
-                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(-Width, 0f), transitionType.Evaluate(T));
-                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(Width, 0f), Vector2.zero, transitionType.Evaluate(T));
+                    From.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, new Vector2(-Width, 0f), transitionType(T));
+                    To.anchoredPosition = Vector2.LerpUnclamped(new Vector2(Width, 0f), Vector2.zero, transitionType(T));
                     break;
                 default:
                     goto case TransitionMode.TopToBottom;

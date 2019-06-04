@@ -207,7 +207,7 @@ public partial class GameManager : MonoBehaviour
     {
         //Set the winning player's UI to the win screen and allow that player to access the menu buttons
         Winner.UI.ButtonsEnabled = true;
-        Winner.UI.SetUIState("Win", Curves.Smooth, FromIsHidden: true);
+        Winner.UI.SetUIState("Win", Curves.Smoothest, FromIsHidden: true);
         //Play the win sound if set to true
         if (PlayWinSound)
         {
@@ -241,7 +241,7 @@ public partial class GameManager : MonoBehaviour
             Audio.Play(Game.LoseSound, Audio.SoundEffects,Vector3.zero,Vector3.zero);
         }
         //Show the losing screen
-        Loser.UI.SetUIState("Lose", Curves.Smooth, FromIsHidden: true);
+        Loser.UI.SetUIState("Lose", Curves.Smoothest, FromIsHidden: true);
         //Show the player's final score
         Loser.UI.FinalScore = Loser.Score;
     }
