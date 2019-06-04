@@ -14,12 +14,23 @@ public class CameraController : PlayerSpecific
         set => SetTarget(value);
     }
 
+    Camera MinimapCamera;
+    RenderTexture MinimapRenderTexture;
+    [SerializeField] Vector2Int RenderTextureDimensions = new Vector2Int(512, 512);
+
 
     private void Start()
     {
+        MinimapRenderTexture = new RenderTexture(RenderTextureDimensions.x, RenderTextureDimensions.y, 0);
         //MultiplayerManager.AddedPlayersUpdate += PlayerCountChanged;
         CameraComponent = GetComponent<Camera>();
+        //MinimapCamera = GetComponentOnlyInChildren<Camera>(true);
+        //MinimapCamera = this.GetComponentOnlyInChildren<Camera>(true);
+        MinimapCamera = transform.Find("Minimap Camera").GetComponent<Camera>();
+        MinimapCamera.targetTexture = MinimapRenderTexture;
+        MinimapManager.MinimapCameras.Add(MinimapCamera);
         OnNewPlayerChange();
+        Debug.Log("TEST");
     }
 
     //Adds a layer to the mask
@@ -47,6 +58,9 @@ public class CameraController : PlayerSpecific
             //Set the cameras culling mask to the new mask
             MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerCamera.CameraComponent.cullingMask = mask;
         }
+        var MinimapTarget = MultiplayerScreens.GetPlayerScreen(PlayerNumber).PlayerUI.GetComponentInChildren<MinimapTarget>(true);
+        MinimapTarget.Target.texture = MinimapRenderTexture;
+        MinimapTarget.MinimapCamera = MinimapCamera;
         //Set the camera's viewport
         if (MultiplayerScreens.PlayersAdded == 1)
         {
@@ -65,6 +79,14 @@ public class CameraController : PlayerSpecific
                 CameraComponent.depth = 0;
                 CameraComponent.rect = new Rect(0.5f, 0, 1, 1);
             }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying)
+        {
+            MinimapManager.MinimapCameras.Remove(MinimapCamera);
         }
     }
 

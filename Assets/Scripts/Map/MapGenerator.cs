@@ -100,15 +100,37 @@ public class MapGenerator : MonoBehaviour
                 //Spawn Random Enemies
                 foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
                 {
-                    //Instantiate a new random enemy
-                    var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], enemySpawn.transform.position + new Vector3(Random.value * 2f,0,Random.value * 2f), enemySpawn.transform.rotation).GetComponent<EnemyTank>();
-                    //If the enemy has the patrol personality
-                    if (enemy.Personality == Personality.Patrol)
+                    void SpawnEnemy(bool random = true)
                     {
-                        //Get and Set the enemy's patrol points
-                        var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();
-                        var SelectedPatrolSet = AllPatrolSets[Random.Range(0, AllPatrolSets.GetLength(0))];
-;                       enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
+                        Vector3 spawnpoint = Vector3.zero;
+                        if (random)
+                        {
+                            spawnpoint = enemySpawn.transform.position + new Vector3(Random.value, 0, Random.value).normalized * 2f;
+                        }
+                        else
+                        {
+                            spawnpoint = enemySpawn.transform.position;
+                        }
+                        //Instantiate a new random enemy
+                        var enemy = Instantiate(Game.EnemyPrefabs[Random.Range(0, Game.EnemyPrefabs.Count)], spawnpoint, enemySpawn.transform.rotation).GetComponent<EnemyTank>();
+                        //If the enemy has the patrol personality
+                        if (enemy.Personality == Personality.Patrol)
+                        {
+                            //Get and Set the enemy's patrol points
+                            var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();
+                            var SelectedPatrolSet = AllPatrolSets[Random.Range(0, AllPatrolSets.GetLength(0))];
+                            ; enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
+                        }
+                    }
+                    SpawnEnemy(false);
+                    if (Options.Difficulty.Value == Difficulty.Easy)
+                    {
+                        break;
+                    }
+                    if (Options.Difficulty.Value == Difficulty.Hard)
+                    {
+                        //Spawn another enemy!
+                        SpawnEnemy();
                     }
                 }
             }
@@ -117,14 +139,14 @@ public class MapGenerator : MonoBehaviour
 
     //Returns a spawnpoint for the player to spawn at
     //It also removes the spawnpoint from the list to prevent spawning at duplicate places
-    public PlayerSpawn PopPlayerSpawnPoint()
+    /*public PlayerSpawn PopPlayerSpawnPoint()
     {
         //Initialize the seed
         //ResetSeed();
         var spawnPoint = PlayerSpawnPoints[Random.Range(0,PlayerSpawnPoints.Count)];
         PlayerSpawnPoints.Remove(spawnPoint);
         return spawnPoint;
-    }
+    }*/
 
     private int GetRandomSeed()
     {

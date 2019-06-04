@@ -20,17 +20,17 @@ public abstract class AudioSlider : MonoBehaviour
             {
                 VolumeSetter = v;
             });
+            slider.value = VolumeSetter;
         }
     }
 
     protected void OnEnable()
     {
-        if (!started)
+        if (started)
         {
-            Start();
+            //Refresh the slider when it becomes visible
+            slider.value = VolumeSetter;
         }
-        //Refresh the slider when it becomes visible
-        slider.value = VolumeSetter;
     }
 }
 

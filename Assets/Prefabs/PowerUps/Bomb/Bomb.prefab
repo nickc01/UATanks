@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4062654970316458658}
   - component: {fileID: 4062654970313591428}
   - component: {fileID: 4062654970314688580}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh2_Group3_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 4062654970316458660}
   - component: {fileID: 4062654970313591430}
   - component: {fileID: 4062654970314688582}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh1_Group2_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4062654970316458662}
   - component: {fileID: 4062654970316853304}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}

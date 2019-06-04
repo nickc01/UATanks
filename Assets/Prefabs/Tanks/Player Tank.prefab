@@ -269,6 +269,8 @@ MonoBehaviour:
   RespawnDelay: 1
   RespawnInvincibility: 3
   RespawnFlashRate: 20
+  MinimapObject: {fileID: 4090292015864262062, guid: 5976028109902c447823b829edd620ad,
+    type: 3}
   FireRate: 0.3
   ShellSpeed: 8
   ShellLifetime: 10

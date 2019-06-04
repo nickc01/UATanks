@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4541826132572401018}
   - component: {fileID: 4541826132573695320}
   - component: {fileID: 4541826132574826392}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh1_Group2_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4541826132572401020}
   - component: {fileID: 4541826132573695322}
   - component: {fileID: 4541826132574826394}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mesh2_Group3_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 8354986200551440230}
   - component: {fileID: 1554804744724868590}
   - component: {fileID: 6479839503078429495}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bomb Powerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}

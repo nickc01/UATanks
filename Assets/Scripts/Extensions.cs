@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -61,5 +62,38 @@ namespace UnityEngine
                 return Mathf.Clamp(value, min, max);
             }
         }
+
+        public static string Clean(this string value)
+        {
+            var result = Regex.Replace(value, @"([[A-Z\s])", @" $1");
+            if (result[0] == ' ')
+            {
+                result = result.Remove(0, 1);
+            }
+            return result;
+        }
+
+        public static T GetComponentOnlyInChildren<T>(this Component parent,bool includeInactive = false) where T : Component
+        {
+            return parent.GetComponentsInChildren<T>(includeInactive).FirstOrDefault(c => c != parent);
+        }
+
+        public static List<T> Clone<T>(this List<T> list)
+        {
+            List<T> clone = new List<T>(list.Capacity);
+            foreach (var item in list)
+            {
+                clone.Add(item);
+            }
+            return clone;
+        }
+
+        public static T PopRandom<T>(this List<T> list)
+        {
+            var item = list[Random.Range(0, list.Count)];
+            list.Remove(item);
+            return item;
+        }
+
     }
 }

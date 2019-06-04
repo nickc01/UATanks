@@ -20,69 +20,15 @@ public class Audio : MonoBehaviour
     public static List<Transform> Listeners = new List<Transform>(); //A list of listeners in the game
     public static Vector3 SourceListenerPosition => Singleton.transform.position; //The position of the main listener
 
-    //The volume level of everything
-    public static float MasterVolume
-    {
-        get
-        {
-            Load();
-            GameManager.Game.MainAudio.GetFloat("MasterVolume", out var result);
-            return Mathf.InverseLerp(-80.0f, 0f, result);
-        }
-        set
-        {
-            PlayerPrefs.SetFloat("MasterVolume", value);
-            GameManager.Game.MainAudio.SetFloat("MasterVolume", Mathf.Lerp(-80f, 0f, value));
-        }
-    }
-    //The volume level of the music
-    public static float MusicVolume
-    {
-        get
-        {
-            Load();
-            GameManager.Game.MainAudio.GetFloat("MusicVolume", out var result);
-            return Mathf.Clamp(Mathf.InverseLerp(-80.0f, 0f, result),0f,MasterVolume);
-        }
-        set
-        {
-            PlayerPrefs.SetFloat("MusicVolume", value);
-            GameManager.Game.MainAudio.SetFloat("MusicVolume", Mathf.Lerp(-80f, 0f, value));
-        }
-    }
-    //The volume of the sound effects
-    public static float SoundEffectsVolume
-    {
-        get
-        {
-            Load();
-            GameManager.Game.MainAudio.GetFloat("SoundEffectsVolume", out var result);
-            return Mathf.Clamp(Mathf.InverseLerp(-80.0f, 0f, result),0f,MasterVolume);
-        }
-        set
-        {
-            PlayerPrefs.SetFloat("SoundEffectsVolume", value);
-            GameManager.Game.MainAudio.SetFloat("SoundEffectsVolume", Mathf.Lerp(-80f,0f,value));
-        }
-    }
     //Functions for getting the volume
+
+    public static float MasterVolume => Options.MasterAudio.Value;
+    public static float MusicVolume => Mathf.Clamp(Options.MusicAudio.Value, 0f, MasterVolume);
+    public static float SoundEffectsVolume => Mathf.Clamp(Options.SoundEffectsAudio.Value, 0f, MasterVolume);
 
     public static float Master() => MasterVolume;
     public static float Music() => MusicVolume;
     public static float SoundEffects() => SoundEffectsVolume;
-
-    //Loads the intial values for the volume meters
-    private static void Load()
-    {
-        if (Loaded)
-        {
-            return;
-        }
-        Loaded = true;
-        MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
-        MusicVolume = PlayerPrefs.GetFloat("MusicVolume");
-        SoundEffectsVolume = PlayerPrefs.GetFloat("SoundEffectsVolume");
-    }
 
     private void Start()
     {

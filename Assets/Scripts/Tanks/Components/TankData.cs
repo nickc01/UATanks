@@ -24,7 +24,7 @@ public class TankData : MonoBehaviour
     [Tooltip("How many points this tank rewards the player when killed. This is primarily used on enemy tanks when they are killed and is ignored for player tanks")]
     public float TankValue = 25f;
     [Tooltip("The color of the tank")]
-    public Color color = Color.white;
+    [SerializeField] Color color = Color.white;
     [Tooltip("How much damage the tank will be able to resist per hit")]
     public float DamageResistance = 0f;
     [Tooltip("How many lives the tank has currently")]
@@ -39,6 +39,10 @@ public class TankData : MonoBehaviour
     [Tooltip("How fast the tank will flash when respawning. Number is in flashes per second")]
     public float RespawnFlashRate = 20f;
 
+    [Header("Minimap")]
+    [Tooltip("The prefab that will be used on the minimap to display where the tank is")]
+    public MinimapPrefab MinimapObject;
+
     [Header("Shell Stats")]
 
     [Tooltip("How fast the tank fires a shell. Determines how many seconds are between each shot fired")]
@@ -50,29 +54,38 @@ public class TankData : MonoBehaviour
     [Tooltip("How much damage the shell will inflict on an enemy")]
     public float ShellDamage = 25f;
 
-    //BELOW IS USED TO DISPLAY THE CURRENT TANK COLOR IN THE EDITOR
-    //THIS ALLOWS YOU TO ACTUALLY SEE THE COLOR YOU SET ON THE TANK BEFORE YOU HIT PLAY
-#if UNITY_EDITOR
+    public Color TankColor
+    {
+        get => color;
+        set
+        {
+            color = value;
+            foreach (var colorizer in GetComponentsInChildren<TankColorer>())
+            {
+                colorizer.Color = value;
+            }
+        }
+    }
+
 
     TankColorer[] colorizers;
 
     private void Start()
     {
-        //If the data is in edit mode
-        if (!Application.IsPlaying(gameObject))
-        {
-            //Get all the colorizers on the current tank
-            colorizers = GetComponentsInChildren<TankColorer>();
-        }
+        //Get all the colorizers on the current tank
+        colorizers = GetComponentsInChildren<TankColorer>();
     }
 
+    //BELOW IS USED TO DISPLAY THE CURRENT TANK COLOR IN THE EDITOR
+    //THIS ALLOWS YOU TO ACTUALLY SEE THE COLOR YOU SET ON THE TANK BEFORE YOU HIT PLAY
+#if UNITY_EDITOR
     private void Update()
     {
         //If the data is in edit mode
         if (!Application.IsPlaying(gameObject))
         {
             //Set the color of any colorizers on this object
-            foreach (var colorizer in GetComponentsInChildren<TankColorer>())
+            foreach (var colorizer in colorizers)
             {
                 colorizer.Color = color;
             }

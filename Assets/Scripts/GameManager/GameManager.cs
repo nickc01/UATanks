@@ -119,6 +119,10 @@ public partial class GameManager : MonoBehaviour
     [Tooltip("The material for the floor")]
     public Material FloorMaterial;
 
+    [Header("Options")]
+    [Tooltip("The main options area")]
+    public Options MainOptions;
+
     private AudioObject MusicObject;
 
     private static Color currentColorInternal;
@@ -131,6 +135,9 @@ public partial class GameManager : MonoBehaviour
             Game.ObstacleMaterial.color = value;
         }
     }
+
+    public static Color CurrentGameColorBright => Color.Lerp(Color.white, CurrentGameColor, 0.3f);
+
 
     private void Start()
     {
@@ -325,13 +332,16 @@ public partial class GameManager : MonoBehaviour
         //Generate the map
         MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Specific ? LevelSeed : 0);
         CurrentGameColor = Color.HSVToRGB(Random.value, 1f, 1f);
+
+        var playerSpawns = MapGenerator.PlayerSpawnPoints.Clone();
+
         //Spawn the first player at a random spawnpoint
-        PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 1,false);
+        PlayerTank.Create(playerSpawns.PopRandom().transform.position, 1,false);
         //If there are two players playing
-        if (Options.PlayerCount.value == 1)
+        if (Options.PlayerCount.Value == PlayerCount.TwoPlayers)
         {
             //Spawn the second player tank at a random spawnpoint
-            PlayerTank.Create(MapGenerator.Generator.PopPlayerSpawnPoint().transform.position, 2);
+            PlayerTank.Create(playerSpawns.PopRandom().transform.position, 2);
         }
         //Enable the border for all of the player screens
         foreach (var screen in MultiplayerScreens.GetAllScreens())

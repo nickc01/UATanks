@@ -13,14 +13,14 @@ public static class Callbacks
     //Plays either a random map or the map of the day depending on the dropdown selection
     public static void PlayGame()
     {
-        var dropdownValue = Options.MapType.value;
-        if (dropdownValue == 0)
+        switch (Options.MapType.Value)
         {
-            GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
-        }
-        else
-        {
-            GameManager.UI.Play(LevelLoadMode.Random);
+            case MapType.Random:
+                GameManager.UI.Play(LevelLoadMode.Random);
+                break;
+            case MapType.MapOfTheDay:
+                GameManager.UI.Play(LevelLoadMode.MapOfTheDay);
+                break;
         }
     }
 

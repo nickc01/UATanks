@@ -113,6 +113,13 @@ MonoBehaviour:
   TankValue: 20
   color: {r: 1, g: 0, b: 0, a: 1}
   DamageResistance: 0
+  Lives: 1
+  MaxLives: 1
+  RespawnDelay: 1
+  RespawnInvincibility: 3
+  RespawnFlashRate: 20
+  MinimapObject: {fileID: 7295411763675162040, guid: 4124cc823b963824099a3233e395a804,
+    type: 3}
   FireRate: 0.6
   ShellSpeed: 8
   ShellLifetime: 10
