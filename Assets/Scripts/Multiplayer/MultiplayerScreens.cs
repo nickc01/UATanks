@@ -32,6 +32,16 @@ public class MultiplayerScreens : MonoBehaviour
         }
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        GameManager.OnLevelUnload += () =>
+        {
+            DeletePlayerScreens();
+            Primary.PlayerCamera.Target = null;
+        };
+    }
+
     static FieldInfo[] playerInfoFields; //The fields of the PlayerScreen Class
 
     //Adds a new screen for a player

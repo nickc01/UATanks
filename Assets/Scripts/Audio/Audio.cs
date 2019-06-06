@@ -44,6 +44,15 @@ public class Audio : MonoBehaviour
         }
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        GameManager.OnLevelUnload += () =>
+        {
+            Listeners.Clear();
+        };
+    }
+
     //A series of functions used to play audio in the game
 
     public static AudioObject Play(AudioClip audio, Func<float> volume, Vector3 position, Vector3 listenerPosition, bool loop = false, AudioPlayType playType = AudioPlayType.Spatial)

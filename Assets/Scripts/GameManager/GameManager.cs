@@ -38,6 +38,8 @@ public partial class GameManager : MonoBehaviour
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
     public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
 
+    public static event Action OnLevelUnload;
+
     [Header("Prefabs")]
     [Tooltip("The prefab used whenever a tank fires a shell")]
     public GameObject ShellPrefab;
@@ -136,23 +138,25 @@ public partial class GameManager : MonoBehaviour
     }
 
     public static Color CurrentGameColorBright => Color.Lerp(Color.white, CurrentGameColor, 0.3f);
+    public static Color CurrentGameColorDark => Color.Lerp(Color.black, CurrentGameColor, 0.3f);
     public static float GameDT => Paused ? 0f : Time.deltaTime;
 
-    private static bool pausedInternal = false;
-    public static bool Paused
+    private static UIManager PausedScreen = null;
+    public static bool Paused { get; private set; } = false;
+
+    public static void SetPausedState(bool value,UIManager screen)
     {
-        get => pausedInternal;
-        set
+        if (value == true && Paused == false && PausedScreen == null)
         {
-            pausedInternal = value;
-            if (value)
-            {
-                UIManager.Primary.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
-            }
-            else
-            {
-                UIManager.Primary.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
-            }
+            Paused = true;
+            PausedScreen = screen;
+            PausedScreen.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
+        }
+        if (value == false && Paused == true && PausedScreen == screen)
+        {
+            Paused = false;
+            PausedScreen.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
+            PausedScreen = null;
         }
     }
 
@@ -193,7 +197,7 @@ public partial class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Paused = !Paused;
+                SetPausedState(!Paused, UIManager.Primary);
             }
         }
     }
@@ -275,35 +279,31 @@ public partial class GameManager : MonoBehaviour
         Loser.UI.FinalScore = Loser.Score;
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        OnLevelUnload += () =>
+        {
+            Paused = false;
+            PlayingLevel = false;
+            Players.Clear();
+            Enemies.Clear();
+        };
+    }
+
     //A routine to unload the level
-    public static IEnumerator UnloadLevel(MusicType? type = null)
+    public static IEnumerator UnloadLevel(bool GoingToMainMenu)
     {
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
-            MinimapManager.RemoveAllTargets();
-            //Delete the other player screens
-            MultiplayerScreens.DeletePlayerScreens();
-            //Disable the border on the primary UI
-            UIManager.Primary.Border = false;
-            pausedInternal = false;
-            PlayingLevel = false;
-            MultiplayerScreens.Primary.PlayerCamera.Target = null;
-
+            OnLevelUnload?.Invoke();
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
-            //Remove the audio listeners from the game
-            Audio.Listeners.Clear();
-            Players.Clear();
-            Enemies.Clear();
-            Tank.AllTanks.Clear();
-            if (type != null)
+            if (GoingToMainMenu)
             {
-                PlayMusic(type.Value);
-                if (type.Value == MusicType.Menu)
-                {
-                    yield return PanoramaGenerator.StartPanorama();
-                }
+                PlayMusic(MusicType.Menu);
+                yield return PanoramaGenerator.StartPanorama();
             }
         }
     }
@@ -334,16 +334,16 @@ public partial class GameManager : MonoBehaviour
     static IEnumerator LoadGameScene(LevelLoadMode loadMode)
     {
         //If there is a level already loaded, unload it
-        yield return UnloadLevel();
+        yield return UnloadLevel(false);
         //Stop the panorama
         yield return PanoramaGenerator.StopPanorama();
         //Stop playing the music
         PlayMusic(MusicType.None);
         //Reset the tank stats
-        Players.Clear();
-        Enemies.Clear();
-        Tank.AllTanks.Clear();
-        pausedInternal = false;
+        //Players.Clear();
+        //Enemies.Clear();
+        //Tank.AllTanks.Clear();
+        //pausedInternal = false;
         //Set the seed of the map generator depending on the level load mode
         CurrentLoadMode = loadMode;
         switch (loadMode)

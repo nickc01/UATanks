@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class SavedInputField : MonoBehaviour
 {
@@ -18,6 +19,18 @@ public class SavedInputField : MonoBehaviour
     private void Start()
     {
         Load();
+    }
+
+    private void OnEnable()
+    {
+        Load();
+        StartCoroutine(RefreshRoutine());
+    }
+
+    IEnumerator RefreshRoutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        inputField.ForceLabelUpdate();
     }
 
     private void NewValue(string str)

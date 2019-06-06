@@ -24,7 +24,14 @@ public static class MinimapManager
     //public static List<MinimapObject> RenderObjects = new List<MinimapObject>();
     public static Dictionary<Transform, GameObject> RenderObjects = new Dictionary<Transform, GameObject>();
 
-    //public static ReadOnlyCollection<MinimapObject> RenderObjects => renderObjects.AsReadOnly();
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        GameManager.OnLevelUnload += () => {
+            Debug.Log("REMOVING ALL TARGETS");
+            RemoveAllTargets();
+        };
+    }
 
     public static void AddTarget(Transform target, GameObject prefab)
     {

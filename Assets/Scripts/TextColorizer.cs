@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public enum ColorShade
+{
+    Light,
+    Normal,
+    Dark
+}
+
 public class TextColorizer : MonoBehaviour
 {
+    [SerializeField] ColorShade Shade = ColorShade.Normal;
     TextMeshProUGUI text;
     private void OnEnable()
     {
@@ -12,6 +20,19 @@ public class TextColorizer : MonoBehaviour
         {
             text = GetComponent<TextMeshProUGUI>();
         }
-        text.color = GameManager.CurrentGameColor;
+        switch (Shade)
+        {
+            case ColorShade.Light:
+                text.color = GameManager.CurrentGameColorBright;
+                break;
+            case ColorShade.Normal:
+                text.color = GameManager.CurrentGameColor;
+                break;
+            case ColorShade.Dark:
+                text.color = GameManager.CurrentGameColorDark;
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -18,6 +18,7 @@ public class MinimapTarget : MonoBehaviour
         }
     }
 
+    [HideInInspector]
     public Camera MinimapCamera;
 
     RectTransform RTransform;
@@ -31,7 +32,6 @@ public class MinimapTarget : MonoBehaviour
 
     private void TargetAdded(Transform target, GameObject prefab)
     {
-        Debug.Log("ADDITION");
         RenderObjects.Add(target);
         var Copy = Instantiate(prefab, transform).GetComponent<MinimapPrefab>();
         Copy.transform.localPosition = Vector3.zero;
@@ -77,7 +77,7 @@ public class MinimapTarget : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         if (Application.isPlaying)
         {

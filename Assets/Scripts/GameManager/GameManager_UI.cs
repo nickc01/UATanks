@@ -61,7 +61,7 @@ public partial class GameManager
 
         static IEnumerator ToMainMenuRoutine()
         {
-            yield return UnloadLevel(MusicType.Menu);
+            yield return UnloadLevel(true);
             UIManager.All.SetUIState("Main Menu", Curves.Smoothest, TransitionMode.BottomToTop);
         }
     }

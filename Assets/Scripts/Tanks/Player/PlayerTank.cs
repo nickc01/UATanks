@@ -77,7 +77,7 @@ public class PlayerTank : Tank
     {
         base.Update();
         Noise = 0;
-        if (!Dead && GameManager.PlayingLevel)
+        if (!Dead && GameManager.PlayingLevel && !GameManager.Paused)
         {
             //If the spacebar is pressed
             if (CurrentScheme.Firing)

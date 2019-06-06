@@ -157,6 +157,15 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         return Spawnpoints[Random.Range(0, Spawnpoints.Count)];
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        GameManager.OnLevelUnload += () =>
+        {
+            AllTanks.Clear();
+        };
+    }
+
     //Respawns the tank
     private IEnumerator RespawnRoutine()
     {

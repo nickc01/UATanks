@@ -42,14 +42,17 @@ public static class Callbacks
         GameManager.UI.Restart();
     }
 
-    public static void Pause()
+    public static void Pause(UIManager sourceScreen)
     {
-        GameManager.Paused = true;
+        //GameManager.Paused = true;
+        //GameManager.SetPausedState
+        GameManager.SetPausedState(true,sourceScreen);
     }
 
-    public static void Resume()
+    public static void Resume(UIManager sourceScreen)
     {
-        GameManager.Paused = false;
+        //GameManager.Paused = false;
+        GameManager.SetPausedState(false, sourceScreen);
     }
 
     //Called when the help button is pressed

@@ -79,6 +79,15 @@ public class UIManager : PlayerSpecific
         }
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void UnloadHandler()
+    {
+        GameManager.OnLevelUnload += () =>
+        {
+            Primary.Border = false;
+        };
+    }
+
     // Start is called before the first frame update
     void Start()
     {
