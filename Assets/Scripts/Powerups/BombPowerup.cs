@@ -11,7 +11,7 @@ public class BombPowerup : PowerUp
     protected override void Update()
     {
         //Increase the bomb timer
-        BombTimer += Time.deltaTime;
+        BombTimer += GameManager.GameDT;
         //If the bomb timer is greater than the bomb rate
         if (BombTimer >= GameManager.Game.BombRate)
         {

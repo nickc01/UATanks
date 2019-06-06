@@ -37,7 +37,7 @@ public class Invincibility : PowerUp
     protected override void Update()
     {
         //Cause the tank to flash
-        if ((FlashTimer += Time.deltaTime) >= 1f / flashRate)
+        if ((FlashTimer += GameManager.GameDT) >= 1f / flashRate)
         {
             Tank.Visible = FlashTracker = !FlashTracker;
         }

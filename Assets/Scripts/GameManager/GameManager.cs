@@ -33,8 +33,7 @@ public partial class GameManager : MonoBehaviour
     public static event Action<bool> PlayingLevelEvent; //An event that is called whenever the game is playing or not
     public static LevelLoadMode CurrentLoadMode { get; private set; } = LevelLoadMode.Random; //The mode the map generator will use
     public static int LevelSeed { get; set; } = 0; //The current campaign level loaded
-    public static GameManager Game { get; private set; } //The singleton for the game manager //---------------------------------------------------------------//
-    //public static (PlayerTank Tank,TankData Data) Player; //The data of the current player in the game
+    public static GameManager Game { get; private set; } //The singleton for the game manager
     public static List<(PlayerTank Tank, TankData Data)> Players = new List<(PlayerTank Tank, TankData Data)>();
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
     public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
@@ -105,7 +104,7 @@ public partial class GameManager : MonoBehaviour
 
     [Header("Audio")]
     [Tooltip("The Main Audio Group")]
-    public AudioMixer MainAudio; //---------------------------------------------------------------//
+    public AudioMixer MainAudio;
 
     [Header("Control Schemes")]
     [Tooltip("The control scheme for player 1")]
@@ -137,6 +136,25 @@ public partial class GameManager : MonoBehaviour
     }
 
     public static Color CurrentGameColorBright => Color.Lerp(Color.white, CurrentGameColor, 0.3f);
+    public static float GameDT => Paused ? 0f : Time.deltaTime;
+
+    private static bool pausedInternal = false;
+    public static bool Paused
+    {
+        get => pausedInternal;
+        set
+        {
+            pausedInternal = value;
+            if (value)
+            {
+                UIManager.Primary.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
+            }
+            else
+            {
+                UIManager.Primary.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
+            }
+        }
+    }
 
 
     private void Start()
@@ -166,6 +184,17 @@ public partial class GameManager : MonoBehaviour
             PlayMusic(MusicType.Menu);
             //Start the background panorama
             StartCoroutine(PanoramaGenerator.StartPanorama());
+        }
+    }
+
+    private void Update()
+    {
+        if (PlayingLevel)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Paused = !Paused;
+            }
         }
     }
 
@@ -252,14 +281,22 @@ public partial class GameManager : MonoBehaviour
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            MinimapManager.RemoveAllTargets();
             //Delete the other player screens
             MultiplayerScreens.DeletePlayerScreens();
             //Disable the border on the primary UI
             UIManager.Primary.Border = false;
+            pausedInternal = false;
+            PlayingLevel = false;
+            MultiplayerScreens.Primary.PlayerCamera.Target = null;
+
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
             //Remove the audio listeners from the game
             Audio.Listeners.Clear();
+            Players.Clear();
+            Enemies.Clear();
+            Tank.AllTanks.Clear();
             if (type != null)
             {
                 PlayMusic(type.Value);
@@ -306,6 +343,7 @@ public partial class GameManager : MonoBehaviour
         Players.Clear();
         Enemies.Clear();
         Tank.AllTanks.Clear();
+        pausedInternal = false;
         //Set the seed of the map generator depending on the level load mode
         CurrentLoadMode = loadMode;
         switch (loadMode)

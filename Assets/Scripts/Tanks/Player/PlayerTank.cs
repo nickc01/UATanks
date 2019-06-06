@@ -110,13 +110,13 @@ public class PlayerTank : Tank
             if (CurrentScheme.MovingLeft)
             {
                 //Rotate the tank to the left
-                Mover.Rotate(-Data.RotateSpeed * Time.deltaTime);
+                Mover.Rotate(-Data.RotateSpeed * GameManager.GameDT);
             }
             //If the D or Right Arrow Keys are currently held down
             if (CurrentScheme.MovingRight)
             {
                 //Rotate the tank to the right
-                Mover.Rotate(Data.RotateSpeed * Time.deltaTime);
+                Mover.Rotate(Data.RotateSpeed * GameManager.GameDT);
             }
         }
     }

@@ -6,15 +6,21 @@ public class SavedValue<valType>
     string SaveID;
     bool loaded = false;
     valType valueInternal;
+    valType DefaultValue;
 
-    public SavedValue(string saveID)
+    public SavedValue(string saveID, valType defaultValue)
     {
         SaveID = saveID;
+        DefaultValue = defaultValue;
     }
 
     private valType Load()
     {
         loaded = true;
+        if (!PlayerPrefs.HasKey(SaveID))
+        {
+            return DefaultValue;
+        }
         if (valueInternal is int)
         {
             return (valType)(object)PlayerPrefs.GetInt(SaveID);

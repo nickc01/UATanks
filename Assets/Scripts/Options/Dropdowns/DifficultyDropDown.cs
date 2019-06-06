@@ -10,5 +10,5 @@ public enum Difficulty
 
 public class DifficultyDropDown : SavedEnumDropdown<Difficulty>
 {
-
+    public override Difficulty DefaultValue => Difficulty.Medium;
 }

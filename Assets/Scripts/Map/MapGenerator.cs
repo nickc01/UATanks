@@ -7,18 +7,17 @@ using static GameManager;
 
 public class MapGenerator : MonoBehaviour
 {
-    [Header("Map Generator Settigns")]
-    [Tooltip("How many tiles wide the map will be")]
-    public int MapWidth = 1;
-    [Tooltip("How many tiles long the map will be")]
-    public int MapHeight = 2;
+    public int MapWidth => Options.MapWidth;
+    public int MapHeight => Options.MapHeight;
+
+    [Header("Map Generator Settings")]
     [Tooltip("How wide and how long each tile in the map will be")]
     public Vector2Int TileDimensions;
     [Tooltip("The type of seed to use")]
-    [PropSender("SeedGenerator", "SeedGenerator", SeedGenerator.UseSeed)]
+    [HideInInspector]
     public SeedGenerator SeedGenerator;
     [Tooltip("The seed used to generate the map")]
-    [PropReceiver("SeedGenerator")]
+    [HideInInspector]
     public int Seed = 0;
     [Tooltip("A list of room prefabs to use")]
     public List<GameObject> Rooms = new List<GameObject>();

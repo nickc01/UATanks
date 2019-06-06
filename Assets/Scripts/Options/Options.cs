@@ -97,6 +97,32 @@ public class Options : MonoBehaviour
         }
     }
 
+    private static MapWidthField widthFieldInternal;
+    public static int MapWidth
+    {
+        get
+        {
+            if (widthFieldInternal == null)
+            {
+                widthFieldInternal = Singleton.GetComponentInChildren<MapWidthField>();
+            }
+            return widthFieldInternal.Value;
+        }
+    }
+
+    private static MapHeightField heightFieldInternal;
+    public static int MapHeight
+    {
+        get
+        {
+            if (heightFieldInternal == null)
+            {
+                heightFieldInternal = Singleton.GetComponentInChildren<MapHeightField>();
+            }
+            return heightFieldInternal.Value;
+        }
+    }
+
 
 
 

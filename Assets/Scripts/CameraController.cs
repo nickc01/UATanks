@@ -105,8 +105,15 @@ public class CameraController : PlayerSpecific
     private void SetTarget(GameObject target)
     {
         targetInternal = target;
-        //Set the position of the camera to the target
-        transform.position = new Vector3(target.transform.position.x,transform.position.y,target.transform.position.z);
+        if (target != null)
+        {
+            //Set the position of the camera to the target
+            transform.position = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(0f, 15f, 0f);
+        }
     }
 
 }

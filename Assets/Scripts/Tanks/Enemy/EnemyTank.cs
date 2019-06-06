@@ -112,7 +112,7 @@ public class EnemyTank : Tank
         base.Update();
         var Player = GameManager.GetNearestPlayer(this);
         //If there is a player in the scene
-        if (!Dead && Player.Tank != null && GameManager.PlayingLevel && Vector3.Distance(Player.Tank.transform.position,transform.position) < 75f)
+        if (!Dead && Player.Tank != null && GameManager.PlayingLevel && !GameManager.Paused && Vector3.SqrMagnitude(transform.position - Player.Tank.transform.position) < 5625f)
         {
             //Use a State machine to determine the action to take based on the personality
             switch (personality)
@@ -163,7 +163,7 @@ public class EnemyTank : Tank
             Shooter.Shoot();
         }
         //Rotate towards the player
-        Mover.RotateTowards(target.transform.position, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
+        Mover.RotateTowards(target.transform.position, Data.RotateSpeed * GameManager.GameDT,UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -178,7 +178,7 @@ public class EnemyTank : Tank
             Shooter.Shoot();
         }
         //Rotate away from the player, with obstacle avoidance enabled
-        Mover.RotateTowards(Player.transform.position, -Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
+        Mover.RotateTowards(Player.transform.position, -Data.RotateSpeed * GameManager.GameDT, UseObstacleAvoidance);
         //Move forward
         Mover.Move(Data.ForwardSpeed);
     }
@@ -193,13 +193,13 @@ public class EnemyTank : Tank
         {
             //Shoot at it and rotate towards it
             Shooter.Shoot();
-            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime);
+            Mover.RotateTowards(target, Data.RotateSpeed * GameManager.GameDT);
         }
         //If the enemy can hear the player
         else if (Hearing.CanHearTarget(target,Player.Noise))
         {
             //Rotate towards the player
-            Mover.RotateTowards(target, Data.RotateSpeed * Time.deltaTime,UseObstacleAvoidance);
+            Mover.RotateTowards(target, Data.RotateSpeed * GameManager.GameDT,UseObstacleAvoidance);
             //Move towards it
             Mover.Move(Data.ForwardSpeed);
         }
@@ -235,7 +235,7 @@ public class EnemyTank : Tank
         }
 
         //Rotate towards the next patrol point
-        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * Time.deltaTime, UseObstacleAvoidance);
+        Mover.RotateTowards(PatrolPoints[CurrentPatrolIndex].position, Data.RotateSpeed * GameManager.GameDT, UseObstacleAvoidance);
 
         //Move forwards
         Mover.Move(Data.ForwardSpeed);

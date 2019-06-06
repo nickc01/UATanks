@@ -22,7 +22,7 @@ public class TankMover : MonoBehaviour
         //Gets the character controller of this tank
         controller = GetComponent<CharacterController>();
         //Create the Obstacle Avoidance System for this mover
-        OA = new ObstacleAvoidance(transform);
+        OA = new ObstacleAvoidance(GetComponent<Tank>());
     }
 
     private void LateUpdate()
@@ -34,7 +34,7 @@ public class TankMover : MonoBehaviour
             //Play the tank sound
             if (GameManager.Game.TankMoveSound != null)
             {
-                SoundTimer += Time.deltaTime;
+                SoundTimer += GameManager.GameDT;
                 if (SoundTimerMax == 0)
                 {
                     SoundTimerMax = GameManager.Game.TankMoveSound.length;

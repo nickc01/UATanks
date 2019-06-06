@@ -27,7 +27,7 @@ public class TankShooter : MonoBehaviour
         if (Firing)
         {
             //Decrease the cooldown tracker
-            CooldownTracker -= Time.deltaTime;
+            CooldownTracker -= GameManager.GameDT;
             //If the cooldown is over
             if (CooldownTracker <= 0)
             {

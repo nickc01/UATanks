@@ -34,8 +34,24 @@ public static class MinimapManager
 
     public static void RemoveTarget(Transform target)
     {
-        OnTargetRemove?.Invoke(target, RenderObjects[target]);
-        RenderObjects.Remove(target);
+        if (RenderObjects.ContainsKey(target))
+        {
+            OnTargetRemove?.Invoke(target, RenderObjects[target]);
+            RenderObjects.Remove(target);
+        }
+    }
+
+    public static void RemoveAllTargets()
+    {
+        /*foreach (var target in RenderObjects)
+        {
+            RemoveTarget(target.Key);
+        }*/
+        foreach (var target in RenderObjects)
+        {
+            OnTargetRemove?.Invoke(target.Key, RenderObjects[target.Key]);
+        }
+        RenderObjects.Clear();
     }
 
     public static event Action<Transform,GameObject> OnTargetAdd;

@@ -83,6 +83,7 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
 
 public abstract class SavedEnumDropdown<E> : EnumDropDown<E> where E : Enum
 {
+    public abstract E DefaultValue { get; }
     public string SaveID = typeof(E).FullName;
     bool isLoaded = false;
     SavedValue<E> saved;
@@ -90,7 +91,7 @@ public abstract class SavedEnumDropdown<E> : EnumDropDown<E> where E : Enum
     protected override void Load()
     {
         base.Load();
-        saved = new SavedValue<E>(SaveID);
+        saved = new SavedValue<E>(SaveID,DefaultValue);
         isLoaded = true;
         base.Value = saved.Value;
     }

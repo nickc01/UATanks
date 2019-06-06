@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class SavedSlider : MonoBehaviour
 {
+    [SerializeField] protected float DefaultValue = 1.0f;
     [SerializeField] protected string SaveID;
     protected Slider slider; //The slider for the volume bar
     protected SavedValue<float> savedValue;
@@ -28,7 +29,7 @@ public class SavedSlider : MonoBehaviour
         {
             SaveID = GetType().FullName;
         }
-        savedValue = new SavedValue<float>(SaveID);
+        savedValue = new SavedValue<float>(SaveID,DefaultValue);
         slider = GetComponent<Slider>();
         slider.onValueChanged.AddListener(newVal => 
         {

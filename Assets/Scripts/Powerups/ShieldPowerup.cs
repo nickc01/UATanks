@@ -39,7 +39,7 @@ public class ShieldPowerup : PowerUp
         if (Warning)
         {
             //Increase the flash timer
-            FlashTimer += Time.deltaTime * WarningFlashRate;
+            FlashTimer += GameManager.GameDT * WarningFlashRate;
             //If it's greater than 1
             if (FlashTimer >= 1f)
             {

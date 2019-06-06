@@ -8,5 +8,5 @@ public enum PlayerCount
 
 public class PlayerCountDropDown : SavedEnumDropdown<PlayerCount>
 {
-
+    public override PlayerCount DefaultValue => PlayerCount.OnePlayer;
 }

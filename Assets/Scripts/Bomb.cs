@@ -11,7 +11,7 @@ public class Bomb : MonoBehaviour
     void Update()
     {
         //Decrease the countdown timer
-        Timer -= Time.deltaTime;
+        Timer -= GameManager.GameDT;
         //If the timer is up
         if (Timer <= 0)
         {

@@ -42,6 +42,16 @@ public static class Callbacks
         GameManager.UI.Restart();
     }
 
+    public static void Pause()
+    {
+        GameManager.Paused = true;
+    }
+
+    public static void Resume()
+    {
+        GameManager.Paused = false;
+    }
+
     //Called when the help button is pressed
     public static void Help()
     {

@@ -88,7 +88,7 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
         //Decrease the powerup timers
         for (int i = ActivePowerUps.Count - 1; i >= 0; i--)
         {
-            ActivePowerUps[i].TimeLeft -= Time.deltaTime;
+            ActivePowerUps[i].TimeLeft -= GameManager.GameDT;
         }
     }
 
@@ -161,7 +161,7 @@ public abstract class Tank : MonoBehaviour, IOnShellHit
     private IEnumerator RespawnRoutine()
     {
         Visible = false;
-        yield return new WaitForSeconds(Data.RespawnDelay);
+        yield return WaitForSecondsGame.Wait(Data.RespawnDelay);
         //Reset the tank to it's spawnpoint
         Spawnpoint = FindNewSpawnpoint();
         transform.position = Spawnpoint;

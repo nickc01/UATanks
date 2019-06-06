@@ -26,7 +26,7 @@ public class PowerUpSpawn : MonoBehaviour
                 continue;
             }
             //Wait a random amount of time
-            yield return new WaitForSeconds(Random.Range(powerUp.powerUp.SpawnTimeMinMax.x, powerUp.powerUp.SpawnTimeMinMax.y));
+            yield return WaitForSecondsGame.Wait(Random.Range(powerUp.powerUp.SpawnTimeMinMax.x, powerUp.powerUp.SpawnTimeMinMax.y));
             //Spawn the powerup
             if (GameManager.PlayingLevel)
             {

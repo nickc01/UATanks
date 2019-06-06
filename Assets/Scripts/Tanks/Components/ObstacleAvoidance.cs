@@ -56,7 +56,8 @@ public class ObstacleAvoidance
             if (!value && updateRoutine != null)
             {
                 //Stop the update routine
-                CoroutineManager.StopCoroutine(updateRoutine);
+                //CoroutineManager.StopCoroutine(updateRoutine);
+                SourceTank.StopCoroutine(updateRoutine);
                 updateRoutine = null;
                 //Reset the whiskerScore
                 whiskerScore = 0;
@@ -66,14 +67,17 @@ public class ObstacleAvoidance
             else if (value && updateRoutine == null)
             {
                 //Start the update routine
-                updateRoutine = CoroutineManager.StartCoroutine(Update());
+                //updateRoutine = CoroutineManager.StartCoroutine(Update());
+                updateRoutine = SourceTank.StartCoroutine(Update());
             }
         }
     }
     public float WhiskerLength { get; set; } = 5f; //How long the whiskers will be
     public LayerMask ObstacleLayers { get; set; } //The layers the whiskers will consider an obstacle
     public bool Debug { get; set; } = false; //Whether to display the whisker lines or not
-    public Transform Source { get;  set; } //The Source Tank that is utilizing the Obstacle Avoidance system
+    public Tank SourceTank { get;  private set; } //The Source Tank that is utilizing the Obstacle Avoidance system
+    public Transform Source { get;  private set; } //The Source Tank that is utilizing the Obstacle Avoidance system
+    public float UpdateRate = 1f / 50f;
 
     List<(float Direction, float Sensitivity)> Whiskers = new List<(float, float)>(); //The whiskers that are being used
     List<float> Distances = new List<float>(); //The last known distance of each whisker to an obstacle
@@ -91,18 +95,24 @@ public class ObstacleAvoidance
     static float SensitivityTransform(float input) => 1 - Mathf.Abs(Mathf.Cos((input + 1) * (Mathf.PI / 2)));
 
     //Create the obstacle avoidance algorithm for the specified source object
-    public ObstacleAvoidance(Transform source = null,int whiskerAmount = 7,float whiskerLength = 5f, float whiskerFOV = 150f)
+    public ObstacleAvoidance(Tank source = null,int whiskerAmount = 7,float whiskerLength = 5f, float whiskerFOV = 150f)
     {
         //Set the default values
-        Source = source;
+        SourceTank = source;
+        Source = source.transform;
         WhiskerAmount = whiskerAmount;
         WhiskerLength = whiskerLength;
         WhiskerFOV = whiskerFOV;
         //Update the whiskers
         UpdateWhiskers();
         //Start the update routine
-        updateRoutine = CoroutineManager.StartCoroutine(Update());
+        //updateRoutine = CoroutineManager.StartCoroutine(Update());
+        updateRoutine = SourceTank.StartCoroutine(Update());
     }
+
+    RaycastHit[] hits = new RaycastHit[1];
+    RaycastHit hit => hits[0];
+
 
     //The update routine that is run each frame
     IEnumerator Update()
@@ -128,8 +138,10 @@ public class ObstacleAvoidance
                 {
                     //Get the current whisker
                     var whisker = Whiskers[i];
+
                     //Fire a raycast in the whisker's direction and check to see if it has hit an obstacle
-                    if (Physics.Raycast(Source.position, DegToVector(tankDirection + whisker.Direction), out var hit, WhiskerLength, ObstacleLayers.value) && hit.transform != null)
+                    //if (Physics.Raycast(Source.position, DegToVector(tankDirection + whisker.Direction), out var hit, WhiskerLength, ObstacleLayers.value) && hit.transform != null)
+                    if (Physics.RaycastNonAlloc(Source.position,DegToVector(tankDirection + whisker.Direction),hits,WhiskerLength,ObstacleLayers.value) > 0 && hit.transform != null)
                     {
                         //Get whether the ray came at the obstacle from the right or from the left
                         //A value of 1 is to the right, and a value of -1 is to the left
@@ -174,7 +186,7 @@ public class ObstacleAvoidance
                 whiskerScore *= 100f;
             }
             //Wait a frame
-            yield return null;
+            yield return WaitForSecondsGame.Wait(UpdateRate);
         }
     }
 
