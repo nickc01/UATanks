@@ -8,6 +8,7 @@ using UnityEngine;
 
 public static class WaitForSecondsGame
 {
+    //Waits a set amount of time while using GameManager.GameDT
     public static IEnumerator Wait(float Time)
     {
         while (Time > 0f)

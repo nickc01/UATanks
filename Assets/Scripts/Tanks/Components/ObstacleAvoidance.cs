@@ -77,7 +77,7 @@ public class ObstacleAvoidance
     public bool Debug { get; set; } = false; //Whether to display the whisker lines or not
     public Tank SourceTank { get;  private set; } //The Source Tank that is utilizing the Obstacle Avoidance system
     public Transform Source { get;  private set; } //The Source Tank that is utilizing the Obstacle Avoidance system
-    public float UpdateRate = 1f / 50f;
+    public float UpdateRate = 1f / 50f; //How fast the obstacle avoidance algorithm will update
 
     List<(float Direction, float Sensitivity)> Whiskers = new List<(float, float)>(); //The whiskers that are being used
     List<float> Distances = new List<float>(); //The last known distance of each whisker to an obstacle

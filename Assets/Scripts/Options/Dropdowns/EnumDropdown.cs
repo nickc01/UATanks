@@ -10,12 +10,11 @@ using TMPro;
 
 public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
 {
-    TMP_Dropdown dropdown;
-    string[] enumNames;
-    Array enumValues;
-    Type EnumType;
-    Type UnderlyingType;
-    bool loaded = false;
+    TMP_Dropdown dropdown; //The dropdown component
+    string[] enumNames; //The list of all the names in the enum
+    Array enumValues; //The list of all the values in the enum
+    Type EnumType; //The enum's type
+    bool loaded = false; //Whether this object has been loaded or not
 
     protected void Start()
     {
@@ -28,16 +27,19 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
     protected virtual void Load()
     {
         loaded = true;
+        //Get the base stats and components
         EnumType = typeof(E);
         dropdown = GetComponent<TMP_Dropdown>();
         enumNames = EnumType.GetEnumNames();
         enumValues = EnumType.GetEnumValues();
-        UnderlyingType = EnumType.GetEnumUnderlyingType();
+        //Clear the existing options from the list
         dropdown.ClearOptions();
+        //Add a function that is called when the dropdown value is updated
         dropdown.onValueChanged.AddListener(newVal => 
         {
             OnDropdownUpdate((E)enumValues.GetValue(dropdown.value));
         });
+        //Create a list of new options
         List<string> newOptions = new List<string>();
         for (int i = 0; i < enumNames.Length; i++)
         {
@@ -46,8 +48,10 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
         dropdown.AddOptions(newOptions);
     }
 
+    //If the dropdown is updated
     protected virtual void OnDropdownUpdate(E newValue)
     {
+        //Updates the stored value
         Value = newValue;
     }
 
@@ -59,6 +63,7 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
             {
                 Load();
             }
+            //Get the current value of the dropdown
             return (E)enumValues.GetValue(dropdown.value);
         }
         set
@@ -76,6 +81,7 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
                     break;
                 }
             }
+            //Set the current value of the dropdown
             dropdown.value = index;
         }
     }
@@ -83,16 +89,18 @@ public abstract class EnumDropDown<E> : MonoBehaviour where E : Enum
 
 public abstract class SavedEnumDropdown<E> : EnumDropDown<E> where E : Enum
 {
-    public abstract E DefaultValue { get; }
-    public string SaveID = typeof(E).FullName;
-    bool isLoaded = false;
-    SavedValue<E> saved;
+    public abstract E DefaultValue { get; } //The default value of the saved value if there is no saved value stored yet
+    public string SaveID = typeof(E).FullName; //The save ID used for playerPrefs
+    bool isLoaded = false; //Whether this object is loaded or not
+    SavedValue<E> saved; //The saved value
 
     protected override void Load()
     {
         base.Load();
+        //Create the saved value
         saved = new SavedValue<E>(SaveID,DefaultValue);
         isLoaded = true;
+        //Retrieve the currently saved value
         base.Value = saved.Value;
     }
 
@@ -104,6 +112,7 @@ public abstract class SavedEnumDropdown<E> : EnumDropDown<E> where E : Enum
             {
                 Load();
             }
+            //Get the saved value
             return base.Value;
         }
         set
@@ -112,6 +121,7 @@ public abstract class SavedEnumDropdown<E> : EnumDropDown<E> where E : Enum
             {
                 Load();
             }
+            //Set the saved value
             saved.Value = value;
             base.Value = value;
         }

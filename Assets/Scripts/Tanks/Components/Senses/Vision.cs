@@ -13,6 +13,8 @@ public class Vision
     public float SightFOV { get; set; } //The field of view of the source
     public LayerMask Blockers; //The objects that will block the line of sight
 
+    RaycastHit[] hit = new RaycastHit[1];
+
     //Returns true if the source can see the target
     public bool CanSeeTarget(Vector3 target)
     {
@@ -21,7 +23,8 @@ public class Vision
             return false;
         }
         //Fire a raycast towards the target and check to see if the the ray has collided with the target
-        return Physics.Raycast(Source.transform.position, (target - Source.transform.position).normalized, out var hitInfo, SightRange, Blockers) && hitInfo.transform.position == target;
+        return Physics.RaycastNonAlloc(Source.transform.position, (target - Source.transform.position).normalized, hit, SightRange, Blockers) > 0 && hit[0].transform.position == target;
+        //return Physics.Raycast(Source.transform.position, (target - Source.transform.position).normalized, out var hitInfo, SightRange, Blockers) && hitInfo.transform.position == target;
     }
 
     //Used to create the vision object

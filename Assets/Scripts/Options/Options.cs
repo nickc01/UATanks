@@ -6,7 +6,7 @@ using UnityEngine;
 public class Options : MonoBehaviour
 {
     static Options singletonInternal;
-    private static Options Singleton
+    private static Options Singleton //The singleton for the options menu
     {
         get
         {
@@ -19,7 +19,7 @@ public class Options : MonoBehaviour
     }
 
     private static EnumDropDown<MapType> mapTypeInternal;
-    public static EnumDropDown<MapType> MapType
+    public static EnumDropDown<MapType> MapType //The map type dropdown
     {
         get
         {
@@ -32,7 +32,7 @@ public class Options : MonoBehaviour
     }
 
     private static EnumDropDown<PlayerCount> playerCountInternal;
-    public static EnumDropDown<PlayerCount> PlayerCount
+    public static EnumDropDown<PlayerCount> PlayerCount //The player count dropdown
     {
         get
         {
@@ -45,7 +45,7 @@ public class Options : MonoBehaviour
     }
 
     private static EnumDropDown<Difficulty> difficultyInternal;
-    public static EnumDropDown<Difficulty> Difficulty
+    public static EnumDropDown<Difficulty> Difficulty //The difficulty dropdown
     {
         get
         {
@@ -59,7 +59,7 @@ public class Options : MonoBehaviour
 
 
     private static MasterAudioSlider masterAudioInternal;
-    public static MasterAudioSlider MasterAudio
+    public static MasterAudioSlider MasterAudio //The master audio slider
     {
         get
         {
@@ -72,7 +72,7 @@ public class Options : MonoBehaviour
     }
 
     private static MusicAudioSlider musicAudioInternal;
-    public static MusicAudioSlider MusicAudio
+    public static MusicAudioSlider MusicAudio //The music audio slider
     {
         get
         {
@@ -85,7 +85,7 @@ public class Options : MonoBehaviour
     }
 
     private static SoundEffectsAudioSlider soundEffectsAudioInternal;
-    public static SoundEffectsAudioSlider SoundEffectsAudio
+    public static SoundEffectsAudioSlider SoundEffectsAudio //The sound effects audio slider
     {
         get
         {
@@ -98,7 +98,7 @@ public class Options : MonoBehaviour
     }
 
     private static MapWidthField widthFieldInternal;
-    public static int MapWidth
+    public static int MapWidth //The map width field
     {
         get
         {
@@ -111,7 +111,7 @@ public class Options : MonoBehaviour
     }
 
     private static MapHeightField heightFieldInternal;
-    public static int MapHeight
+    public static int MapHeight //The map height field
     {
         get
         {

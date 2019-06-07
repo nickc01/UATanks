@@ -8,11 +8,11 @@ using UnityEngine.UI;
 
 public class SavedSlider : MonoBehaviour
 {
-    [SerializeField] protected float DefaultValue = 1.0f;
-    [SerializeField] protected string SaveID;
+    [SerializeField] protected float DefaultValue = 1.0f; //The default value for the slider
+    [SerializeField] protected string SaveID; //The save ID for PlayerPrefs
     protected Slider slider; //The slider for the volume bar
-    protected SavedValue<float> savedValue;
-    private bool loaded = false;
+    protected SavedValue<float> savedValue; //The saved value
+    private bool loaded = false; //Whether this object is loaded or not
 
     protected void Start()
     {
@@ -29,7 +29,9 @@ public class SavedSlider : MonoBehaviour
         {
             SaveID = GetType().FullName;
         }
+        //Create the saved value object
         savedValue = new SavedValue<float>(SaveID,DefaultValue);
+        //Get the slider component
         slider = GetComponent<Slider>();
         slider.onValueChanged.AddListener(newVal => 
         {
@@ -38,8 +40,10 @@ public class SavedSlider : MonoBehaviour
         Value = savedValue.Value;
     }
 
+    //When the slider value has updated
     protected virtual void OnSliderChange(float newValue)
     {
+        //Set the updated value
         Value = newValue;
     }
 
@@ -51,6 +55,7 @@ public class SavedSlider : MonoBehaviour
             {
                 Load();
             }
+            //Get the slider value
             return Mathf.InverseLerp(slider.minValue, slider.maxValue, slider.value);
         }
         set
@@ -59,6 +64,7 @@ public class SavedSlider : MonoBehaviour
             {
                 Load();
             }
+            //Set the slider value
             savedValue.Value = value;
             slider.value = Mathf.Lerp(slider.minValue, slider.maxValue, value);
         }

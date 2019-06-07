@@ -13,8 +13,8 @@ public class MultiplayerScreens : MonoBehaviour
     [Tooltip("The objects that make up a player's screen. These objects will be duplicated for each player in the game")]
     [SerializeField] PlayerScreen BaseScreenObjects; //The screen that all the other screens will copy from
     private static Dictionary<int, PlayerScreen> OtherPlayerScreens = new Dictionary<int, PlayerScreen>(); //A list of all the other player screens
-    public static int PlayersAdded { get; private set; } = 1;
-    private static MultiplayerScreens Singleton;
+    public static int PlayersAdded { get; private set; } = 1; //How many player screens have been added
+    private static MultiplayerScreens Singleton; //The singleton for the multiplayer screens
 
     public static PlayerScreen Primary => GetPlayerScreen(1); //The primary UI screen
 
@@ -32,6 +32,7 @@ public class MultiplayerScreens : MonoBehaviour
         }
     }
 
+    //Called when the level is unloaded
     [RuntimeInitializeOnLoadMethod]
     private static void UnloadHandler()
     {

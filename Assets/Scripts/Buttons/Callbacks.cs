@@ -42,17 +42,18 @@ public static class Callbacks
         GameManager.UI.Restart();
     }
 
-    public static void Pause(UIManager sourceScreen)
+    //Called when the pause button is pressed
+    public static void Pause(UIManager sourceUI)
     {
-        //GameManager.Paused = true;
-        //GameManager.SetPausedState
-        GameManager.SetPausedState(true,sourceScreen);
+        //Pause the game and show the pause screen on the source UI
+        GameManager.SetPausedState(true,sourceUI);
     }
 
-    public static void Resume(UIManager sourceScreen)
+    //Called when the resume button is pressed
+    public static void Resume(UIManager sourceUI)
     {
-        //GameManager.Paused = false;
-        GameManager.SetPausedState(false, sourceScreen);
+        //Unpause the game and hide the pause screen on the source UI
+        GameManager.SetPausedState(false, sourceUI);
     }
 
     //Called when the help button is pressed
@@ -65,7 +66,6 @@ public static class Callbacks
     //Called when the quit button is pressed
     public static void Quit()
     {
-        Debug.Log("QUITTING GAME");
         //Quit the game
         Application.Quit();
     }

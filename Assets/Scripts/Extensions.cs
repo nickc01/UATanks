@@ -63,6 +63,7 @@ namespace UnityEngine
             }
         }
 
+        //Adds spaces inbetween capital letters
         public static string Clean(this string value)
         {
             var result = Regex.Replace(value, @"([[A-Z\s])", @" $1");
@@ -73,11 +74,7 @@ namespace UnityEngine
             return result;
         }
 
-        public static T GetComponentOnlyInChildren<T>(this Component parent,bool includeInactive = false) where T : Component
-        {
-            return parent.GetComponentsInChildren<T>(includeInactive).FirstOrDefault(c => c != parent);
-        }
-
+        //Clones a list
         public static List<T> Clone<T>(this List<T> list)
         {
             List<T> clone = new List<T>(list.Capacity);
@@ -88,6 +85,7 @@ namespace UnityEngine
             return clone;
         }
 
+        //Pops a random element out of a list
         public static T PopRandom<T>(this List<T> list)
         {
             var item = list[Random.Range(0, list.Count)];

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MinimapTarget : MonoBehaviour
 {
     private RawImage targetInternal;
-    public RawImage Target
+    public RawImage Target //The render texture target for the minimap camera
     {
         get
         {
@@ -19,17 +19,18 @@ public class MinimapTarget : MonoBehaviour
     }
 
     [HideInInspector]
-    public Camera MinimapCamera;
+    public Camera MinimapCamera; //The minimap camera
 
-    RectTransform RTransform;
+    RectTransform RTransform; //The rect transform component
 
-    private float GetCamHeight() => MinimapCamera.orthographicSize * 2f;
-    private float GetCamWidth() => MinimapCamera.aspect * GetCamHeight();
-    private Vector3 CamPosition => MinimapCamera.transform.position;
+    private float GetCamHeight() => MinimapCamera.orthographicSize * 2f; //Gets the camera's height
+    private float GetCamWidth() => MinimapCamera.aspect * GetCamHeight(); //Gets the camera's width
+    private Vector3 CamPosition => MinimapCamera.transform.position; //Gets the camera's position
 
-    private List<Transform> RenderObjects = new List<Transform>();
-    private Dictionary<Transform, RectTransform> RenderInstances = new Dictionary<Transform, RectTransform>();
+    private List<Transform> RenderObjects = new List<Transform>(); //The list of icons on the minimap to render
+    private Dictionary<Transform, RectTransform> RenderInstances = new Dictionary<Transform, RectTransform>(); //Stores the rectTransforms of the Icons
 
+    //Called when a new icon is added
     private void TargetAdded(Transform target, GameObject prefab)
     {
         RenderObjects.Add(target);
@@ -40,6 +41,7 @@ public class MinimapTarget : MonoBehaviour
         RenderInstances.Add(target, Copy.GetComponent<RectTransform>());
     }
 
+    //Called when an icon is removed
     private void TargetRemoved(Transform target, GameObject prefab)
     {
         RenderObjects.Remove(target);
@@ -64,6 +66,7 @@ public class MinimapTarget : MonoBehaviour
     {
         if (MinimapCamera != null)
         {
+            //Updates all the icons's positions
             var Height = GetCamHeight();
             var Width = GetCamWidth();
             Rect camRect = new Rect(new Vector2(CamPosition.x, CamPosition.z) - (new Vector2(Width, Height) / 2f),new Vector2(Width,Height));

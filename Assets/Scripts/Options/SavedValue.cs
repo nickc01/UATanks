@@ -3,13 +3,14 @@ using Newtonsoft.Json;
 
 public class SavedValue<valType>
 {
-    string SaveID;
-    bool loaded = false;
-    valType valueInternal;
-    valType DefaultValue;
+    string SaveID; //The save ID for playerprefs
+    bool loaded = false; //Whether the saved value has been loaded
+    valType valueInternal; //The internal storage value
+    valType DefaultValue; //The default value
 
     public SavedValue(string saveID, valType defaultValue)
     {
+        //Set the saveID and default value
         SaveID = saveID;
         DefaultValue = defaultValue;
     }
@@ -17,6 +18,7 @@ public class SavedValue<valType>
     private valType Load()
     {
         loaded = true;
+        //Load the saved value based on the type of valType
         if (!PlayerPrefs.HasKey(SaveID))
         {
             return DefaultValue;
@@ -41,6 +43,7 @@ public class SavedValue<valType>
 
     private void Save(valType value)
     {
+        //Save the value based on the type of valType
         if (value is int intValue)
         {
             PlayerPrefs.SetInt(SaveID,intValue);
@@ -55,7 +58,6 @@ public class SavedValue<valType>
         }
         else
         {
-            Debug.Log("SAVE VALUE = " + JsonConvert.SerializeObject(value));
             PlayerPrefs.SetString(SaveID, JsonConvert.SerializeObject(value));
         }
     }
@@ -68,10 +70,12 @@ public class SavedValue<valType>
             {
                 valueInternal = Load();
             }
+            //Gets the internal value
             return valueInternal;
         }
         set
         {
+            //Sets the internal value
             valueInternal = value;
             Save(value);
         }

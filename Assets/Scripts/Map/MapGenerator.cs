@@ -7,8 +7,8 @@ using static GameManager;
 
 public class MapGenerator : MonoBehaviour
 {
-    public int MapWidth => Options.MapWidth;
-    public int MapHeight => Options.MapHeight;
+    public int MapWidth => Options.MapWidth; //How wide the map will be
+    public int MapHeight => Options.MapHeight; //How long the map will be
 
     [Header("Map Generator Settings")]
     [Tooltip("How wide and how long each tile in the map will be")]
@@ -99,7 +99,7 @@ public class MapGenerator : MonoBehaviour
                 //Spawn Random Enemies
                 foreach (var enemySpawn in NewRoom.GetComponentsInChildren<EnemySpawn>())
                 {
-                    void SpawnEnemy(bool random = true)
+                    EnemyTank SpawnEnemy(bool random = true)
                     {
                         Vector3 spawnpoint = Vector3.zero;
                         if (random)
@@ -118,10 +118,11 @@ public class MapGenerator : MonoBehaviour
                             //Get and Set the enemy's patrol points
                             var AllPatrolSets = NewRoom.GetComponentsInChildren<PatrolSet>();
                             var SelectedPatrolSet = AllPatrolSets[Random.Range(0, AllPatrolSets.GetLength(0))];
-                            ; enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
+                            enemy.PatrolPoints.AddRange(SelectedPatrolSet.GetComponentsInChildren<Transform>());
                         }
+                        return enemy;
                     }
-                    SpawnEnemy(false);
+                    var newEnemy = SpawnEnemy(false);
                     if (Options.Difficulty.Value == Difficulty.Easy)
                     {
                         break;
@@ -129,29 +130,26 @@ public class MapGenerator : MonoBehaviour
                     if (Options.Difficulty.Value == Difficulty.Hard)
                     {
                         //Spawn another enemy!
-                        SpawnEnemy();
+                        //SpawnEnemy();
+                        var data = newEnemy.GetComponent<TankData>();
+                        data.MaxLives += 1;
+                        data.Lives += 1;
+                        //newEnemy.Data.MaxLives += 1;
+                        //newEnemy.Data.Lives += 1;
                     }
                 }
             }
         }
     }
 
-    //Returns a spawnpoint for the player to spawn at
-    //It also removes the spawnpoint from the list to prevent spawning at duplicate places
-    /*public PlayerSpawn PopPlayerSpawnPoint()
-    {
-        //Initialize the seed
-        //ResetSeed();
-        var spawnPoint = PlayerSpawnPoints[Random.Range(0,PlayerSpawnPoints.Count)];
-        PlayerSpawnPoints.Remove(spawnPoint);
-        return spawnPoint;
-    }*/
-
+    //Gets a random seed
     private int GetRandomSeed()
     {
         //Get the time right now and convert it to a hash code for use as a seed
         return DateTime.Now.GetHashCode();
     }
+
+    //Gets the map of the day
     private int GetSeedOfTheDay()
     {
         //Get the time for just today and convert it to a hash code for use as a seed

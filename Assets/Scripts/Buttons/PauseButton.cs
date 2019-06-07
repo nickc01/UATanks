@@ -8,13 +8,15 @@ using UnityEngine.UI;
 
 public class PauseButton : MonoBehaviour
 {
-    Button button;
-    UIManager SourceUI;
+    Button button; //The pause button object
+    UIManager SourceUI; //The source UI
 
     private void Start()
     {
+        //Get the components
         button = GetComponent<Button>();
         SourceUI = GetComponentInParent<UIManager>();
+        //Call the pause function when the button is clicked
         button.onClick.AddListener(() =>
         {
             Callbacks.Pause(SourceUI);

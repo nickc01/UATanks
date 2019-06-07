@@ -8,24 +8,22 @@ using UnityEngine.Audio;
 
 public enum AudioPlayType
 {
-    Spatial,
-    Stereo
+    Spatial, //Whether to play the audio spatially
+    Stereo //Whether to play the audio in stereo
 }
 
 public class Audio : MonoBehaviour
 {
     static bool Loaded = false; //Whether the volume meters are loaded or not
-    static Audio Singleton;
+    static Audio Singleton; //The singleton for the audio object
 
     public static List<Transform> Listeners = new List<Transform>(); //A list of listeners in the game
     public static Vector3 SourceListenerPosition => Singleton.transform.position; //The position of the main listener
 
     //Functions for getting the volume
-
     public static float MasterVolume => Options.MasterAudio.Value;
     public static float MusicVolume => Mathf.Clamp(Options.MusicAudio.Value, 0f, MasterVolume);
     public static float SoundEffectsVolume => Mathf.Clamp(Options.SoundEffectsAudio.Value, 0f, MasterVolume);
-
     public static float Master() => MasterVolume;
     public static float Music() => MusicVolume;
     public static float SoundEffects() => SoundEffectsVolume;
@@ -44,6 +42,7 @@ public class Audio : MonoBehaviour
         }
     }
 
+    //Adds a method that is called when the level unloads
     [RuntimeInitializeOnLoadMethod]
     private static void UnloadHandler()
     {

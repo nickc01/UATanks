@@ -41,14 +41,4 @@ public class HealthDisplay : Display<float>
         //Interpolate to the current health value
         healthSlider.value = Mathf.Lerp(healthSlider.value, newValue, Speed * Time.deltaTime);
     }
-
-    /*protected override void Update()
-    {
-        //If interpolation is enabled
-        if (Interpolate)
-        {
-            //Interpolate to the current health value
-            healthSlider.value = Mathf.Lerp(healthSlider.value, Value, InterpolationSpeed * Time.deltaTime);
-        }
-    }*/
 }

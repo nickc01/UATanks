@@ -24,7 +24,9 @@ public partial class GameManager
 
         public static void Restart()
         {
+            //Get the current seed
             LevelSeed = MapGenerator.Generator.Seed;
+            //Load the level
             Play(LevelLoadMode.Specific);
         }
 

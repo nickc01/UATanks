@@ -38,7 +38,7 @@ public partial class GameManager : MonoBehaviour
     public static List<(EnemyTank Tank,TankData Data)> Enemies = new List<(EnemyTank,TankData)>(); //The data of all the enemies in the game
     public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
 
-    public static event Action OnLevelUnload;
+    public static event Action OnLevelUnload; //An event that is called when the level unloads
 
     [Header("Prefabs")]
     [Tooltip("The prefab used whenever a tank fires a shell")]
@@ -124,10 +124,10 @@ public partial class GameManager : MonoBehaviour
     [Tooltip("The main options area")]
     public Options MainOptions;
 
-    private AudioObject MusicObject;
+    private AudioObject MusicObject; //The audio object for the music
 
     private static Color currentColorInternal;
-    public static Color CurrentGameColor
+    public static Color CurrentGameColor //The current color of the game
     {
         get => currentColorInternal;
         set
@@ -137,26 +137,27 @@ public partial class GameManager : MonoBehaviour
         }
     }
 
-    public static Color CurrentGameColorBright => Color.Lerp(Color.white, CurrentGameColor, 0.3f);
-    public static Color CurrentGameColorDark => Color.Lerp(Color.black, CurrentGameColor, 0.3f);
-    public static float GameDT => Paused ? 0f : Time.deltaTime;
+    public static Color CurrentGameColorBright => Color.Lerp(Color.white, CurrentGameColor, 0.3f); //The current color but brighter
+    public static Color CurrentGameColorDark => Color.Lerp(Color.black, CurrentGameColor, 0.3f); //The current color but darker
+    public static float GameDT => Paused ? 0f : Time.deltaTime; //Similar to Time.deltaTime, but is zero when the game is paused
 
-    private static UIManager PausedScreen = null;
-    public static bool Paused { get; private set; } = false;
+    private static UIManager PausedUI = null; //The UI showing the pause screen
+    public static bool Paused { get; private set; } = false; //Whether the game is paused or not
 
+    //Sets whether the game is paused or not
     public static void SetPausedState(bool value,UIManager screen)
     {
-        if (value == true && Paused == false && PausedScreen == null)
+        if (value == true && Paused == false && PausedUI == null)
         {
             Paused = true;
-            PausedScreen = screen;
-            PausedScreen.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
+            PausedUI = screen;
+            PausedUI.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
         }
-        if (value == false && Paused == true && PausedScreen == screen)
+        if (value == false && Paused == true && PausedUI == screen)
         {
             Paused = false;
-            PausedScreen.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
-            PausedScreen = null;
+            PausedUI.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
+            PausedUI = null;
         }
     }
 
@@ -195,8 +196,10 @@ public partial class GameManager : MonoBehaviour
     {
         if (PlayingLevel)
         {
+            //If the escape key is pressed
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                //Pause or unpause the game
                 SetPausedState(!Paused, UIManager.Primary);
             }
         }
@@ -279,12 +282,14 @@ public partial class GameManager : MonoBehaviour
         Loser.UI.FinalScore = Loser.Score;
     }
 
+    //Adds a function that is called when the level unloads
     [RuntimeInitializeOnLoadMethod]
     private static void UnloadHandler()
     {
         OnLevelUnload += () =>
         {
             Paused = false;
+            PausedUI = null;
             PlayingLevel = false;
             Players.Clear();
             Enemies.Clear();
@@ -297,12 +302,16 @@ public partial class GameManager : MonoBehaviour
         //If the game is loaded
         if (SceneManager.GetSceneByName("Game").isLoaded)
         {
+            //Call the OnLevelUnload Event
             OnLevelUnload?.Invoke();
             //Unload it
             yield return SceneManager.UnloadSceneAsync("Game");
+            //If the game is going to the main menu
             if (GoingToMainMenu)
             {
+                //Play the menu music
                 PlayMusic(MusicType.Menu);
+                //Start the background panorama
                 yield return PanoramaGenerator.StartPanorama();
             }
         }
@@ -339,11 +348,6 @@ public partial class GameManager : MonoBehaviour
         yield return PanoramaGenerator.StopPanorama();
         //Stop playing the music
         PlayMusic(MusicType.None);
-        //Reset the tank stats
-        //Players.Clear();
-        //Enemies.Clear();
-        //Tank.AllTanks.Clear();
-        //pausedInternal = false;
         //Set the seed of the map generator depending on the level load mode
         CurrentLoadMode = loadMode;
         switch (loadMode)
@@ -371,6 +375,7 @@ public partial class GameManager : MonoBehaviour
         MapGenerator.Generator.GenerateMap(loadMode == LevelLoadMode.Specific ? LevelSeed : 0);
         CurrentGameColor = Color.HSVToRGB(Random.value, 1f, 1f);
 
+        //Get a copy of the possible player spawnpoints
         var playerSpawns = MapGenerator.PlayerSpawnPoints.Clone();
 
         //Spawn the first player at a random spawnpoint

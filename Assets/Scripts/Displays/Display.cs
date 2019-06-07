@@ -15,11 +15,13 @@ public abstract class Display<ValueType> : PlayerSpecific
         }
     }
 
+    //Sets the value directly without interpolation
     public virtual void SetDirect(ValueType value)
     {
         Value = value;
     }
 
+    //Used to interpolate to a new value
     protected virtual void InterpolateTo(ValueType newValue,float Speed)
     {
         
