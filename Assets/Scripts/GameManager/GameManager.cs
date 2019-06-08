@@ -39,6 +39,7 @@ public partial class GameManager : MonoBehaviour
     public static Dictionary<Type, List<PowerupHolder>> AllPowerups = new Dictionary<Type, List<PowerupHolder>>(); //All the powerups spawned in the game, sorted by powerup type
 
     public static event Action OnLevelUnload; //An event that is called when the level unloads
+    public static event Action<bool> OnGamePause; //Called when the game is paused or unpaused
 
     [Header("Prefabs")]
     [Tooltip("The prefab used whenever a tank fires a shell")]
@@ -149,12 +150,14 @@ public partial class GameManager : MonoBehaviour
     {
         if (value == true && Paused == false && PausedUI == null)
         {
+            OnGamePause?.Invoke(true);
             Paused = true;
             PausedUI = screen;
             PausedUI.SetUIState("Paused", Curves.Smoothest, TransitionMode.TopToBottom, 2f);
         }
         if (value == false && Paused == true && PausedUI == screen)
         {
+            OnGamePause?.Invoke(false);
             Paused = false;
             PausedUI.SetUIState("Game", Curves.Smoothest, TransitionMode.BottomToTop, 2f);
             PausedUI = null;
@@ -189,19 +192,6 @@ public partial class GameManager : MonoBehaviour
             PlayMusic(MusicType.Menu);
             //Start the background panorama
             StartCoroutine(PanoramaGenerator.StartPanorama());
-        }
-    }
-
-    private void Update()
-    {
-        if (PlayingLevel)
-        {
-            //If the escape key is pressed
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                //Pause or unpause the game
-                SetPausedState(!Paused, UIManager.Primary);
-            }
         }
     }
 
