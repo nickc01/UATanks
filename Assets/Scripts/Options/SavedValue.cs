@@ -37,7 +37,15 @@ public class SavedValue<valType>
         }
         else
         {
-            return JsonConvert.DeserializeObject<valType>(PlayerPrefs.GetString(SaveID));
+            var str = PlayerPrefs.GetString(SaveID);
+            if (str == null || str == "")
+            {
+                return default;
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<valType>(PlayerPrefs.GetString(SaveID));
+            }
         }
     }
 
