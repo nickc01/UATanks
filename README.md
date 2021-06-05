@@ -17,7 +17,6 @@ UATanks is a top-down tank shooting game, where your goal is to control a tank i
 - Interface Sounds : [UI Sound Effects)](https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks)
 - Explosion Image : [Explosion 3](https://opengameart.org/content/explosion-3)
 - Menu Music : [JoTech - Awaken](https://jotech.bandcamp.com/album/awaken)
-<<<<<<< HEAD
     *Songs*:
     - JoTech - Another Dimension
 - Game Music : [JoTech - Understand](https://jotech.bandcamp.com/album/understand)
@@ -25,13 +24,6 @@ UATanks is a top-down tank shooting game, where your goal is to control a tank i
     - JoTech – Reverse Time
     - JoTech – Understand
     - JoTech – Time Machine
-=======
-	JoTech - Another Dimension
-- Game Music : [JoTech - Understand](https://jotech.bandcamp.com/album/understand)
-	JoTech – Reverse Time
-	JoTech – Understand
-	JoTech – Time Machine
->>>>>>> master
 - UI Assets : [UI Pack](https://www.kenney.nl/assets/ui-pack)
 - ReadOnlyAttribute Code : [ReadOnlyAttribute.cs](https://gist.github.com/LotteMakesStuff/c0a3b404524be57574ffa5f8270268ea)
 - Tank Model : [Low Poly Tank Assets](https://opengameart.org/content/low-poly-tank-assets)
